@@ -46,6 +46,9 @@ $ stack setup
 
 ## Compression tools
 
+By default these aren't needed - only needed if relevant code in `Main.hs` is
+uncommented.
+
 ```
 $ sudo apt install zopfli brotli
 ```

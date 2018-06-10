@@ -63,8 +63,11 @@ data Config = Config { outDir   :: FilePath
 -- Compresses the given file to a new file with .gz/br appended to the filename.
 compressFile :: FilePath -> IO ()
 compressFile fname = do
+  {-
   System.Process.callProcess "zopfli" [fname]
   System.Process.callProcess "brotli" ["--force", "--output",  fname ++ ".br", "--input", fname]
+  -}
+  return ()
 
 -- Given the post template and the global context, expands the template for all
 -- of the posts and writes them to the output directory. This also prints a list
