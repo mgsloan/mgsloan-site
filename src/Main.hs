@@ -78,14 +78,17 @@ writePosts tmpl ctx posts config =
     -- Reverse the list of posts, so the most recent one is rendered first.
     -- This makes the preview workflow faster, because the most recent post
     -- in the list is likely the one that I want to view.
-    withRelated = zip [1 :: Int ..] $ reverse $ P.selectRelated posts
-    writePostAsync (i, (post, related)) = do
+    -- RELATED withRelated = zip [1 :: Int ..] $ reverse $ P.selectRelated posts
+    withRelated = zip [1 :: Int ..] $ reverse posts
+    -- RELATED writePostAsync (i, (post, related)) = do
+    writePostAsync (i, post) = do
       putStrLn $ "[" ++ (show i) ++ " of " ++ (show total) ++ "] " ++ (P.slug post)
-      Async.async $ writePost post related
-    writePost post related = do
+      Async.async $ writePost post {- related -}
+    -- RELATED writePost post related = do
+    writePost post = do
       let destFile = (outDir config) </> (drop 1 $ P.url post) </> "index.html"
           context  = M.unions [ P.context post
-                              , P.relatedContext related
+    -- RELATED                          , P.relatedContext related
                               , ctx]
           -- Generating the html is a two-stage process: first we render the
           -- template without knowing the font filenames, as those are based
@@ -122,7 +125,7 @@ writePage url pageContext template config = do
 
 writeIndex :: Template.Context -> Template.Template -> Config -> IO [SubsetCommand]
 writeIndex globalContext = writePage "/" context
-  where context = M.unions [ Template.stringField "title"     "Ruud van Asseldonk"
+  where context = M.unions [ Template.stringField "title"     "mgsloan's blog"
                            , Template.stringField "bold-font" "true"
                            , Template.stringField "light"     "true"
                            , globalContext ]
@@ -132,7 +135,7 @@ writeIndex globalContext = writePage "/" context
 writeArchive :: Template.Context -> Template.Template -> [P.Post] -> Config -> IO [SubsetCommand]
 writeArchive globalContext template posts = writePage "/writing" context template
   where context = M.unions [ P.archiveContext posts
-                           , Template.stringField "title"     "Writing by Ruud van Asseldonk"
+                           , Template.stringField "title"     "Writing by mgsloan"
                            , Template.stringField "bold-font" "true"
                            , Template.stringField "archive"   "true"
                            , globalContext ]
@@ -141,7 +144,7 @@ writeArchive globalContext template posts = writePage "/writing" context templat
 -- to the destination directory.
 writeContact :: Template.Context -> Template.Template -> Config -> IO [SubsetCommand]
 writeContact globalContext = writePage "/contact" context
-  where context = M.unions [ Template.stringField "title" "Contact Ruud van Asseldonk"
+  where context = M.unions [ Template.stringField "title" "Contact mgsloan"
                            , Template.stringField "light" "true"
                            , globalContext ]
 
@@ -164,9 +167,15 @@ main = do
   -- Create a context with the field "year" set to the current year, and create
   -- a context that contains all of the templates, to handle includes.
   (year, _month, _day) <- fmap (toGregorian . utctDay) getCurrentTime
-  let yctx          = Template.stringField "year" $ show year
-      tctx          = fmap Template.TemplateValue templates
-      globalContext = M.union tctx yctx
+  let yearString = show year
+      globalContext = M.unions
+        [ Template.stringField "year" yearString
+        , Template.stringField "year-range" $
+          if yearString == "2018"
+            then "2018"
+            else "2018-" ++ yearString
+        , fmap Template.TemplateValue templates
+        ]
       config        = Config { outDir   = "out/"
                              , imageDir = "images/compressed/" }
 
@@ -182,12 +191,13 @@ main = do
   archiveCmd <- writeArchive globalContext (templates M.! "archive.html") posts config
 
   copyFile "assets/favicon.png"          "out/favicon.png"
-  copyFile "assets/ruudvanasseldonk.asc" "out/contact/ruudvanasseldonk.asc"
 
   putStrLn "Writing atom feed..."
   writeFeed (templates M.! "feed.xml") posts config
 
+  {- TODO: get back to the font stuff
   putStrLn "Subsetting fonts..."
   createDirectoryIfMissing True "out/fonts"
   nSubsetted <- subsetFonts $ concat [indexCmd, contactCmd, archiveCmd, postCmds]
   putStrLn $ "Subsetted " ++ show nSubsetted ++ " new fonts."
+  -}

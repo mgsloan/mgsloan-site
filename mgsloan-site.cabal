@@ -1,15 +1,17 @@
-name:          blog
+name:          mgsloan-site
 version:       3.0.0
-synopsis:      Static site generator for my personal blog
-homepage:      https://ruudvanasseldonk.com
+synopsis:      Static site generator for mgsloan's personal blog
+homepage:      https://mgsloan.com
 author:        Ruud van Asseldonk <dev@veniogames.com>
+               Michael Sloan <mgsloan@gmail.com>
 copyright:     Ruud van Asseldonk 2015
+               Michael Sloan 2018
 license:       GPL-3
 license-file:  license
 build-type:    Simple
 cabal-version: >= 1.10
 
-executable blog
+executable mgsloan-site
   main-is:          Main.hs
   hs-source-dirs:   src
   other-modules:    Html, Image, Minification, Post, Template, Type
