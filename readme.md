@@ -35,12 +35,35 @@ Compiling
 ---------
 Install Python requirements (for font subsetting) in a virtualenv:
 
+    $ pip3 install virtualenv
     $ virtualenv venv
     $ source venv/bin/activate
     $ pip install -r requirements.txt
+
+Note that python 2's virtualenv cannot be used, hence `pip3 install virtualenv`.
 
 Build the generator, then build the site (requires fonts to be present):
 
     $ stack setup
     $ stack build
     $ stack exec blog
+
+Serving Output Locally
+----------------------
+
+Since this already involves installing python3, I (mgsloan) figured may as well
+use python's simple web server to test the site locally:
+
+    $ source env/bin/activate
+    $ cd out
+    $ python3 -m http.server 8080
+
+Other Requirements
+------------------
+
+I (mgsloan) needed to install some utilities invoked by this project, and I use
+ubuntu. This list is not exhaustive.
+
+    $ sudo apt install zopfli brotli
+
+I am not sure why I needed to install `brotli`, since it is in requirements.txt
