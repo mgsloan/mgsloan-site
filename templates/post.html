@@ -6,12 +6,19 @@
         {{if part}}<p class="smcp">Part {{part}}</p>{{end}}
         {{if subheader}}<h2>{{subheader}}</h2>{{end}}
         <p>
-          written by <a href="/" class="author">Michael G Sloan (mgsloan)</a><br>
-          published <time datetime="{{short-date}}" itemprop="datePublished">{{long-date}}</time>
+          by <a href="/" class="author">Michael G Sloan (mgsloan)</a><br>
+          <time datetime="{{short-date}}" itemprop="datePublished">{{long-date}}</time>
         </p>
       </header>
       {{content}}
     </article>
+    <section id="teaser-section">
+      <div id="teaser">
+        <p class="smcp">More words</p>
+        <h2>{{further.title-html}}</h2>
+        <p>{{further.synopsis-html}} <a href="{{further.url}}" class="smcp">Read full post</a></p>
+      </div>
+    </section>
     {{include footer.html}}
   </body>
 </html>

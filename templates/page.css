@@ -24,10 +24,10 @@ html
 body
 {
   background-color: #fffef8;
-  border-top: 0.5em solid #c35;
+  /* border-top: 0.5em solid #c35; */
   padding-top: 0.2em;
   color: #456;
-  font-family: Calluna Sans, sans-serif;
+  font-family: {{body-font}}, sans-serif;
   /* Firefox applies ligatures automatically when they are available, but Chrome
    * needs to be told explicitly. */
   font-feature-settings: 'liga', 'kern';
@@ -59,7 +59,7 @@ body
 
 header
 {
-  font-family: Calluna, serif;
+  font-family: {{serif-font}}, serif;
   margin-left: 1em;
   margin-right: 1em;
   overflow: hidden;
@@ -71,9 +71,10 @@ h1
   /* Align the header on the third baseline. (The first baseline is at the
    * bottom of the top border of the body.) Ensure that the bottom margin
    * aligns with the grid. */
+  font-family: {{header-font}}, serif;
   color: #000;
   font-size: 2.8em;
-  line-height: 2.8rem;
+  line-height: 3.8rem;
   margin-bottom: 0.7rem;
   padding-top: 2.8rem;
 }
@@ -173,7 +174,7 @@ abbr
 
 h2
 {
-  font-family: Calluna, serif;
+  font-family: {{serif-font}}, serif;
   font-size: 1.4em;
   line-height: 1em;
   margin-bottom: 0.2rem;
@@ -249,7 +250,7 @@ th, td
 code
 {
   color: #c35;
-  font-family: Inconsolata, Consolas, monospace;
+  font-family: {{mono-font}}, Inconsolata, Consolas, monospace;
 }
 
 div.sourceCode
@@ -314,7 +315,7 @@ img
 
 blockquote
 {
-  font-family: Calluna, serif;
+  font-family: {{serif-font}}, serif;
   font-style: italic;
   padding-left: 1em;
   padding-right: 1em;
@@ -335,7 +336,7 @@ blockquote
 
 #teaser a {
   color: #fff; /* TODO: Pick good colour scheme. */
-  font-family: Calluna, serif;
+  font-family: {{serif-font}}, serif;
 
   /* Fix baseline alignment of the teaser in Firefox. At different viewport
    * widths and zoom levels, the error is different, and there is no one
@@ -394,7 +395,7 @@ nav a
 {{if archive}}
 .archive p > a
 {
-  font-family: Calluna, serif;
+  font-family: {{serif-font}}, serif;
 
   /* The next line is required to fix baseline alingnment in Firefox. */
   line-height: 0;

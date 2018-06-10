@@ -115,13 +115,11 @@ context p = fmap Template.StringValue ctx
                                , ("part", fmap toRoman $ part p)
                                , ("bold-font", boldFontField)
                                , ("italic-font", italicFontField)
-                               , ("math", mathField)
                                , ("mono-font", monoFontField)
                                , ("serif-italic-font", serifItalicFontField) ]
         usesSerifItalic      = (Type.usesSerifItalicFont $ body p) || (isJust $ subheader p)
         boldFontField        = booleanField $ Type.usesBoldFont $ body p
         italicFontField      = booleanField $ usesItalicFont p
-        mathField            = booleanField $ Html.hasMath $ body p
         monoFontField        = booleanField $ usesMonoFont p
         serifItalicFontField = booleanField $ usesSerifItalic
 

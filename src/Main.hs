@@ -15,7 +15,6 @@ import System.Process
 import qualified Data.Map as M
 import qualified Control.Concurrent.Async as Async
 
-import Type (SubsetCommand, subsetArtifact, subsetFonts)
 import Minification (minifyHtml)
 
 import qualified Image
@@ -71,59 +70,45 @@ compressFile fname = do
 -- of the posts and writes them to the output directory. This also prints a list
 -- of processed posts to the standard output. Start numbering post artifacts at
 -- 53, lower indices are reserved for other pages.
-writePosts :: Template.Template -> Template.Context -> [P.Post] -> Config -> IO [SubsetCommand]
+writePosts :: Template.Template -> Template.Context -> [P.Post] -> Config -> IO ()
 writePosts tmpl ctx posts config =
   let
     total = length posts
     -- Reverse the list of posts, so the most recent one is rendered first.
     -- This makes the preview workflow faster, because the most recent post
     -- in the list is likely the one that I want to view.
-    -- RELATED withRelated = zip [1 :: Int ..] $ reverse $ P.selectRelated posts
-    withRelated = zip [1 :: Int ..] $ reverse posts
-    -- RELATED writePostAsync (i, (post, related)) = do
-    writePostAsync (i, post) = do
+    withRelated = zip [1 :: Int ..] $ reverse $ P.selectRelated posts
+    writePostAsync (i, (post, related)) = do
       putStrLn $ "[" ++ (show i) ++ " of " ++ (show total) ++ "] " ++ (P.slug post)
-      Async.async $ writePost post {- related -}
-    -- RELATED writePost post related = do
-    writePost post = do
+      Async.async $ writePost post related
+    writePost post related = do
       let destFile = (outDir config) </> (drop 1 $ P.url post) </> "index.html"
           context  = M.unions [ P.context post
-    -- RELATED                          , P.relatedContext related
+                              , P.relatedContext related
                               , ctx]
-          -- Generating the html is a two-stage process: first we render the
-          -- template without knowing the font filenames, as those are based
-          -- on the hash of the glyphs. Then we scan which glyphs occur in
-          -- there to determine the hash, and then we can render again.
-          baseHtml = Template.apply tmpl context
-          (fontCtx, subsetCmds) = Type.subsetArtifact "out/fonts/" baseHtml
-          html = Template.apply tmpl (context <> fontCtx)
+          html = Template.apply tmpl context
       withImages  <- Image.processImages (imageDir config) html
       let minified = minifyHtml withImages
       createDirectoryIfMissing True $ takeDirectory destFile
       writeFile destFile minified
       compressFile destFile
-      pure subsetCmds
   in do
     subsetCmdsAsync <- mapM writePostAsync withRelated
-    subsetCmds <- mapM Async.wait subsetCmdsAsync
-    pure (concat subsetCmds)
+    mapM_ Async.wait subsetCmdsAsync
 
 -- Writes a general (non-post) page given a template and expansion context.
 -- Returns the subset commands that need to be executed for that page.
-writePage :: String -> Template.Context -> Template.Template -> Config -> IO [SubsetCommand]
+writePage :: String -> Template.Context -> Template.Template -> Config -> IO ()
 writePage url pageContext template config = do
   let context  = Template.stringField "url" url <> pageContext
-      baseHtml = Template.apply template context
-      (fontCtx, subsetCmds) = Type.subsetArtifact "out/fonts/" baseHtml
-      html     = minifyHtml $ Template.apply template (context <> fontCtx)
+      html     = minifyHtml $ Template.apply template context
       destDir  = (outDir config) </> (tail url)
       destFile = destDir </> "index.html"
   createDirectoryIfMissing True destDir
   writeFile destFile html
   compressFile destFile
-  pure subsetCmds
 
-writeIndex :: Template.Context -> Template.Template -> Config -> IO [SubsetCommand]
+writeIndex :: Template.Context -> Template.Template -> Config -> IO ()
 writeIndex globalContext = writePage "/" context
   where context = M.unions [ Template.stringField "title"     "mgsloan's blog"
                            , Template.stringField "bold-font" "true"
@@ -132,7 +117,7 @@ writeIndex globalContext = writePage "/" context
 
 -- Given the archive template and the global context, writes the archive page
 -- to the destination directory.
-writeArchive :: Template.Context -> Template.Template -> [P.Post] -> Config -> IO [SubsetCommand]
+writeArchive :: Template.Context -> Template.Template -> [P.Post] -> Config -> IO ()
 writeArchive globalContext template posts = writePage "/writing" context template
   where context = M.unions [ P.archiveContext posts
                            , Template.stringField "title"     "Writing by mgsloan"
@@ -142,7 +127,7 @@ writeArchive globalContext template posts = writePage "/writing" context templat
 
 -- Given the contact template and the global context, writes the contact page
 -- to the destination directory.
-writeContact :: Template.Context -> Template.Template -> Config -> IO [SubsetCommand]
+writeContact :: Template.Context -> Template.Template -> Config -> IO ()
 writeContact globalContext = writePage "/contact" context
   where context = M.unions [ Template.stringField "title" "Contact mgsloan"
                            , Template.stringField "light" "true"
@@ -174,6 +159,11 @@ main = do
           if yearString == "2018"
             then "2018"
             else "2018-" ++ yearString
+        , Template.stringField "body-font" "Roboto"
+        , Template.stringField "serif-font" "Merriweather"
+        -- , Template.stringField "header-font" "'Indie Flower'"
+        , Template.stringField "header-font" "'Playfair Display'"
+        , Template.stringField "mono-font" "'Roboto Mono'"
         , fmap Template.TemplateValue templates
         ]
       config        = Config { outDir   = "out/"
@@ -183,21 +173,14 @@ main = do
   copyFiles "images/compressed/" "out/images/"
 
   putStrLn "Writing posts..."
-  postCmds <- writePosts (templates M.! "post.html") globalContext posts config
+  writePosts (templates M.! "post.html") globalContext posts config
 
   putStrLn "Writing other pages..."
-  indexCmd   <- writeIndex   globalContext (templates M.! "index.html")   config
-  contactCmd <- writeContact globalContext (templates M.! "contact.html") config
-  archiveCmd <- writeArchive globalContext (templates M.! "archive.html") posts config
+  writeIndex   globalContext (templates M.! "index.html")   config
+  writeContact globalContext (templates M.! "contact.html") config
+  writeArchive globalContext (templates M.! "archive.html") posts config
 
   copyFile "assets/favicon.png"          "out/favicon.png"
 
   putStrLn "Writing atom feed..."
   writeFeed (templates M.! "feed.xml") posts config
-
-  {- TODO: get back to the font stuff
-  putStrLn "Subsetting fonts..."
-  createDirectoryIfMissing True "out/fonts"
-  nSubsetted <- subsetFonts $ concat [indexCmd, contactCmd, archiveCmd, postCmds]
-  putStrLn $ "Subsetted " ++ show nSubsetted ++ " new fonts."
-  -}
