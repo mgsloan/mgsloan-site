@@ -7,6 +7,7 @@
 module Html ( Tag
             , TagProperties
             , makeRunIn
+            , addAnchors
             , applyTagsWhere
             , classifyTags
             , cleanTables
@@ -14,6 +15,8 @@ module Html ( Tag
             , filterTags
             , getTextInTag
             , hasUl
+            , hasH2
+            , hasMath
             , isA
             , isAbbr
             , isArchive
@@ -288,6 +291,21 @@ hasUl = not . null
       . classifyTags
       . parseTags
 
+-- Returns whether a <h2> tag is present in the <article> in an html string.
+hasH2 :: String -> Bool
+hasH2 = not . null
+      . filter (isArticle . snd)
+      . filter (S.isTagOpenName "h2" . fst)
+      . classifyTags
+      . parseTags
+
+-- Returns whether an html snippet contains a <sub>, <sup>, or <var> tag.
+hasMath :: String -> Bool
+hasMath = any (\t -> isSub t || isSup t || isVar t)
+        . fmap snd
+        . classifyTags
+        . parseTags
+
 -- Returns the length of the longest ordered list in an html string.
 maxOlLength :: String -> Int
 maxOlLength = maximum . foldl listLength [0] . classifyTags . parseTags
@@ -316,3 +334,12 @@ cleanTables = renderTags . mapTagsWhere isTable stripAttrs . parseTags
         stripAttrs tag = case tag of
           S.TagOpen name attrs -> S.TagOpen name $ filterAttrs attrs
           _                    -> tag
+
+-- Add an empty <a> tag to every <h2> that has an id, and link it to that id.
+addAnchors :: String -> String
+addAnchors = renderTags . concatMap expandHeader . parseTags
+  where
+    emptyA href = [S.TagOpen "a" [("href", href)], S.TagClose "a"]
+    expandHeader tag = case tag of
+      h2 @ (S.TagOpen "h2" [("id", anchor)]) -> h2 : emptyA ('#' : anchor)
+      otherTag -> [otherTag]

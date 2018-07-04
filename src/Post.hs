@@ -143,7 +143,11 @@ parse postSlug contents = let
           , date      = parseDate $ frontMatter M.! "date"
           , slug      = postSlug
           , synopsis  = frontMatter M.! "synopsis"
-          , body      = refineType $ Html.cleanTables $ renderMarkdown bodyContents }
+          , body      = refineType
+                      $ Html.cleanTables
+                      $ Html.addAnchors
+                      $ renderMarkdown bodyContents
+          }
 
 -- Renders markdown to html using Pandoc with my settings.
 renderMarkdown :: String -> String
@@ -155,6 +159,8 @@ renderMarkdown md = case fmap (writeHtmlString wopt) (readMarkdown ropt md) of
   where ropt = def { readerExtensions = S.insert Ext_backtick_code_blocks $
                                         S.insert Ext_raw_html $
                                         S.insert Ext_simple_tables $
+                                        S.insert Ext_auto_identifiers $
+                                        S.insert Ext_ascii_identifiers $
                                         def }
         wopt = def { writerHighlight  = True }
 
