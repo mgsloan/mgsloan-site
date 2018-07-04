@@ -3,20 +3,18 @@
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License version 3. See
 -- the licence file in the root of the repository.
-
-import Control.Monad (filterM, void)
+import Control.Monad
 import Data.Monoid ((<>))
 import Data.Time.Calendar (toGregorian)
 import Data.Time.Clock (getCurrentTime, utctDay)
-import System.Directory (doesFileExist, copyFile, createDirectoryIfMissing, getDirectoryContents)
-import System.FilePath ((</>), takeBaseName, takeDirectory, takeExtension, takeFileName)
-import System.Process
-
-import qualified Data.Map as M
-import qualified Control.Concurrent.Async as Async
-
 import Minification (minifyHtml)
-
+import System.Directory
+import System.FilePath
+{-
+import System.Process
+-}
+import qualified Control.Concurrent.Async as Async
+import qualified Data.Map as M
 import qualified Image
 import qualified Post as P
 import qualified Template
@@ -62,7 +60,7 @@ data Config = Config { outDir   :: FilePath
 
 -- Compresses the given file to a new file with .gz/br appended to the filename.
 compressFile :: FilePath -> IO ()
-compressFile fname = do
+compressFile _fname = do
   {-
   System.Process.callProcess "zopfli" [fname]
   System.Process.callProcess "brotli" ["--force", "--output",  fname ++ ".br", "--input", fname]
