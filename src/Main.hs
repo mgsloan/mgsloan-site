@@ -170,6 +170,20 @@ main = do
       config        = Config { outDir   = "out/"
                              , imageDir = "images/compressed/" }
 
+  {-
+  outExists <- doesDirectoryExist "out"
+  when outExists $ do
+    files <- listDirectory "out"
+    print files
+    forM_ files $ \file -> do
+      let fp = "out" </> file
+      isFile <- doesFileExist fp
+      print (fp, isFile)
+      if isFile
+        then removeFile fp
+        else removeDirectoryRecursive fp
+  -}
+
   createDirectoryIfMissing True  "out/images/"
   copyFiles "images/compressed/" "out/images/"
 
