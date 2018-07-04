@@ -57,38 +57,57 @@ $ sudo apt install zopfli brotli
 
 I like to be able to modify the Haskell, templates, and markdown, and quickly
 see the results. In other words, I want to be able to just save files, and have
-the browser automatically update. Here's how to do this:
+the browser automatically update. My current approach is a bit of a mishmash of
+tools. I'd like something better, but it works well enough. Here's how I'm
+currently doing this:
 
-## Install ghcid and live-server
+## Install ghcid and livereload
 
 [ghcid] automates reloading code in `ghci`, Haskell's interpreter. Code gets
 reloaded whenever source files change.
 
-[live-server] is a server which modifies HTML it serves, to inject some JS that
-will cause the page to reload when the file changes.
+[livereload] is an node server that can be used with the [livereload chrome
+plugin] to cause the browser to reload after changes.
 
 ```
 $ stack install ghcid
-$ npm install -g
+$ npm install -g livereload
 ```
+
+## Run ghcid
 
 Then, in one terminal run the following:
 
 ```
-./interpret.sh
+$ ./interpret.sh
 ```
 
 This script runs `ghcid`, configuring it to run `main` and watch the `posts` and
 `templates` directory.
 
+## Run python3 http server
+
+Then in another terminal, run the following:
+
 ```
-./server.sh
+$ cd out
+$ python3 -m http.server
 ```
 
-This script runs `live-server` in the `out` directory. The <localhost:8080>
+This runs a web server that serves the output of site generation.
+
+## Run livereload
+
+Then, in yet another terminal, run the following:
+
+```
+$ cd out
+$ livereload
+```
 
 [ghcid]: https://github.com/ndmitchell/ghcid
-[live-server]: https://github.com/tapio/live-server
+[livereload]: https://www.npmjs.com/package/livereload
+[livereload chrome plugin]: https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei
 
 License
 -------
