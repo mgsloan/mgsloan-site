@@ -59,11 +59,13 @@ body
 
 header
 {
-  font-family: {{serif-font}}, serif;
+  font-family: {{header-font}}, sans;
   margin-left: 1em;
   margin-right: 1em;
-  overflow: hidden;
+  overflow: visible;
   text-align: center;
+  /* NOTE: this used to be only for min-width: 802px */
+  margin-bottom: 1.0em;
 }
 
 h1
@@ -92,10 +94,21 @@ header > h2
 
 header > p
 {
-  color: #c35;
   padding-top: 0.5em;
   padding-bottom: 0.9em;
   margin-bottom: 0;
+}
+
+header > hr.hairline
+{
+  margin-top: 0.5em;
+}
+
+hr.hairline
+{
+  border: none;
+  border-bottom: 1px solid #c35;
+  transform: scale(1.4, 0.5);
 }
 
 /* The headings may contain manually inserted line breaks for a more balanced
@@ -498,7 +511,6 @@ nav a
   header
   {
     margin-top: 1.4em;
-    margin-bottom: 1.4em;
   }
 }
 
