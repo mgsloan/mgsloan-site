@@ -26,12 +26,10 @@ body
   background-color: #fffef8;
   /* border-top: 0.5em solid #c35; */
   padding-top: 0.2em;
-  color: #456;
+  color: rgba(0,0,0,0.85);
   font-family: {{body-font}}, sans-serif;
-  /* Firefox applies ligatures automatically when they are available, but Chrome
-   * needs to be told explicitly. */
   font-feature-settings: 'liga', 'kern';
-  line-height: 1.4em;
+  line-height: 1.6;
 }
 
 #content, #teaser, #footer
@@ -149,18 +147,7 @@ h3 > a
 
 abbr, .smcp
 {
-  /* Use the both the caps-to-small-caps (c2sc) opentype feature, and small
-   * normal lower case to small caps (smcp). This means that the text will
-   * render in all small caps if opentype features are supported, or in its
-   * original casing if they are not. I prefer to fall back to the original
-   * casing instead of all caps, because all caps are too shouty. For acronyms
-   * the original caps are still all caps, but for most .smcp things they are
-   * not. */
-  font-feature-settings: 'smcp', 'c2sc';
-
-  /* Note: Enabling letter spacing breaks small caps in Blink before version
-   * 48. I fixed it in https://crrev.com/1416603005 which will go mainstream
-   * with Chrome 48. */
+  font-family: "Alegreya Sans SC";
   letter-spacing: 0.1em;
 }
 
@@ -176,11 +163,7 @@ abbr
 
 .run-in
 {
-  /* Use the 'smcp' feature instead of font-variant: small-caps, because not all
-   * browsers will select the true small-caps with font-variant. For the run-in
-   * it is fine if the fallback is to do nothing special at all. */
-  font-feature-settings: 'smcp';
-
+  font-family: "Alegreya Sans SC";
   /* Use a bit more modest letter spacing here than for .smcp. */
   letter-spacing: 0.05em;
 }
@@ -248,6 +231,9 @@ ul, ol
 li
 {
   margin-left: 1em;
+  margin-bottom: 1em;
+  /* Top padding is handled by p within the li */
+  /* padding-top: 0.4em */
 }
 
 li:before
@@ -260,6 +246,10 @@ li:before
 ul > li:before
 {
   content: '•';
+  font-weight: bold;
+  transform: scale(2);
+  position: relative;
+  top: -0.15em;
 }
 
 ol > li:before
@@ -267,6 +257,11 @@ ol > li:before
   content: counter(ol, decimal);
   counter-increment: ol;
   font-weight: bold;
+}
+
+li > p:first-child
+{
+  display: inline;
 }
 
 table

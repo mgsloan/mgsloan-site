@@ -160,11 +160,10 @@ main = do
           if yearString == "2018"
             then "2018"
             else "2018-" ++ yearString
-        , Template.stringField "body-font" "Roboto"
-        , Template.stringField "serif-font" "Merriweather"
-        -- , Template.stringField "header-font" "'Indie Flower'"
+        , Template.stringField "body-font" "'Alegreya Sans'"
         , Template.stringField "header-font" "'Playfair Display'"
-        , Template.stringField "mono-font" "'Roboto Mono'"
+        , Template.stringField "serif-font" "Alegreya"
+        , Template.stringField "mono-font" "Inconsolata"
         , fmap Template.TemplateValue templates
         ]
       config        = Config { outDir   = "out/"
