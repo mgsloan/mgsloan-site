@@ -53,6 +53,14 @@ body
 #content
 {
   padding-top: 0;
+  /* If the content is less than one full page, make it at least a pagefull. This
+   * makes the footer always be at the bottom even for short pages, and it looks
+   * better flush with the bottom of the page. This also means the reader always
+   * needs to scroll to see the footer (not sure if that's good or bad).
+   */
+  min-height: -moz-available;
+  min-height: -webkit-fill-available;
+  min-height: fill-available;
 }
 
 header
