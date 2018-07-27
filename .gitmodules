@@ -1,0 +1,3 @@
+[submodule "mgsloan-posts"]
+	path = mgsloan-posts
+	url = git://github.com/mgsloan/mgsloan-posts.git
