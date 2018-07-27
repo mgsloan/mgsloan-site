@@ -119,4 +119,4 @@ SA][cc] licence. For the font license details, see the readme in the fonts
 directory.
 
 [gplv3]: https://gnu.org/licenses/gpl.html
-[cc]:    https://creativecommons.org/licenses/by-sa/3.0/
+[cc]:    https://creativecommons.org/licenses/by-sa/4.0/
