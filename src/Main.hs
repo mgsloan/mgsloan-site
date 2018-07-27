@@ -52,7 +52,10 @@ readPost fname = fmap makePost $ readFile fname
 
 -- Reads and renders all posts in the given directory.
 readPosts :: FilePath -> IO [P.Post]
-readPosts = mapFilesIf ((== ".md") . takeExtension) readPost
+readPosts = mapFilesIf (\fp -> isMarkdown fp && isn'tLicense fp) readPost
+  where
+    isMarkdown = (== ".md") . takeExtension
+    isn'tLicense = (/= "license.md") . takeFileName
 
 -- Holds the output directory and input image directory.
 data Config = Config { outDir   :: FilePath
