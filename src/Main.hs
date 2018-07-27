@@ -112,23 +112,26 @@ writePage url pageContext template config = do
   writeFile destFile html
   compressFile destFile
 
+{-
 writeIndex :: Template.Context -> Template.Template -> Config -> IO ()
 writeIndex globalContext = writePage "/" context
   where context = M.unions [ Template.stringField "title"     "mgsloan's blog"
                            , Template.stringField "bold-font" "true"
                            , Template.stringField "light"     "true"
                            , globalContext ]
+-}
 
 -- Given the archive template and the global context, writes the archive page
 -- to the destination directory.
 writeArchive :: Template.Context -> Template.Template -> [P.Post] -> Config -> IO ()
-writeArchive globalContext template posts = writePage "/writing" context template
+writeArchive globalContext template posts = writePage "/" context template
   where context = M.unions [ P.archiveContext posts
                            , Template.stringField "title"     "Writing by mgsloan"
                            , Template.stringField "bold-font" "true"
                            , Template.stringField "archive"   "true"
                            , globalContext ]
 
+{-
 -- Given the contact template and the global context, writes the contact page
 -- to the destination directory.
 writeContact :: Template.Context -> Template.Template -> Config -> IO ()
@@ -136,6 +139,7 @@ writeContact globalContext = writePage "/contact" context
   where context = M.unions [ Template.stringField "title" "Contact mgsloan"
                            , Template.stringField "light" "true"
                            , globalContext ]
+-}
 
 -- Given the feed template and list of posts, writes an atom feed.
 writeFeed :: Template.Template -> [P.Post] -> Config -> IO ()
@@ -193,8 +197,10 @@ main = do
   writePosts (templates M.! "post.html") globalContext posts config
 
   putStrLn "Writing other pages..."
+  {-
   writeIndex   globalContext (templates M.! "index.html")   config
   writeContact globalContext (templates M.! "contact.html") config
+  -}
   writeArchive globalContext (templates M.! "archive.html") posts config
 
   copyFile "assets/favicon.png"          "out/favicon.png"
