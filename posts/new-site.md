@@ -1,6 +1,6 @@
 ---
 title: A new website!
-date: 2018-07-26
+date: 2018-07-27
 synopsis: A brief introduction to my new site, future plans, and how it works.
 run-in: Publishing posts on the internet
 ---
@@ -13,7 +13,7 @@ ideas, tutorials, musings, and articles.
 My past attempt at blogging fizzled more than 6 years ago, and I only wrote a
 few posts. I kept a single html page around for posterity. You can visit it
 [here](/wordpress) if you are curious to see what I was writing about back then.
-Mostly some fun ideas using Template Haskell :)
+Mostly some fun ideas using Template Haskell :-)
 
 I'm planning to have a wide variety in the degree of effort and tone in my
 posts. The point of this is to reduce the obstacles to posting things up. I
@@ -63,10 +63,12 @@ generator instead of using hakyll. This is not really a criticism of hakyll - I
 didn't really give it a fair shot. I find this custom site generator approach to
 be quite nice, though.
 
-Ruud kindly gave me the go-ahead to base my site off of his. I've tweaked the
+Ruud kindly gave me the go-ahead to base my site off of his. You can check out
+the [code on github](https://github.com/mgsloan/mgsloan-site). I've tweaked the
 layout a fair bit, and I'm use [google fonts][] instead of the beautiful and
 proprietary [calluna][] family of fonts. Particularly due to the fonts, I think
-[his site][Ruud van Asseldonk's site] is substantially better looking than mine :)
+[his site][Ruud van Asseldonk's site] is substantially better looking than mine
+:-)
 
 [Haskell]: https://haskell.org
 [hakyll]: https://jaspervdj.be/hakyll
