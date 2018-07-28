@@ -109,9 +109,12 @@ splitAbbrs :: String -> [AbbrWord]
 splitAbbrs = filter (not . abbrNull) . foldr prepend [MixedCaps ""] . splitWords
   where prepend _    []              = error "unreachable"
         prepend word (AllCaps   str : more) = MixedCaps word : AllCaps str : more
-        prepend word (MixedCaps str : more) = if (all isAsciiUpper word) && (length word >= 2)
-                                            then AllCaps word : MixedCaps str : more
-                                            else MixedCaps (word ++ str) : more
+        prepend word (MixedCaps str : more)
+            | wordIsAbbr = AllCaps word : MixedCaps str : more
+            | otherwise = MixedCaps (word ++ str) : more
+          where wordIsAbbr =
+                  ((all isAsciiUpper word) && (length word >= 2)) ||
+                  word `elem` extraAbbrs
 
 -- Inserts <abbr> tags around words in all-caps.
 makeAbbrs :: String -> String
@@ -123,6 +126,10 @@ makeAbbrs = Html.renderTags . Html.concatMapTagsWhere isBodyTag mkAbbr . Html.pa
         -- Only insert <abbr> tags in things that are typesetted (text content),
         -- but not in monospace content (code).
         isBodyTag t = (needsFont t) && (not $ Html.isCode t)
+
+-- | Extra strings to wrap in Abbr.
+extraAbbrs :: [String]
+extraAbbrs = []
 
 -- Returns whether Calluna or Inconsolata has a glyph for the character. This
 -- function is optimistic, so getGlyphName still fails for unexpected glyphs.
