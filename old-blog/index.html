@@ -1,0 +1,919 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0033)http://www.mgsloan.com/wordpress/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US"><head profile="http://gmpg.org/xfn/11"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>[| mgsloan quasi-quoted |]</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen">
+<meta name="generator" content="WordPress 3.3.1">
+	<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+</head>
+<body class="home blog">
+
+<div id="site">
+<div id="wrap">
+<div id="header">
+	<h1><a href="/wordpress" title="[| mgsloan quasi-quoted |]" name="top">[| mgsloan quasi-quoted |]</a> <span></span></h1>
+</div>
+<div id="blog">
+	<div id="content" class="widecolumn">
+
+      <div style="border: 5px solid #a55; color: #a55; font-size: 200%;">
+        NOTE: This is my old wordpress blog, snapshotted as a single html page, preserved for posterity.
+        <br/><br/>
+        See <a href="http://www.mgsloan.com/">mgsloan.com</a> for my new blog.
+     </div>
+
+
+			<div id="post-335" class="post-335 post type-post status-publish format-standard hentry category-haskell category-th">
+									<h2>Template Haskell Lens Idea</h2>
+					<div class="postmeta">
+						<span class="comments">0 <span>comments</span></span>						<span class="author">By mgsloan</span>
+						<span class="categories">Filed in Haskell, TH</span>
+						<span class="tags"></span>
+						<span class="timestamp">April 12th, 2012 @ 5:28 pm</span>
+					</div>
+
+				<div class="entry">
+					<p>I recently ran into the problem of fclabels partial lenses being partial in both directions.  This was not a critical problem, but it was annoying that a type had to be Maybe when the code would never use the “Nothing” constructor.  There’s a new, interesting lens library called <a href="http://brandon.si/code/yall/">YALL</a>, that inspired me to think about it a bit more.  There are <a href="http://www.reddit.com/r/haskell/comments/rujzs/do_we_need_yet_another_lens_library/c48ses3">some potential issues</a> with this perspective – it is no longer clear that there are algebraic laws that hold.  I think that there’s a possibility that this might be resolved by adding some restrictions on the relationship between <b>m</b> and <b>w</b>.  Anyway, the point is that lens library design is not a settled issue.</p>
+<p>I’m interested in trying another way of using template haskell to express lenses:</p>
+<pre>fstLens = [mkLens| \(a, _) -&gt; a |]
+
+sndLens = [mkLens| \(_, b) -&gt; b |]
+
+fooLens = [mkLens| \(Just (a, b)) -&gt; [a, b] |]
+
+tupListIso = [mkIso| \(a, b) = [a, b] |]
+</pre>
+<p>Each lens is specified in terms of the implementation of its <b>get</b>.  We can do this because construction literals are bidirectional – they can be used for pattern matching.  The right hand side of the lenses need to have variables in every position in order to preserve the lens laws (otherwise a portion of the <b>set</b> would not be reflected in the corresponding <b>get</b>).</p>
+<p>The partiality of the lenses depends on whether any of the types used have multiple constructors – whether a match could fail.  If the constructor on the left could fail, then the lens is partial in both directions (so <b>fooLens</b> is fully partial).  If the constructor on the right could fail, then the lens is at least partial in the setter.</p>
+<p>We can also bring in function application:</p>
+<pre>plusOneLens = lens (+1) (const . subtract 1)
+
+switchPlus = [mkLens| \(a, b) -&gt; (plusOneLens b, plusOneLens a) |]
+</pre>
+<p>This is moving towards a full-blown embedded language for creating bidirectional transformations!  It’d be interesting to target the feature set of the <a href="http://www.seas.upenn.edu/~harmony/">Boomerang</a> project, which has a particular focus on doing bidirectional operations with text, and can do so with regexes as well as more powerful grammars.  I’ve already written a TH quasi-quoter that allows you to use regular expressions in patterns and expressions: <a href="http://hackage.haskell.org/package/rex">rex</a>.  Incorporating this into lens generation, by adding cannonical serialization to regexes, would be really cool.</p>
+<p>I think that this way of working with lenses / isos would really help to popularize their use in Haskell.  While <a href="http://hackage.haskell.org/package/fclabels">fclabels</a> is quite excellent, the Applicative instance is not a very clear way to construct lenses on compound structures.  This is even nice for the typical lenses, as it avoids using typical records in the first place.  Though, <b>foobar_</b> can be nicer than <b>get foobar</b>.</p>
+				</div>
+							</div>
+
+
+
+			<div id="post-228" class="post-228 post type-post status-publish format-standard hentry category-haskell category-th">
+									<h2>Plumbers Pointless?</h2>
+					<div class="postmeta">
+						<span class="comments">0 <span>comments</span></span>						<span class="author">By mgsloan</span>
+						<span class="categories">Filed in Haskell, TH</span>
+						<span class="tags"></span>
+						<span class="timestamp">April 12th, 2012 @ 4:10 pm</span>
+					</div>
+
+				<div class="entry">
+					<p>In my last post, I attempted to sarcastically / humorously introduce the <a href="http://hackage.haskell.org/package/plumbers">plumbers</a> package.  I probably should have saved it for April 1st, but I also don’t think the idea is merit-less.  I don’t think that becoming a plumbers expert, adept at large plumbing pipelines, would be a very good way to spend your time, just as I don’t think becoming a pointfree combinator ninja is very valuable (though fun!).</p>
+<p>The use-case that this is practical / useful for is the very same that the arrow combinators are usually applied to.  Let’s face it – most of the time you’re dealing with the <b>(-&gt;)</b> arrow, and use <b>(***)</b>, <b>(&amp;&amp;&amp;)</b>, <b>first</b>, and <b>second</b>.  Perhaps I should take a look at making plumber operators for arrows / categories – I have an inkling that they may be useful for lenses.</p>
+<p>Anyway, with this particular arrows use case, you don’t really see long chains of arrow combinators – just one at a time, applied to one or two functions.  This is the use case I see for the provided plumbers – just take two functions, and apply, bind, or pair the results after giving them the auxiliary parameters.  I don’t think that this is too awful – the types of the auxiliary parameters will often make it pretty clear what’s going on.  The plumbing operator, when the code reader is skimming code, indicates “combine these two functions, providing these arguments as an environment to their execution”.  They can look closer at the plumber to see what’s <em>really</em> happening to the arguments.</p>
+<p>The <a href="http://www.reddit.com/r/haskell/comments/r0l53/pointless_plumbers/">reddit discussion</a> was interesting!</p>
+<p>Particularly interesting is <a href="http://www.reddit.com/r/haskell/comments/r0l53/pointless_plumbers/c41yosq">this</a> discussion between ehird and cdsmith.  I probably should have commented with my thoughts, but I figured out my opinion a few days later, and it was a little bit longwinded, so I figured a followup post was in order.  Thank you, ehird, for defending the idea!  Thank you cdsmith, for your well informed assessment!</p>
+<p>One thing that’s brought up is the “implementation issues” of this idea.  I’d like to note that the binary size overhead of including all of these can be mitigated by using <a href="http://hackage.haskell.org/packages/archive/plumbers/0.0.2/doc/html/Control-Plumbers-TH.html">Control.Plumbers.TH</a>.<b>implementPlumber</b>.  There may be some overhead from invoking the function – I should really add INLINE pragmas!</p>
+<p>The other criticism is that “Point-free style is useful when it helps you think at a higher level of abstraction… but I can’t see how these operators lead to higher levels of abstraction.”  This is a fair point, however, holding these operators to the standard of “must increase abstraction”.  I would argue that points-free form does not significantly increase abstraction, or as ehird points out, “They’re an abstraction of various forms of composition and pipe plumbing. It’s not like not using point-free style lets you escape the plumbing; you just write it in another way.”</p>
+<pre>f1 = g . h
+f2 x = g (h x)
+
+-- Manipulating with f1:
+--             f1 $ 1 / 3
+-- (Subst)  g . h $ 1 / 3
+-- (inline) g ( h ( 1 / 3 ) )
+
+-- Manipulating with f2:
+--           f2                $ 1 / 3
+-- (inline)  (\x -&gt; g (h x))     1 / 3
+-- (apply)          g (h (1 / 3))
+</pre>
+<p>If we view things from a value-centric perspective, then our code during evaluation will be full of lambdas, in order to bind these values to names.  If we instead view them with a function-centric perspective, we often end up being able to reason about code by direct substitution without beta reduction.  I think that the plumbing operators lead to similar substitutional reasoning, and can be good when used tastefully.  The question is whether the rules of plumbers (which I should probably write down in a post) are too confusing for reasoning to be effective.  It’s quite possible!</p>
+<p>The plumbers experiment led me to think about language support for such “classes of identifiers”.  It’d be interesting to support using a context free grammar to specify all of the operators / names that something can generate.  Then, importing this would import the infinite set of operators generated.  They need to be context free, such that we can test for the intersection of identifiers when re-exporting such generators.  This would be a huge change to Haskell, for not very much pay off – but interesting to think about!</p>
+				</div>
+							</div>
+
+
+
+			<div id="post-219" class="post-219 post type-post status-publish format-standard hentry category-uncategorized">
+									<h2>More Compatible Packages</h2>
+					<div class="postmeta">
+						<span class="comments"><1 <span>comment</span></span>						<span class="author">By mgsloan</span>
+						<span class="categories">Filed in Uncategorized</span>
+						<span class="tags"></span>
+						<span class="timestamp">April 10th, 2012 @ 4:59 pm</span>
+					</div>
+
+				<div class="entry">
+					<h2> The Problem </h2>
+<p>A few days ago, Greg Weber posted <a href="http://www.yesodweb.com/blog/2012/04/cabal-meta">“Transcending to dependency heaven”</a>, describing the latest version of Cabal, which sounds like it will far improve the reliability of installing a set of Cabal packages.  However, this is not entirely satisfying – we still have the fundamental problems aptly described in a <a href="http://cdsmith.wordpress.com/2011/01/16/haskells-own-dll-hell/">blog post</a> by cdsmith.</p>
+<p>Short summaries of some potential solutions:</p>
+<ul>
+<li> Improve Cabal’s dependency resolution behavior. </li>
+<li> Isolate build environments. </li>
+<li> <a href="http://www.yesodweb.com/blog/2012/03/cabal-nirvana">“Create lists of blessed package-sets”</a> </li>
+<li> Reduce external dependencies by identifying internal dependencies (imports that do not leak into the interface).  This has the downside of potentially shipping multiple versions of libraries in your linked binary. </li>
+</ul>
+<p>These solutions all help, but ignore the fundamental nature of the diamond dependency issue.</p>
+<p>We need to look closely at the purpose and effects of these upper-bound constraints.  The intention is to prevent targeting a new, unforeseen version of an API, which may change the interfaces and behaviors.  By addressing this with the <a href="http://www.haskell.org/haskellwiki/Package_versioning_policy">PVP</a>‘s “proper”, conservative upper bounds, we usually avoid the problem of spewing a bunch of compilation errors.</p>
+<p>However, this comes at a huge cost: packages that would otherwise compile and function do not.  An upgrade to one module that many of your dependencies depend on can cause many packages to need corresponding updates.  This causes a portion of package maintenance to be proportional to the sum of the major-version velocity of the dependencies.  This is awful, particularly as small, task-specific packages are encouraged.  The last thing we want to do in such an eco-system is to disincentivize adding dependencies and splitting packages.</p>
+<p><br></p>
+<h2> Solution: Delta Modules </h2>
+<p>My proposed solution is to create a convention for versioning the modules in packages in order to enable far less conservative package version upper bounds.  The idea is that Haskell has enough ways to create synonyms for named things, that for most superficial changes, the old API can be expressed straightforwardly in terms of the new.</p>
+<p>For example, <b>data</b> and <b>newtype</b> declarations can be renamed and have parameters re-ordered by <b>type</b> synonyms.  Functions can be proxied by declaring functions of the form “old = new” and, in the case of parameter re-ordering, “old x y z = new z y x”.</p>
+<p>Many basic refactorings are analogous to plain Haskell code.  When applying the refactorings that a module represents, you are just inlining all of the elements of the module necessary to </p>
+<p>It makes sense to package up these synonyms in a module that shares a namespace prefix with the module being versioned.  For example, the <a href="http://www.mgsloan.com/wordpress/hackage.haskell.org/package/diagrams-lib">diagrams-lib package</a> would export <b>Diagrams.Prelude.V0_5</b> as well as <b>Diagrams.Prelude</b>.  From here on, such modules will be referred to as “delta modules”, as they express the change in API from version to version.</p>
+<p><br></p>
+<h2> Example </h2>
+<p>Let’s say we are going through a number of iterations of a library.  For familiarity sake, I chose a well-known, simple module: <a href="http://www.haskell.org/ghc/docs/latest/html/libraries/base/Data-Maybe.html"> Data.Maybe</a></p>
+<p><br></p>
+<h4> Version 0.0.1 </h4>
+<pre>module Data.Maybe ( Maybe(Nothing, Just), maybe ) where
+
+data Maybe a = Nothing | Just a
+
+-- Note: this intentionally deviates from the typical definition
+maybe _ d Nothing  = d
+maybe f _ (Just x) = f x
+</pre>
+<p>In order for people to start using the delta API, preemptively avoiding breaking changes, there needs to be a delta module that straight re-exports the current version:</p>
+<pre>module Data.Maybe.V0_0_1
+  ( Maybe(Nothing, Just), maybe ) where
+import Data.Maybe
+</pre>
+<p><br></p>
+<h4> Version 0.0.2 </h4>
+<p>What happens if we add <b>isNothing</b> / <b>isJust</b> to this?</p>
+<pre>module Data.Maybe ( Maybe(Nothing, Just), maybe, isNothing, isJust ) where
+
+-- Note: this intentionally deviates from the typical definition
+maybe _ d Nothing  = d
+maybe f _ (Just x) = f x
+
+isNothing = maybe (const False) True
+isJust    = maybe (const True)  False
+</pre>
+<p>This is a benign API change – just additions of top-level declarations.  It seems a bit silly to add a module just to remove elements of the API..  However, this is still a change that matters, as it could break compilation for modules that <b>import Data.Maybe</b> without <a href="http://www.haskell.org/haskellwiki/Import_modules_properly"> qualification or explicit imports</a>.  Ideally other changes would be bundled in, as it seems a bit silly to introduce a module just to remove elements of the API, but at least the delta module is very straightforward to create.</p>
+<p>Since <b>Data.Maybe.V0_0_1</b> only differs from the latest version by hiding some exports, we just add a <a href="http://www.haskell.org/ghc/docs/7.4.1/html/users_guide/pragmas.html#id3186470">WARNING pragma</a>, and import the latest delta module.  </p>
+<pre>module Data.Maybe.V0_0_1 {-# WARNING "V0_0_1 is not the latest version" #-}
+  ( Maybe(Nothing, Just), maybe ) where
+import Data.Maybe.V0_0_2
+</pre>
+<pre>module Data.Maybe.V0_0_2
+  ( Maybe(Nothing, Just), maybe, isNothing, isJust ) where
+import Data.Maybe
+</pre>
+<p>Making the import structure into a linked-list of delta modules allows us to avoid modification of any but the most recent.  This works, because if a module exported the correct API when it was the most recent modification of the latest API, then it ought to still be correct, if all subsequent delta modules are too.</p>
+<p><br></p>
+<h4> Version 0.1.0 </h4>
+<p>Now a breaking change!  We’ll fix the definition of <b>maybe</b> to correspond to the typical API:</p>
+<pre>module Data.Maybe ( Maybe(Nothing, Just), maybe, isNothing, isJust ) where
+
+-- Note: this intentionally deviates from the typical definition
+maybe d _ Nothing  = d
+maybe _ f (Just x) = f x
+
+isNothing = maybe True  (const False)
+isJust    = maybe False (const True)
+</pre>
+<p>Here’s what the delta modules would look like:</p>
+<pre>module Data.Maybe.V0_0_2 {-# WARNING "V0_0_2 is not the latest version" #-}
+  ( Maybe(Nothing, Just), maybe, isNothing, isJust ) where
+import Data.Maybe.V0_1_0
+  ( Maybe(Nothing, Just),        isNothing, isJust )
+
+import qualified Data.Maybe.V0_1_0 as N
+
+maybe a b = N.maybe b a
+</pre>
+<pre>module Data.Maybe.V0_1_0
+  ( Maybe(Nothing, Just), maybe, isNothing, isJust ) where
+import Data.Maybe
+</pre>
+<p>This is because the actual ADT is only necessary to provide pattern matching – <b>mkConstructor</b> functions are used to avoid writing newtype wrappers everywhere.</p>
+<p><br></p>
+<h4> Version 1.0.0 </h4>
+<p>Now a <em>really</em> breaking change!  As I will explain later, setting the version number to “1.0.0″ should be a strong indication that the pre-1.0.0 delta modules are removed or imperfect.</p>
+<pre>module Data.Maybe ( Maybe, maybe, mkJust, mkNothing, isNothing, isJust ) where
+
+import Data.Either ( Either(..), either )
+
+type Maybe a = Either () a
+
+maybe d f = either (const d) f
+
+mkJust    = Left ()
+mkNothing = Right
+
+-- Other definitions as before
+isNothing = maybe True  (const False)
+isJust    = maybe False (const True)
+</pre>
+<pre>module Data.Maybe.V0_1_0 {-# WARNING "V0_0_2 is not the latest version" #-}
+  ( Maybe(Nothing, Just), maybe, isNothing, isJust ) where
+import Data.Maybe.V1_0_0
+  (                       maybe, isNothing, isJust )
+
+import qualified Data.Maybe.V1_0_0 as N
+
+{#- DEPRECATED The old representation of Maybe may require version-coercion #-}
+data Maybe a = Nothing | Just a
+
+instance View (Maybe a) (N.Maybe a) where
+  view Nothing   = Left ()
+  view (Just  x) = Left x
+
+instance View (N.Maybe a) (Maybe a) where
+  view (Left  _) = Nothing
+  view (Right x) = Just x
+
+maybe d f = N.maybe d f . view
+isNothing = N.isNothing . view
+isJust    = N.isJust    . view
+</pre>
+<pre>module Data.Maybe.V1_0_0
+  ( module Data.Maybe ) where
+import Data.Maybe
+</pre>
+<p>This is pretty ugly.  We had to export new versions of all of the functions that mention the data type.  Worse yet, libraries that target version 0.1.0 or before won’t be directly compatible with those that come after.  Also, this code is referencing a class which is a (likely intentionally) <a href="http://hackage.haskell.org/trac/ghc/wiki/ViewPatterns#ImplicitViewFunctions">unimplemented portion of ViewPatterns</a>.  The <b>View</b> class looks like this:</p>
+<pre>class View a b where
+  view :: a -&gt; b
+</pre>
+<p>These view functions are then used to do pattern matching on the ADT.  </p>
+<pre>type Iso a b = (View a b, View b a)
+</pre>
+<p><b>Iso</b> is a <a href="http://blog.omega-prime.co.uk/?p=127">constraint synonym</a> that I made up for when we have views to and from a datatype.  Ideally these would form an isomorphism, though that may not be possible for all data types.</p>
+<p>Thankfully, if we know that we will be versioning our code in this way, we can pre-empt this in the design:</p>
+<pre>module A (ThingADT(..), Thing, mkThing) where
+
+data ThingADT = ThingADT Double
+
+newtype Thing = Thing ThingADT
+
+-- One for each constructor
+mkThing = ThingADT . Thing
+
+instance View ThingADT Thing    where { view (ThingADT x) = x            }
+instance View Thing    ThingADT where { view           x  = (ThingADT x) }
+</pre>
+<p>Then, we write all of the library functions in terms of the <b>Thing</b> wrapper.  This is a slightly cumbersome solution, but view patterns, particularly implicit ones, really paper over the syntactic impact.  <b>mkConstructor</b> functions are used to avoid writing newtype wrappers everywhere.</p>
+<p>In the event that implicit view patterns are added to the language, it may also make sense to add a shorthand for composing <b>view</b> with a constructor, eg, <b>#ThingADT :: Double -&gt; Thing</b>.  I’m not sure what a good constructor pre / postfix would be – for better or worse, Haskell is rather short on spare symbol sequences for use by language extension.</p>
+<p><br></p>
+<h2> Class Instances </h2>
+<p>Thinking in terms of what we can and can’t change with delta modules can guide API design, in order to avoid irrevocable decisions.  What kinds of things might we change in class instances?</p>
+<ul>
+<li> <em>Remove an instance.</em>  This is supported pretty directly – just define the instance in the delta module for the last version for which it should exist.<br>
+<br></li>
+<li> <em>Add an instance.</em>  This is also supported, though has caveats regarding orphan instances, described below.<br>
+<br></li>
+<li> <em>Remove a constraint from an instance.</em>  This is fine, as reducing the constraints on usage still allow it to be used in all of the same places.<br>
+<br></li>
+<li> <em>Add a constraint to an instance.</em>  This is a breaking change, because it causes these constraints to need to be added to anything that uses that particular instance.  This isn’t really resolvable, but I’ll talk about a mitigating strategy later.<br>
+<br></li>
+</ul>
+<p><br></p>
+<h3> Adopt the Orphans! </h3>
+<p>Classes and their instances are a leaky part of the delta module abstraction.  Namely, instances are inherited from their imports, so instances in the latest version will come with the older delta modules.  This would be entirely fine if we could be sure that none of our client packages define or import instances that conflict with these added instances.</p>
+<p>In <a href="http://lukepalmer.wordpress.com/2009/01/25/a-world-without-orphans/">“A world without orphans”</a>, Luke Palmer points out that eliminating orphans allows us to create super-class instances.  This is one way to be able to rework hierarchies (such as the numeric hierarchy) – retrospectively split classes while maintaining compatibility.</p>
+<p>Orphan instances can be nice – in the comments of the above post, augustss makes a good point that newtype wrappers are clunky.  The problem of course is that orphan instances leads to the same benefits and problems as multiple inheritance: “what do we do about conflicting instances?”</p>
+<p>The problem with the newtype solution is that it composes badly, making it difficult to write two independent newtypes over a datatype, and easily combine the instances of the two.  This can be done, I think, but only if both newtypes are designed to support it (by deriving instances of Control.Newtype and having each newtype be an existential wrapper like <b>forall a. Newtype a Concrete =&gt; a</b>).  But then it has to be done with a data declaration and not a newtype!  I wonder how the performance compares?</p>
+<p>So, in lieu of a good, composable solution with newtype(s), the only solution is to attempt to control and mitigate the problems orphan instances cause.  I have an idea of one way to do this:</p>
+<p>Create an orphan “adoption” registry, and allow package authors to endorse canonical instances.  The dependent packages can then annotate with a pragma that proudly declares cannonicality, suppressing the warning.  Then, when GHC is compiling a non-canonical instance of something that has one, it will throw an error unless “-XNonCannonicalOrphans” is supplied.  When building with cabal, using this flag will need to coincide with appropriate markings on the package, so that it’s clear to all users that it exports non-canonical orphan instances.</p>
+<p>The main important aspect of this orphan registry is that the packages involved do not need to be imported, and therefore do not expand the package’s dependencies.</p>
+<p><br></p>
+<h2> Classes </h2>
+<p>As things stand, almost no change to a typeclass can be properly expressed in a delta module.  The good news is, with <a href="http://blog.omega-prime.co.uk/?p=127">Constraint Kinds</a>, we are much closer!  Constraint Kinds allows us to create constraint synonyms, giving one name for many type-classes.</p>
+<p>However, one thing is missing: the ability to declare instances for these synonyms.  This feature is necessary for any of the changes to classes to be properly versioned.  There’d be a couple caveats of these type-synonym instances:</p>
+<ul>
+<li> Not all constraint synonyms can be instantiated – a synonym might mention a class twice.  This could be resolved by “sub-instances” – instances within the typing context of an instance, disambiguating which methods are associated<br>
+<br></li>
+<li> Instances that are part of the type synonym, and declared in the same module, should override anything that would be generated by default.  This is discussed in the <a href="http://hackage.haskell.org/trac/ghc/wiki/DefaultSuperclassInstances#Thedesignoftheopt-outmechanism"> Default Superclass Instances Proposal</a>.  I like my proposal better, because as <a href="http://www.haskell.org/haskellwiki/Superclass_defaults">this wiki page</a>, points out that it’s strange to conflate defaults and instances of class aliases.<br>
+<br></li>
+</ul>
+<p>One nice thing about instances of constraint groups is that they let you consolidate a bunch of instances that need the same constraint context.  Once we have this, we can start thinking about having delta modules deal with type classes.  Here are all of the things I can imagine you wanting to do to a type class:</p>
+<ul>
+<li> <em>Rename a type class.</em> This is a simple application of a type constraint synonym.<br>
+<br></li>
+<li> <em>Split a type class.</em> This is an extremely important feature, as it allows for re-organization of typeclass hierarchies. We split a typeclass by having the older version module export the union of the two classes which provide the operations.<br>
+<br></li>
+<li> <em>Combine type classes.</em>  This works too – just define the two type classes in the latest version, and use a constraint synonym to merge them.<br>
+<br></li>
+<li> <em>Change method API.</em>  If breaking instance declarations, but not usages is acceptable, then a function declaration works for this.  It’s possible to not break instance declarations, but it’s not very pretty – you’d need to preserve both operations in the class, named different things.  Each would have default implementations in terms of the other, and the methods would be selectively re-exported.<br>
+<br></li>
+<li> <em>Remove a super-class constraint.</em>  This is quite doable – just use a type constraint in the delta modules to specify that the removed superclass is now required for a type of that name.  This would have been the way of expressing the refactoring for the <a href="http://www.haskell.org/ghc/docs/7.4.1/html/users_guide/release-7-4-1.html">GHC 7.4.1 removal of Eq / Show superclasses of Num</a>.<br>
+<br></li>
+<li> <em>Add a super-class constraint.</em>  This is pretty much out of the picture if the superclass constraint is being added for use in default methods.  If it isn’t, then a constraint synonym in the most-recent API would work.<br>
+<br></li>
+</ul>
+<p>Adding / removing a method is pretty much the same thing as combining / splitting a typeclass.  Except in order to effectively remove a method while supporting backwards compatibility, you do still need to implement it.</p>
+<p><br></p>
+<h3> Method Defaulting – Enter TH </h3>
+<p>Above, I make the claim that it’s strange to conflate the defalting mechanism with the typing mechanism.  Superclass constraints give us a couple things that constraint synonyms cannot emulate:</p>
+<p><br></p>
+<ul>
+<li> Default implementations in terms of the super-classes.<br>
+<br></li>
+<li> Algebraic properties in terms of operations that are certainly defined, given a single class constraint.<br>
+<br></li>
+<li> Allows you to re-use the same symbol for a particular concept.  With <a href="http://www.haskell.org/haskellwiki/Functor-Applicative-Monad_Proposal"> Functor / Applicative / Monad</a>, which should have been more hierarchicalized than it currently is, we have the following sets of identical functions: [pure, return], [fmap, liftM, map, liftA], [(&lt;*&gt;), ap], and [concat, join]. </li>
+</ul>
+<p><br></p>
+<p>These are very nice things to have!  However, I think that this “feature” is a rather ugly side of typeclasses, for the following reasons:</p>
+<p><br></p>
+<ul>
+<li> They are irrevocable API decisions.<br>
+<br></li>
+<li> The defaulting is such that there is no good way of checking if the user’s definitions form an appropriately minimal subset of the class.<br>
+<br></li>
+<li> I feel like algebraic properties specified about a constraint group synonym, are equally weighty as algebraic properties specified about a class. This is particularly the case when all of the classes come from the same package.<br>
+<br></li>
+<li> There are many use cases for more elaborate defaulting.  For example, it might be interesting to be able to  define an instance for a class when given a function of a particular type.<br>
+<br></li>
+<li> People often face the “only one instance per class per datatype” problem, which isn’t really a problem, as the solution is to wrap it in a newtype!  Introducing superclass instances (like in in <a href="http://hackage.haskell.org/trac/ghc/wiki/DefaultSuperclassInstances">Default Superclass Instances</a>) brings about the “only one instance per superclass per class” problem.  This is even worse, though, as there is no way to specialize on a per-data-type basis.<br>
+<br></li>
+</ul>
+<p><br></p>
+<p>Doing things this way is fundamentally different, in that there is not a mandatory implication from one class to another.  Instead, we use distinctly named derivers, which allow you to generate some or all definitions for an instance.  Since this deriver is picked by the user, and can take additional parameters, the user has full control.</p>
+<p>There’s a package of template haskell <a href="http://hackage.haskell.org/package/derive-2.5.5">derive</a>rs for datatypes.  I haven’t seen a full system for doing default instances from other instances, but James Cook’s <a href="http://hackage.haskell.org/packages/archive/flexible-defaults/0.0.0.3/doc/html/Language-Haskell-TH-FlexibleDefaults.html">flexible defaults</a> package looks like an interesting take on this problem.</p>
+<p>The deriver package has a DSL for expressing derivations, and ideally defaulting derivations would also be expressible with instance syntax.  I’d like to see them look very similar to Luke Palmer’s superclass instance example:</p>
+<pre>class Additive a where
+    (^+^) :: a -&gt; a -&gt; a
+
+$(mkDeriver "AdditiveNum" [d|
+instance (Num a) =&gt; Additive a where
+    (^+^) = (+)
+|] )
+</pre>
+<p>Possible now:</p>
+<pre>data Foo = -- ...
+
+instance Num Foo where { ... }
+
+$(deriveAdditiveNum)
+</pre>
+<p>The following would require <a href="http://www.haskell.org/ghc/docs/7.0.2/html/users_guide/template-haskell.html#th-quasiquotation">quasi-quoters</a> to be updated in order to be particularly convenient for defining stuff within instances (providing information about the context).  The type of this part of the quasi-quoter would be <b>Dec -&gt; String -&gt; [Dec]</b>, where the first <b>Dec</b> is the declaration of the class that has been accumulated so-far.</p>
+<pre>instance Num Foo where { ... }
+
+instance Additive Foo where
+  $[deriveFrom| Num Foo]
+</pre>
+<p>I think that Template Haskell is a very good way to experiment with better ways of defaulting class methods.  Ideally something like this would make it into the language, so that most code doesn’t have any mysterious invocations of TH.  But first, exploring the design space, and figuring out out what’s actually needed, is best.</p>
+<p>It would also be quite straightforward to use Template Haskell to implement instances for type-synonym constraints.  It would <b>reify</b> each class involved in the synonym, and extract which methods are needed by each, and then split all of the provided definitions into the appropriate instances.</p>
+<p><!--<br />
+type Monadic = (Functor, Applicative, Monad)</p>
+<p>Then, "instance Monadic" would need to define all of the functions in the three classes.  Currently this isn't supported - but writing a Template Haskell Quasiquoter that splits an instance of this form out into instances<br />
+shouldn't actually be very difficult.<br />
+--></p>
+<p><br></p>
+<h2> Applying Deltas </h2>
+<p>This idea not only greatly reduces the pain of Cabal upper-bounds, but also removes much of the pain of changing identifier names.  This is an excellent property – less resistance to package evolution leads to better packages.</p>
+<p>Even with these delta modules, there is still quite a bit of resistance to API evolution, partially due to package users needing to modify their code when the API changes.  The main point of this post is that we do not need a special format to store refactorings – Haskell is currently very close to being able to encode a powerful subset of the refactorings associated with API changes.</p>
+<p>These refactoring modules do not need to be restricted to expressing the difference in API between versions.  It’s also imaginable that you could represent the relationship between similarly designed libraries!</p>
+<p><br></p>
+<h2> Generating Deltas </h2>
+<p>Writing these delta modules by hand wouldn’t be <em>that</em> difficult, but Haskellers are notoriously lazy. &nbsp;We need a tool that attempts to infer what definitions the delta module needs, and inform the user of the remaining difference.</p>
+<p>In order to appropriately mark the definitions that cannot be generated / defined, I’d like to request an additional <a href="http://www.haskell.org/ghc/docs/latest/html/users_guide/pragmas.html">pragma</a> in the vein of WARNING / DEPRECATED – ERROR. &nbsp;This would allow for a place to put the boilerplate error of “Automated generation of delta function ‘foobar’ infeasible”. &nbsp;Usually the definition of functions marked with ERROR would <b>undefined</b> as their definition.</p>
+<p><br></p>
+<h2> Interactions with existing infrastructure </h2>
+<p><br></p>
+<h3> Cabal </h3>
+<p>Cabal packages work as before, and support this use case very nicely, via the “hs-source-dirs:” field, which can be set to “src, vers”.  This lets you have two module hierarchies, one for your normal code, and one for your delta modules.  This avoids delta modules cluttering up the source tree, making it feel less manageable.  It’s particularly nice when changing the namespaces of modules, as only the directory structure of “vers” needs to be mucked up.</p>
+<p>Another directory that could conceivably exist is “imps”, in order to reduce the ugliness of having versioned imports everywhere.  Instead of <b>import Data.Maybe.V1_0_0</b> you’d <b>import Imp.Data.Maybe</b>, which would re-export the appropriate version.</p>
+<p><br></p>
+<h3> Haddock </h3>
+<p>It would be nice if Haddock were aware of this convention, and intelligently hid all of the “Vn_n_n” form modules from the index page.  The docs for the delta modules would still be accessible, but only through a link from the haddock of the module that they version.</p>
+<p>It would also be nice if orphan instances were prominently specified and distinguished in the Haddock, particularly with clear indication of cannonical / non-cannonical annotations if there are orphan registries.  I wouldn’t mind if there was a complete listing of orphans on the contents page of the package, after the exported namespaces, as somewhat of a “wall of shame”.</p>
+<p><br></p>
+<h3> The PVP </h3>
+<p>One question is “What happens to the <a href="http://www.haskell.org/haskellwiki/Package_versioning_policy">PVP</a>?”.  The PVP page on the wiki specifies the semantic meaning of the version numbers.</p>
+<p>The PVP is compatible with this idea, however, we now have an additional class of change:</p>
+<ol>
+<li> A.B.C.<em><b>D</b></em> – Non-API-changing edits  </li>
+<li> A.B.<em><b>C</b>.0</em> – Addition of entity </li>
+<li> <em><b>A.B</b>.0.0</em> – Removal or breaking modification of API </li>
+<li> <b> (New) </b>          – Probable removal or breakage of delta modules </li>
+</ol>
+<p>Since we are introducing a new type of breakage we are presented with a couple of choices:</p>
+<ol>
+<li> <em><b>A</b>.0.0.0</em> – Increment <b>A</b> on delta module breakage.  The problem with this is that the library designer no longer has control over the major-major version number.<br>
+<br></li>
+<li> Another option is to stick with the <em>intention</em> of the PVP.  Now that we have versioned modules, most removal / breaking changes are equivalent to adding a definition.
+<ol>
+<li> A.B.C.<em><b>D</b></em> – Non-API-changing edits </li>
+<li> A.B.<em><b>C</b>.0</em> – Modification of API </li>
+<li> <em><b>A.B</b>.0.0</em> – Probable removal or breakage of delta modules </li>
+</ol>
+<p>The problem with this is that it deviates from the traditional PVP when we export the “latest version” modules.  A middle-ground that seems reasonable to me is to use this convention when forcing usage of the versioned modules, and use the prior otherwise.<br>
+<br></p></li>
+<li> Another alternative is to make version numbers use five numbers, to accommodate every type of change, and still provide two digits of major version.  I think this is too verbose.<br>
+<br></li>
+</ol>
+<p>Determining what constitutes a breaking delta module change, and what to do with the delta modules, is entirely up to the library designer.  A strict library designer would increment, and deprecate old delta modules every time the behavior of old functionality is substantially changed.</p>
+<p><br></p>
+<h3> Relationship to the ECT </h3>
+<p>When looking at the PVP page in order to write this post, I noticed that this idea has been <a href="http://www.haskell.org/haskellwiki/The_Monad.Reader/Issue2/EternalCompatibilityInTheory">brought up before</a>, in a somewhat different form.  I had forgotten about this page, but I read this page several years ago, when first learning Haskell, so the seed for this idea was likely planted then.  Clearly, this didn’t catch on, maybe because the cure was uglier than the ailment.  It seems like the growth and maturation of Hackage in the seven years since Issue 2 of the Monad Reader necessitates implementation of this, or similar schemes.  </p>
+<p>Differences between my proposal and the ECT:</p>
+<p><br></p>
+<ul>
+<li> The ECT recommends duplicating module code in the event of a behavioral change (see “Bugs, Behaviour, Semantics” section).  I don’t think there’s a point to having the package contain two copies of the code.  Not only will their data structures be incompatible, but the semantic link between the old and new version will be lost.<br>
+<br> </li>
+<li> The ECT doesn’t address incompatible classes / mention problems related to orphans.<br>
+<br> </li>
+<li> The ECT doesn’t address incompatible ADTs.<br>
+<br> </li>
+<li> The ECT uses “DEPRECATED” for old versions.  This will break packages that have “-Werror” TODO: Check this!<br>
+<br> </li>
+<li> This is a pretty long post, at least by my standards!  However, if you remove all of the contextualization / speculation text of this post, the description of this idea is fairly concise.  The policy document for the “PVP’” or “MCP” (More Compatible Packages) will ideally be concise and understandable, to encourage adoption.<br>
+<br> </li>
+</ul>
+<p><br></p>
+<h2> Conclusion </h2>
+<p>I realize that this is quite a multi-faceted proposal – changing package conventions, majorly altering typeclasses.  However, all of these things are just refinements to attempt make delta packages feasible.</p>
+<p>I think that this solution is quite attractive, because it can easily be tried now.  With community consensus and buy in, something like this can also be incrementally deployed, without breaking any packages, and already cover <em>most</em> API changes.</p>
+<p>I hope that this use case will help encourage and motivate resolution of the orphan instances problem.  The class / module system is very close to being able to express API-deltas in a way that compose properly, and that is a very sweet, Haskell-ey quality.</p>
+				</div>
+							</div>
+
+
+
+			<div id="post-148" class="post-148 post type-post status-publish format-standard hentry category-haskell category-th">
+									<h2>Pointless Plumbers</h2>
+					<div class="postmeta">
+						<span class="comments">0 <span>comments</span></span>						<span class="author">By mgsloan</span>
+						<span class="categories">Filed in Haskell, TH</span>
+						<span class="tags"></span>
+						<span class="timestamp">March 16th, 2012 @ 8:09 pm</span>
+					</div>
+
+				<div class="entry">
+					<p>From <a href="http://www.reddit.com/r/haskell/comments/q9ph6/composing_functions_with_adicity_greater_than_one/">this</a> recent reddit comment thread / blog post, I had the idea of generalizing the operators found in the <a href="http://hackage.haskell.org/packages/archive/composition/1.0.1.0/doc/html/Data-Composition.html">Data.Composition</a> package.  This could be a bad idea, as it encourages code to have larger, scarier operators, but I think I decided upon some interesting conventions.  These operators can be used to construct <a href="http://www.haskell.org/haskellwiki/Pointfree">pointfree</a> expressions in a somewhat more straightforward, less nested fashion.</p>
+<p>I brought it up on <a href="http://www.haskell.org/haskellwiki/IRC_channel"> #haskell </a> to mixed reactions.  The following quote is now <a href="http://contemplatecode.blogspot.com/2012/03/haskell-weekly-news-issue-218.html">attributed</a> to me via lambdabot by ski:</p>
+<pre> (on pointless black magic)
+&lt;mgsloan&gt; welcome to excessively pointless plumbing operators :)
+&lt;byorgey&gt; mgsloan: that's... terrifying
+&lt;DanBurton&gt; you should put it on hackage
+</pre>
+<p>So I did!  I cleaned up the library and put it <a href="http://hackage.haskell.org/package/plumbers">on hackage</a>.  Here’s how it works:</p>
+<h2> Pair Plumber </h2>
+<pre>(*^) ::       r'  -&gt;       r''  -&gt;  a     -&gt; (r', r'')
+(*&lt;) :: (a -&gt; r') -&gt;       r''  -&gt;  a     -&gt; (r', r'')
+(*&gt;) ::       r'  -&gt; (a -&gt; r'') -&gt;  a     -&gt; (r', r'')
+(*&amp;) :: (a -&gt; r') -&gt; (a -&gt; r'') -&gt;  a     -&gt; (r', r'')
+(**) :: (a -&gt; r') -&gt; (b -&gt; r'') -&gt; (a, b) -&gt; (r', r'')
+
+(*^) f1 f2  _     = (f1,   f2  )  -- Drop parameter
+(*&lt;) f1 f2  a     = (f1 a, f2  )  -- Left gets parameter
+(*&gt;) f1 f2  a     = (f1,   f2 a)  -- Right gets parameter
+(*&amp;) f1 f2  a     = (f1 a, f2 a)  -- Both get parameter
+(**) f1 f2 (a, b) = (f1 a, f2 b)  -- Split tuple
+</pre>
+<p>The first two parameters are functions which are applied to the remainder of the parameters, in a fashion requested by the symbol after the initial “*”.  These symbols specify a routing – which functions each parameter is routed to – leading to the name “plumbing”.  Here’s one downside of this naming scheme – (**) is Floating exponentiation in the Prelude – so modules that fully import this library need to import the Prelude hiding (**).</p>
+<p>If these operators were generalized to arrows, which they could be, then (**) would be the same thing as (***), and (*&amp;) would be the same thing as (&amp;&amp;&amp;). So what’s (***) being used for now?</p>
+<pre>(***) :: (a -&gt; c -&gt; r') -&gt; (b -&gt; d -&gt; r'') -&gt; (a, b) -&gt; (c, d) -&gt; (r', r'')
+(***) f1 f2 (a, b) (c, d) = (f1 a c, f2 b d)
+</pre>
+<p>It’s the generic zip on tuples!  The additional ‘*’ indicates that an additional tuple parameter should be split between the functions.  This version of (***) is something I often want, and have added it, under the name zipT (though bizip is probably a better name), to project-specific utilities libraries a few times.</p>
+<p>If this is the extended version of (Control.Arrow.***), then what’s the extended version of (Control.Arrow.&amp;&amp;&amp;)?</p>
+<pre>(*&amp;&amp;) :: (a -&gt; b -&gt; r') -&gt; (a -&gt; b -&gt; r'') -&gt; a -&gt; b -&gt; (r', r'')
+(*&amp;&amp;) f1 f2 a b = (f1 a b, f2 a b)
+</pre>
+<p>We can also mix &amp; and * in a couple ways:</p>
+<pre>(*&amp;*) :: (a -&gt; b -&gt; r') -&gt; (a -&gt; c -&gt; r'') -&gt; a -&gt; (b, c) -&gt; (r', r'')
+(*&amp;*) f1 f2 a (b, c) = (f1 a b, f2 a c)
+
+(**&amp;) :: (a -&gt; c -&gt; r') -&gt; (b -&gt; c -&gt; r'') -&gt; (a, b) -&gt; c -&gt; (r', r'')
+(**&amp;) f1 f2 (a, b) c = (f1 a c, f2 b c)
+</pre>
+<p>Never before seen combinators, as far as I know, but I think they are reasonably understandable with a little practice.  In theory, I’m defining a naming scheme for an infinite set of related function definitions.  In practice, only plumbers up to arity 3 are defined by default – you can invoke a Template Haskell function to generate more if you need them.</p>
+<h3> Examples </h3>
+<p>Some examples of using these functions:</p>
+<pre>λ&gt; (+1) ** (*2) $ (9, 4)
+(10, 8)
+
+λ&gt; ((++) *** (++)) ("a", "b") (" forest", "ird")
+("a forest", "bird")
+
+λ&gt; (maybe (:[]) replicate *&lt;&amp; length) (Just 3) "hi"
+(["hi","hi","hi"], 2)
+</pre>
+<pre>(11, 20) == ((+1) *&amp;   (*2)) 10
+
+(12, 20) == ((+)  *&amp;&amp;  (*) ) 10 2
+
+(13, 20) == ((+)  *&amp;&gt;&lt; (*) ) 10 2 3
+
+(12, 30) == ((+)  *&amp;&lt;&gt; (*) ) 10 2 3
+
+(12, 40) == ((+)  *&amp;&lt;  (*4)) 10 2
+
+(14, 20) == ((+4) *&amp;&gt;  (*) ) 10 2
+</pre>
+<h2> Composition Plumber </h2>
+<pre>($^) :: (     r'' -&gt; r') -&gt;       r''  -&gt; a      -&gt; r'  -- Drop parameter
+($&lt;) :: (a -&gt; r'' -&gt; r') -&gt;       r''  -&gt; a      -&gt; r'  -- Left gets parameter
+($&gt;) :: (     r'' -&gt; r') -&gt; (a -&gt; r'') -&gt; a      -&gt; r'  -- Right gets parameter
+($&amp;) :: (a -&gt; r'' -&gt; r') -&gt; (a -&gt; r'') -&gt; a      -&gt; r'  -- Both get parameter
+($*) :: (a -&gt; r'' -&gt; r') -&gt; (b -&gt; r'') -&gt; (a, b) -&gt; r'  -- Split tuple
+
+($&gt;) f1 f2  _     = f1   $ f2    -- Drop parameter
+($&lt;) f1 f2  a     = f1 a $ f2    -- Left gets parameter
+($&gt;) f1 f2  a     = f1   $ f2 a  -- Right gets parameter
+($&amp;) f1 f2  a     = f1 a $ f2 a  -- Both get parameter
+($*) f1 f2 (a, b) = f1 a $ f2 b  -- Split tuple
+</pre>
+<p>The definitions are exactly the same as in the pair plumber, except using the ($) function to combine the arguments, instead of (,).  Ordinary composition is "$&gt;" in this system, as it combines the functions using "$", and provides the parameter to the function on the right.  All of these operators have "infixr 9" priority, to match with ordinary composition.</p>
+<pre>λ&gt; :t (.)
+(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+
+λ&gt; :t ($&gt;)
+($&gt;) ::  r'' -&gt; r') -&gt; (a -&gt; r'') -&gt; a -&gt;r'
+</pre>
+<p><br></p>
+<h3> PNorm Example </h3>
+<p>Let's say we want to implement the <a href="http://en.wikipedia.org/wiki/Lp_space">p-norm</a> on lists.  This works by exponentiating each element of a list by p, summing, and exponentiating by 1 / p.  Standard, cartesian distance is the p = 2 norm.</p>
+<pre>pow = flip (Prelude.**)
+pnorm p xs = pow (1 / p) (sum (map (pow p) xs))
+</pre>
+<p>Here's how I'd normally write this function:</p>
+<pre>pnorm p = pow (1 / p) . sum . map (pow p)
+</pre>
+<p>But now we can go further!  Without descending into the full points-free madness of </p>
+<pre>pnorm = ap ((.) . pow . (1 /)) ((sum .) . map . pow)
+</pre>
+<p>We can instead use the plumbers variant.</p>
+<pre>pnorm = (pow $&gt; (1/)) $&amp;&gt; sum $&gt;&gt; map $&gt; pow
+
+--      (pow $&gt; (1/)) $&amp;&gt;(sum $&gt;&gt; map($&gt; pow))  -- infixr 9
+
+--            /----^  p xs        ^    /---^
+--            |       | |         |    |
+--            \-------| \------=--/    |
+--                    |                |
+--                    \---------=------/
+</pre>
+<p>The ascii illustration shows how the plumbing operators route the parameters.  The arrow for xs may be a little confusing.  That parameter is being provided to the result of (map $&gt; pow), because ($&gt;&gt;) is expecting something that uses two arguments (apart from functions) and ($&gt;) = (.) only has one.</p>
+<p>What if we want to normalize according to a given pnorm?</p>
+<pre>pnormalized = (flip map $&lt;&gt; (/)) $&gt;&amp; pnorm
+
+--                    ^          p xs  ^ ^
+--                    |          | |   | |
+--                    \--=-------|-\---/ |
+--                               |       |
+--                               \-------/
+</pre>
+<p><br></p>
+<h3> List Cons Example </h3>
+<p>On IRC, ski suggested that such higher-arity combinators should be systematically decomposable into the others, and gave the following points-free example:</p>
+<pre>list3 :: a -&gt; a -&gt; a -&gt; [a]
+list3 = ($ []) .:: (.: (:)) .: (.: (:)) . (.: (:)) id
+
+(.:) :: (b -&gt; c) -&gt; (a -&gt; a1 -&gt; b) -&gt; a -&gt; a1 -&gt; c
+(.:) = (.) . (.)
+
+(.::) :: (b -&gt; c) -&gt; (a -&gt; a1 -&gt; a2 -&gt; b) -&gt; a -&gt; a1 -&gt; a2 -&gt; c
+(.::) = (.) . (.) . (.)
+</pre>
+<p>Instead of figuring out how to express these combinators in terms of the others (I might give some of these definitions / identities in a later post - omitted for brevity and convenience), I gave an equivalent definition of list3 using plumbers:</p>
+<pre>list3 = ((:) $&lt;&gt;&gt; (:) $&lt;&gt; (:[]))
+
+(.:) = ($&gt;&gt;)
+(.::) = ($&gt;&gt;&gt;)
+</pre>
+<p>Generalizing this to four is easy.  However, the module doesn't currently export arity greater than three, as the compile time was longish, and the binary was 1MB.  If you want these operators, you can use Control.Plumbers.TH to request their implementation.</p>
+<pre>list4 = ((:) $&lt;&gt;&gt;&gt; (:) $&lt;&gt;&gt; (:) $&lt;&gt; (:[]))
+</pre>
+<p>Turns out that the expression of this can get even more uniform:</p>
+<pre>&lt;ski&gt; (could you separate `(:[])' into a `(:)' and a `[]', for uniformity ?)
+&lt;mgsloan&gt; ((:) $&lt;&gt;&gt;&gt; (:) $&lt;&gt;&gt; (:) $&lt;&gt; (:) $&lt; []) 1 2 3 4
+***ski claps
+</pre>
+<p>Something interesting to observe is that when using plumbing operators on cons, just by changing the operators involved, we can get out any 3-list that consists of the passed parameters:</p>
+<pre>λ&gt; ((:) $&lt;&gt;&gt; (:) $&lt;&gt; (:[])) 1 2 3
+[1,2,3]
+
+λ&gt; ((:) $&lt;&gt;&gt; (:) $&lt;&gt; (:) $&lt; []) 1 2 3
+[1,2,3]
+
+λ&gt; ((:) $&lt;&gt;&gt; (:) $&gt;&lt; (:) $&lt; []) 1 2 3
+[1,3,2]
+
+λ&gt; ((:) $&gt;&lt;&gt; (:) $&gt;&lt; (:) $&lt; []) 1 2 3
+[2,3,1]
+
+λ&gt; ((:) $&gt;&gt;&lt; (:) $&gt;&lt; (:) $&lt; []) 1 2 3
+[3,2,1]
+
+λ&gt; ((:) $&gt;&amp;^ (:) $&gt;&lt; (:) $&lt; []) 1 2 3
+[2,2,1]
+
+λ&gt; ((:) $&amp;&gt;^ (:) $&gt;&lt; (:) $&lt; []) 1 2 3
+[1,2,1]
+</pre>
+<h2> Implementation </h2>
+<p>Here's the main body of Control.Plumbers:</p>
+<pre>$(implementPlumbers compositionSpec)
+
+infixr 9 $^, $&lt;, $&gt;, $&amp;, $*
+infixr 9 $^^, $^&lt;, $^&gt;, $^&amp;, $^*, $&lt;^, $&lt;&lt;, $&lt;&gt;, $&lt;&amp;, $&lt;*, $&gt;^, $&gt;&lt;, $&gt;&gt;, $&gt;&amp;, $&gt;*, $&amp;^, $&amp;&lt;, $&amp;&gt;, $&amp;&amp;, $&amp;*, $*^, $*&lt;, $*&gt;, $*&amp;, $**
+infixr 9 $^^^, $^^&lt;, $^^&gt;, $^^&amp;, $^^*, $^&lt;^, $^&lt;&lt;, $^&lt;&gt;, $^&lt;&amp;, $^&lt;*, $^&gt;^, $^&gt;&lt;, $^&gt;&gt;, $^&gt;&amp;, $^&gt;*, $^&amp;^, $^&amp;&lt;, $^&amp;&gt;, $^&amp;&amp;, $^&amp;*, $^*^, $^*&lt;, $^*&gt;, $^*&amp;, $^**, $&lt;^^, $&lt;^&lt;, $&lt;^&gt;, $&lt;^&amp;, $&lt;^*, $&lt;&lt;^, $&lt;&lt;&lt;, $&lt;&lt;&gt;, $&lt;&lt;&amp;, $&lt;&lt;*, $&lt;&gt;^, $&lt;&gt;&lt;, $&lt;&gt;&gt;, $&lt;&gt;&amp;, $&lt;&gt;*, $&lt;&amp;^, $&lt;&amp;&lt;, $&lt;&amp;&gt;, $&lt;&amp;&amp;, $&lt;&amp;*, $&lt;*^, $&lt;*&lt;, $&lt;*&gt;, $&lt;*&amp;, $&lt;**, $&gt;^^, $&gt;^&lt;, $&gt;^&gt;, $&gt;^&amp;, $&gt;^*, $&gt;&lt;^, $&gt;&lt;&lt;, $&gt;&lt;&gt;, $&gt;&lt;&amp;, $&gt;&lt;*, $&gt;&gt;^, $&gt;&gt;&lt;, $&gt;&gt;&gt;, $&gt;&gt;&amp;, $&gt;&gt;*, $&gt;&amp;^, $&gt;&amp;&lt;, $&gt;&amp;&gt;, $&gt;&amp;&amp;, $&gt;&amp;*, $&gt;*^, $&gt;*&lt;, $&gt;*&gt;, $&gt;*&amp;, $&gt;**, $&amp;^^, $&amp;^&lt;, $&amp;^&gt;, $&amp;^&amp;, $&amp;^*, $&amp;&lt;^, $&amp;&lt;&lt;, $&amp;&lt;&gt;, $&amp;&lt;&amp;, $&amp;&lt;*, $&amp;&gt;^, $&amp;&gt;&lt;, $&amp;&gt;&gt;, $&amp;&gt;&amp;, $&amp;&gt;*, $&amp;&amp;^, $&amp;&amp;&lt;, $&amp;&amp;&gt;, $&amp;&amp;&amp;, $&amp;&amp;*, $&amp;*^, $&amp;*&lt;, $&amp;*&gt;, $&amp;*&amp;, $&amp;**, $*^^, $*^&lt;, $*^&gt;, $*^&amp;, $*^*, $*&lt;^, $*&lt;&lt;, $*&lt;&gt;, $*&lt;&amp;, $*&lt;*, $*&gt;^, $*&gt;&lt;, $*&gt;&gt;, $*&gt;&amp;, $*&gt;*, $*&amp;^, $*&amp;&lt;, $*&amp;&gt;, $*&amp;&amp;, $*&amp;*, $**^, $**&lt;, $**&gt;, $**&amp;, $***
+
+$(implementPlumbers productSpec)
+
+infixr 9 *^, *&lt;, *&gt;, *&amp;, **
+infixr 9 *^^, *^&lt;, *^&gt;, *^&amp;, *^*, *&lt;^, *&lt;&lt;, *&lt;&gt;, *&lt;&amp;, *&lt;*, *&gt;^, *&gt;&lt;, *&gt;&gt;, *&gt;&amp;, *&gt;*, *&amp;^, *&amp;&lt;, *&amp;&gt;, *&amp;&amp;, *&amp;*, **^, **&lt;, **&gt;, **&amp;, ***
+infixr 9 *^^^, *^^&lt;, *^^&gt;, *^^&amp;, *^^*, *^&lt;^, *^&lt;&lt;, *^&lt;&gt;, *^&lt;&amp;, *^&lt;*, *^&gt;^, *^&gt;&lt;, *^&gt;&gt;, *^&gt;&amp;, *^&gt;*, *^&amp;^, *^&amp;&lt;, *^&amp;&gt;, *^&amp;&amp;, *^&amp;*, *^*^, *^*&lt;, *^*&gt;, *^*&amp;, *^**, *&lt;^^, *&lt;^&lt;, *&lt;^&gt;, *&lt;^&amp;, *&lt;^*, *&lt;&lt;^, *&lt;&lt;&lt;, *&lt;&lt;&gt;, *&lt;&lt;&amp;, *&lt;&lt;*, *&lt;&gt;^, *&lt;&gt;&lt;, *&lt;&gt;&gt;, *&lt;&gt;&amp;, *&lt;&gt;*, *&lt;&amp;^, *&lt;&amp;&lt;, *&lt;&amp;&gt;, *&lt;&amp;&amp;, *&lt;&amp;*, *&lt;*^, *&lt;*&lt;, *&lt;*&gt;, *&lt;*&amp;, *&lt;**, *&gt;^^, *&gt;^&lt;, *&gt;^&gt;, *&gt;^&amp;, *&gt;^*, *&gt;&lt;^, *&gt;&lt;&lt;, *&gt;&lt;&gt;, *&gt;&lt;&amp;, *&gt;&lt;*, *&gt;&gt;^, *&gt;&gt;&lt;, *&gt;&gt;&gt;, *&gt;&gt;&amp;, *&gt;&gt;*, *&gt;&amp;^, *&gt;&amp;&lt;, *&gt;&amp;&gt;, *&gt;&amp;&amp;, *&gt;&amp;*, *&gt;*^, *&gt;*&lt;, *&gt;*&gt;, *&gt;*&amp;, *&gt;**, *&amp;^^, *&amp;^&lt;, *&amp;^&gt;, *&amp;^&amp;, *&amp;^*, *&amp;&lt;^, *&amp;&lt;&lt;, *&amp;&lt;&gt;, *&amp;&lt;&amp;, *&amp;&lt;*, *&amp;&gt;^, *&amp;&gt;&lt;, *&amp;&gt;&gt;, *&amp;&gt;&amp;, *&amp;&gt;*, *&amp;&amp;^, *&amp;&amp;&lt;, *&amp;&amp;&gt;, *&amp;&amp;&amp;, *&amp;&amp;*, *&amp;*^, *&amp;*&lt;, *&amp;*&gt;, *&amp;*&amp;, *&amp;**, **^^, **^&lt;, **^&gt;, **^&amp;, **^*, **&lt;^, **&lt;&lt;, **&lt;&gt;, **&lt;&amp;, **&lt;*, **&gt;^, **&gt;&lt;, **&gt;&gt;, **&gt;&amp;, **&gt;*, **&amp;^, **&amp;&lt;, **&amp;&gt;, **&amp;&amp;, **&amp;*, ***^, ***&lt;, ***&gt;, ***&amp;, ****
+</pre>
+<p>$(implementPlumbers ...) invokes a template haskell function which generates all of the function declarations.  All of those "infixr 9" declarations should really be unnecessary - you can't create them with Template Haskell yet.  See <a href="http://hackage.haskell.org/trac/ghc/ticket/1541">this</a> GHC bug - which simonpj recently created a fix for!  Props to him for fixing stuff like that!  Until that fix is included in a GHC release, though, I'll leave these fixity declarations around.</p>
+<p>You can create your own plumbing operators by using the following interface from Control.Plumbers.TH:</p>
+<pre>-- | Specifies all of the information needed to construct type declarations
+--   for the plumber.
+data PlumberTypes = PlumberTypes
+ { leftType   :: Type  -- ^ Type of the left argument's result
+ , rightType  :: Type  -- ^ Type of the right argument's result
+ , resultType :: Type  -- ^ Results type.  This needs to be wrapped in a
+                       --   forall naming all of the utilized type variables.
+ }
+
+-- | A basic set of types, which make r' the left type, and r'' the right type.
+--   The resultType is a forall that introduces these type variables, and has
+--   undefined content.  Therefore any implementation in terms of baseTypes
+--   needs to redefine resultType, as the Forall has undefined as its content.
+baseTypes :: PlumberTypes
+baseTypes = PlumberTypes
+  { leftType   = mkVT "r'"
+  , rightType  = mkVT "r''"
+  , resultType = ForallT [mkVB "r'", mkVB "r''"] [] undefined
+  }
+
+-- | Specifies all of the information needed to implement a plumber.
+data PlumberSpec = PlumberSpec
+ { plumberOpE     :: Exp -&gt; Exp -&gt; Exp  -- ^ The plumber implementation
+ , plumberTypes   :: Maybe PlumberTypes -- ^ Optional explicit type signatures
+ , plumberArities :: [Int]              -- ^ Arities to generate - 26 is max
+ , plumberPrefix  :: String             -- ^ Prefix to use for operator
+ }
+
+-- | Creates a plumber spec for the given prefix for the generated operators,
+--   and the name of the infix operator to use to construct the implementation.
+baseSpec :: String -&gt; String -&gt; PlumberSpec
+baseSpec p e = PlumberSpec
+  { plumberOpE      = (\l r -&gt; InfixE (Just l) (mkVE e) (Just r))
+  , plumberTypes    = Nothing
+  , plumberArities  = [1..3]
+  , plumberPrefix   = p
+  }
+</pre>
+<p>The operators, along with those that are exported by Control.Plumbers.Monad are defined in Control.Plumbers.Specs as follows:</p>
+<pre>productSpec :: PlumberSpec
+productSpec     = (baseSpec "*" "_") { plumberTypes = Just productTypes
+                                     , plumberOpE   = (\l r -&gt; TupE [l, r]) }
+
+compositionSpec :: PlumberSpec
+compositionSpec = (baseSpec "$" "$") { plumberTypes = Just compositionTypes }
+
+lbindSpec  :: PlumberSpec
+lbindSpec  = (baseSpec "&lt;=" "=&lt;&lt;")   { plumberTypes = Just lbindTypes }
+
+rbindSpec  :: PlumberSpec
+rbindSpec  = (baseSpec "&gt;=" "&gt;&gt;=")   { plumberTypes = Just rbindTypes }
+
+frbindSpec :: PlumberSpec
+frbindSpec = (baseSpec "&gt;&gt;" "&gt;&gt;")    { plumberTypes = Just $ fbindTypes False }
+
+flbindSpec :: PlumberSpec
+flbindSpec = (baseSpec "&lt;&lt;" "&lt;&lt;")    { plumberTypes = Just $ fbindTypes True  }
+
+productTypes :: PlumberTypes
+productTypes = addBaseContext $ baseTypes
+  { resultType = tuplesT [leftType baseTypes, rightType baseTypes] }
+
+compositionTypes :: PlumberTypes
+compositionTypes = addBaseContext $ baseTypes
+  { leftType   = arrowsT [rightType baseTypes, leftType baseTypes]
+  , resultType = leftType baseTypes
+  }
+</pre>
+<p>This leaves the library open to others defining plumbing operators following the same conventions.</p>
+<h2> Thoughts? </h2>
+<p>I think that this family of operators has a very memorable and visual notation, and can be put to reasonable.  I'm not set on all of these decisions, though - the notation may change in order to avoid collisions with (**) and the arrow operators.</p>
+<p>What do people think?  Is this awful?  Useful?  Are the symbol choices good?  Other suggestions?  It's something I've itched for often in past times when points-free style reaches slightly beyond its reasonable limit.</p>
+				</div>
+							</div>
+
+
+
+			<div id="post-36" class="post-36 post type-post status-publish format-standard hentry category-haskell category-toyframework">
+									<h2>Visualizing the Haskell AST</h2>
+					<div class="postmeta">
+						<span class="comments">0 <span>comments</span></span>						<span class="author">By mgsloan</span>
+						<span class="categories">Filed in Haskell, ToyFramework</span>
+						<span class="tags"></span>
+						<span class="timestamp">August 22nd, 2011 @ 12:00 pm</span>
+					</div>
+
+				<div class="entry">
+					<p>I’m very enthused by the potential for development environments that offload more of the uninteresting minutae of programming onto the computer.  This has been looked at a lot in the past, by a lot of very smart people.  From structure editors to the visualization of the results of a variety of static analysis techniques, tons of work has been done.  Despite this, these ideas have not yet revolutionized popular development as we know it, with auto-completion being the main widely utilized language-aware convenience tool.</p>
+<p>Much more is known about a Haskell program at compile time than a program written in most of your run-of-the-mill programming languages.  It seems like it would be a good idea to provide more of this information to the programmer, in a live, interactive, context-dependent form.  Examples include depicting the parse tree, types of subexpressions, applicable semantics-preserving transformations, and example-evaluations, right in the programming editor.  Rather than attempting to address this problem directly, on limited free-time, I intend to build a number of toy programs to play with the problem.</p>
+<p>This post is literate Haskell, and so should be copy-pastable into a *.lhs file.  It depends on two libraries that are not yet hackage-ready:</p>
+<p><a href="http://github.com/mgsloan/curve/tree/c621e5e6b405801a69dbeb1e1ecdd4edcef28199">http://github.com/mgsloan/curve</a><br>
+<a href="http://github.com/mgsloan/gtk-toy/tree/354c0225ec6d21c24b7696468b81ddb37aa099f2"> http://github.com/mgsloan/gtk-toy</a></p>
+<p>Gtk-Toy is a wrapper over GTK / Cairo that processes inputs into more Haskell-ey data types and provides a few convenience data structures.  I intend to grow it as I write more “toys” for various purposes.  The ‘Curve’ library and the ToyFramework are partial ports / re-imaginings of the <a href="http://lib2geom.sourceforge.net/">lib2geom</a> project, which I was more active in several years ago.  While working on this library, we established a habit of creating an interactive toy to exercise particular features or to provide a prototying sandbox to play with a new idea.  In order to encourage this development pattern, the infrastructure for toy-making had to be convenient and straight-forward, which is what I attempt to achieve with the Haskell equivalent.</p>
+<p>I’ll intersperse explanation between chunks of code, for some of the trickier bits, but familiarity with Haskell is assumed.  The source on this page is available on github: <a href="http://github.com/mgsloan/ast-vis/blob/master/Main.hs">http://github.com/mgsloan/ast-vis/blob/master/Main.hs</a></p>
+<p>Here’s a script to make trying it out convenient:</p>
+<pre>#!/bin/bash
+
+# Download and locally install curve library
+wget -O curve.tar.gz http://github.com/mgsloan/curve/tarball/c621e5e6b405801a69dbeb1e1ecdd4edcef28199
+tar -xvf curve.tar.gz
+rm curve.tar.gz
+cd mgsloan-curve-c621e5e
+cabal configure --user
+cabal install
+cd ../
+
+# Download and locally install toyframework
+wget -O toyframework.tar.gz http://github.com/mgsloan/toyframework/tarball/354c0225ec6d21c24b7696468b81ddb37aa099f2
+tar -xvf toyframework.tar.gz
+rm toyframework.tar.gz
+cd mgsloan-toyframework-354c022
+cabal configure --user
+cabal install
+cd ../
+
+# Download and run the simple AST-vis
+git clone git@github.com:mgsloan/ast-vis.git
+cd ast-vis
+runhaskell Main.hs</pre>
+<pre>&gt; {-# LANGUAGE FlexibleInstances, TemplateHaskell,
+&gt;              TupleSections, TypeOperators #-}
+&gt;
+&gt; import Control.Arrow ((&amp;&amp;&amp;))
+&gt; import Control.Monad (liftM, zipWithM_)
+&gt; import Data.Curve
+&gt; import Data.Data
+&gt; import Data.Function (on)
+&gt; import Data.Generics.Aliases
+&gt; import Data.Label
+&gt; import Data.List (groupBy)
+&gt; import Data.Maybe
+&gt; import Graphics.ToyFramework
+&gt; import Language.Haskell.Exts.Annotated
+&gt; import qualified Graphics.Rendering.Cairo as C</pre>
+<p>Now that the imports are out of the way, we define the state representation for the AST-visualization toy.  It’s very simple – this is not intended to be anywhere near a real text editor – and so just stores the code in a plain string, the current cursor position, and a cache of the parsed representation.  It also stores the current mouse location, in order to provide vertical scrolling of the AST visualization (as it can easily get quite large).</p>
+<p>Following the data declaration is a Template Haskell <a href="http://hackage.haskell.org/package/fclabels">fclabels</a> invocation which provides lenses for the different fields of the state.  These allow you to construct views on data structures, use them to <strong>get</strong> / <strong>set</strong> / <strong>modify</strong> the projection (often times, and the whole time here, these are just ADT fields).</p>
+<pre>&gt; data State = State
+&gt;   { _code :: String
+&gt;   , _cursor :: Int
+&gt;   , _parsed :: (ParseResult (Decl SrcSpanInfo))
+&gt;   , _mouseCursor :: (Double, Double)
+&gt;   }
+&gt;
+&gt; $(mkLabels [''State])</pre>
+<p>First, a few convenience fclabels-related utilities.  <strong>modM</strong> and <strong>setM</strong> lift <strong>modify</strong> and <strong>set</strong>, respectively to yield monadic values. <strong> lensed </strong> provides a more generic self-modification, allowing the new value for some label to be derived from the projection of another.  <strong> updateParse </strong> is an example usage of lensed which will soon become useful.</p>
+<pre>&gt; modM :: Monad m =&gt; (b :-&gt; a) -&gt; (a -&gt; a) -&gt; b -&gt; m b
+&gt; modM l f = return . modify l f
+&gt;
+&gt; setM :: Monad m =&gt; (b :-&gt; a) -&gt; a -&gt; b -&gt; m b
+&gt; setM l x = return . set l x
+
+&gt; lensed :: (f :-&gt; a) -&gt; (f :-&gt; a') -&gt; (a -&gt; a') -&gt; f -&gt; f
+&gt; lensed l l' f s = set l' (f $ get l s) s
+&gt;
+&gt; updateParse :: State -&gt; State
+&gt; updateParse = lensed code parsed parseDecl</pre>
+<p>This is what most toy main functions will look like – an initial value for the state of the toy, followed by references to the functions which handle events and drawing.  <strong>handleMouse</strong> just sets the <strong>mouseCursor</strong> field of the state to the mouse position.  This will later allow for adjustment of the vertical position of the AST diagram.</p>
+<pre>&gt; main :: IO ()
+&gt; main = runToy $ Toy
+&gt;  { initialState = updateParse $
+&gt;      State "fibs = 0 : 1 : zipWith (+) fibs (tail fibs)" 0 undefined (0, 220)
+&gt;   , mouse   = const $ setM mouseCursor
+&gt;   , key     = handleKey
+&gt;   , display = handleDisplay
+&gt;   , tick    = const return
+&gt;   }</pre>
+<p>Definition of <strong>Toy</strong> from the “toyframework” source code, for reference:</p>
+<pre>data Toy a = Toy
+  { initialState :: a
+
+  -- Given the current keyboard state, perform a single 30ms periodic execution
+  , tick    :: KeyTable                              -&gt; a -&gt; IO a
+
+  -- Display using cairo, based on the canvas size and dirty region.
+  , display :: IPnt -&gt; IRect                         -&gt; a -&gt; C.Render a
+
+  -- Handle mouse presses (first parameter is (pressed?, which)) and motion.
+  , mouse   :: Maybe (Bool, Int) -&gt; (Double, Double) -&gt; a -&gt; IO a
+
+  -- Handle key-presses, first parameter is "pressed?", second is (Left string)
+  -- to give the names of non-character keys, and (Right char) for the rest.
+  , key     :: Bool -&gt; Either String Char            -&gt; a -&gt; IO a
+  }</pre>
+<p>Definition of the key-handler follows.  It handles basic motion, deletion, and insertion.</p>
+<pre>&gt; handleKey :: Bool -&gt; Either [Char] Char -&gt; State -&gt; IO State
+&gt; handleKey True (Right k) (State xs ix p m) =
+&gt;   return . updateParse $ State (pre ++ (k : post)) (ix + 1) p m
+&gt;  where
+&gt;   (pre, post) = splitAt ix xs
+&gt;
+&gt; handleKey True (Left k) s@(State xs ix _ _) = liftM updateParse $ (case k of
+&gt;     "Left"  -&gt; modM cursor (max 0 . subtract 1)
+&gt;     "Right" -&gt; modM cursor (min endPos . (+1))
+&gt;     "Home"  -&gt; setM cursor 0
+&gt;     "End"   -&gt; setM cursor endPos
+&gt;     "BackSpace" -&gt; modM cursor (max 0 . subtract 1)
+&gt;                  . set code (delIx (ix - 1))
+&gt;     "Delete" -&gt; setM code (delIx ix)
+&gt;     "Escape" -&gt; const $ error "The user escaped!"
+&gt;     _ -&gt; return) s
+&gt;   where endPos = length xs
+&gt;         delIx i | (pre, (_:post)) &lt;- splitAt i xs = pre ++ post
+&gt;                 | otherwise = xs
+&gt;
+&gt; handleKey _ _ s = return s</pre>
+<p>The handleDisplay function below draws the text and cursor, followed by either the parse tree or an error message.  <strong> (^+^) </strong> and <strong> (^-^) </strong> are <a href="http://hackage.haskell.org/package/vector-space">vector-space</a> operators, in this case operating on 2D vectors.</p>
+<pre>&gt; handleDisplay :: IPnt -&gt; IRect -&gt; State -&gt; C.Render State
+&gt; handleDisplay _ (tl, br) s@(State txt ix p (_, ypos)) = do
+&gt;   let textPos = (50.5, 100.5)
+&gt;       height = (fromIntegral . snd $ br ^-^ tl) * 0.5
+&gt;       astPos = textPos ^+^ (0.0, ypos - height)
+&gt;
+&gt;   move textPos
+&gt;   C.showText txt
+&gt;
+&gt;   -- Draw the mouse cursor.
+&gt;   C.setLineWidth 1
+&gt;   draw . offset (textPos ^+^ (-1, 0)) . rside 1 . expandR 2
+&gt;        =&lt;&lt; textRect txt 0 ix
+&gt;   C.stroke
+&gt;
+&gt;   case p of
+&gt;     ParseOk decl -&gt; drawSpans astPos txt (getSpans decl)
+&gt;     f@(ParseFailed _ _) -&gt; C.showText (show f)
+&gt;   C.stroke
+&gt;
+&gt;   return s</pre>
+<p>We’re done with all the little support bits!  Only the meat of the problem, the definition of <strong>drawSpans</strong> and <strong>getSpans</strong> remains.  In fact, if we set it to be a no-op, the above code is a functioning single-line text editor.  Not too bad for around 75 SLOC!</p>
+<pre>drawSpans _ _ _ = return ()
+getSpans = undefined</pre>
+<p><a href="text1.png"><img class="alignnone size-full wp-image-69" title="text" src="text1.png" alt="" width="626" height="76"></a></p>
+<p>Next, we display a horizontal-spans based visualization of the abstract syntax tree of the code that the user has typed.  This proceeds in a fairly straightforward manner, as a pipeline of transformations to draw the source-spans as a stack of labelled lines:</p>
+<pre>&gt; drawLabeledLine :: String -&gt; DLine -&gt; C.Render ()
+&gt; drawLabeledLine txt lin = do
+&gt;   draw lin
+&gt;   relText 0.5 (lin `at` 0.5 ^-^ (0, 7)) txt
+&gt;
+&gt; spanLine :: String -&gt; (Int, Int) -&gt; C.Render (Linear Double, Linear Double)
+&gt; spanLine txt (f, t) = liftM (rside 2 . expandR 2) $ textRect txt f (t - 1)
+&gt;
+&gt; drawSpans :: DPoint  -&gt; String -&gt; [((Int, Int), String)] -&gt; C.Render ()
+&gt; drawSpans pos txt =
+&gt;       -- Draw each labeled line, with each subsequent line 15 pixels lower.
+&gt;   (&gt;&gt;= zipWithM_ (\d (lin, name) -&gt; drawLabeledLine name . (`offset` lin)
+&gt;                                   $ pos ^+^ (0, 15) ^* fromIntegral d)
+&gt;                  [0..])
+&gt;
+&gt;       -- Turn each span into an appropriately sized line segment.
+&gt;   . mapM (\(s, n) -&gt; liftM (, n) $ spanLine txt s)
+&gt;
+&gt;       -- Prefer last of all identically-spanned tokens.  Pretty arbitrary.
+&gt;   . map last . groupBy ((==) `on` (\(x,_)-&gt;x))</pre>
+<p><a href="trees.png"><img class="alignnone size-full wp-image-74" title="trees" src="trees.png" alt="" width="625" height="622"></a></p>
+<p>On the left is the diagram resulting from commenting out the line “. map last . groupBy ((==) `on` (\(x,_)-&gt;x))”.  As illustrated, it mostly removes information that the user wouldn’t care about for understanding Haskell’s parse tree.</p>
+<p>So, how did we manage to get the spans from the abstract syntax tree of the declaration? The <a href="http://hackage.haskell.org/packages/archive/haskell-src-exts/1.11.1/doc/html/Language-Haskell-Exts-Syntax.html">haskell-src-exts documentation</a> has tons of ADTs, each representing a different potential members of Haskell’s AST.  In order to collect the source-span information, we could write a function for each type, pattern matching on every single case, recursing into the children of each node.  What saves us from such drudgery is that every ADT has a derived Data and Typable instance!  We will do something much nicer using <a href="http://www.cs.uu.nl/wiki/GenericProgramming/SYB">SYB</a>.</p>
+<p>First off, the <strong>SrcSpanInfo</strong> annotations indicating source location on the AST nodes contain a lot of information we don’t need.  For this simple single-file, single-line case, we discard everything by the column range, and so define a convenient accessor for this.  If you aren’t familiar with arrows, when operating with functions, the <strong>(&amp;&amp;&amp;)</strong> operator has type “(a -&gt; b) -&gt; (a -&gt; c) -&gt; a -&gt; (b, c)”.  In other words, it applies two functions to the same input, and wraps the result in a tuple.</p>
+<pre>&gt; srcSpan :: SrcSpanInfo -&gt; (Int, Int)
+&gt; srcSpan = (srcSpanStartColumn &amp;&amp;&amp; srcSpanEndColumn) . srcInfoSpan</pre>
+<p>Here’s the exciting part! How can we get the source span from an arbitrary data type?  SYB makes it very easy.  <strong> Data.Data.gmapQ </strong> applies a generic function to every field, and yields the results as a list.  <strong> Data.Generics.Aliases.extQ </strong> allows us to use “Just . srcSpan” whenever it can be applied (when the types are compatible), and otherwise “const Nothing”.  So, in whole the following function Just yields a span tuple if the given data type has a <strong>SrcSpanInfo</strong> field.</p>
+<pre>&gt; getSpan :: (Data a) =&gt; a -&gt; Maybe (Int, Int)
+&gt; getSpan = listToMaybe . catMaybes
+&gt;         . gmapQ (const Nothing `extQ` (Just . srcSpan))</pre>
+<p>Next we need to be able to get all of the spans paired up with the names of the constructors.  We use <strong>gmapQ</strong> again, but this time to recursively traverse the entire tree in preorder.  Applying show to the constructor representation yielded by <strong>Data.Data.toConstr</strong> allows us to get the name of the current node in a generic fashion.</p>
+<pre>&gt; getSpans :: (Data a) =&gt; a -&gt; [((Int, Int), String)]
+&gt; getSpans x = maybeToList (fmap (, show $ toConstr x) $ getSpan x)
+&gt;           ++ concat (gmapQ getSpans x)</pre>
+<p>Admittedly, this isn’t very useful yet.  It’s fun to modify code and see the AST change in realtime, and perhaps might even be marginally useful for those writing code manipulating Haskell-Src-Exts ASTs.  What this does do, however, is lay out an initial skeleton for more useful and compact visualizations of the meta-data of Haskell source code, to come in subsequent posts.</p>
+				</div>
+							</div>
+
+
+
+			<div class="nav widecolumn">
+							<div class="left"></div>
+				<div class="right"></div>
+						</div>
+
+
+	</div>
+</div>
+
+	<div id="copy">
+	    <div class="copycolumnwide">
+	    	<p>© Michael Sloan<br><em></em></p>
+	    </div>
+	</div>
+
+</div>
+</div>
+
+
+</body></html>
