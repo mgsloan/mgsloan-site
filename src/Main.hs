@@ -176,7 +176,6 @@ main = do
       config        = Config { outDir   = "out/"
                              , imageDir = "images/compressed/" }
 
-  {-
   outExists <- doesDirectoryExist "out"
   when outExists $ do
     files <- listDirectory "out"
@@ -188,13 +187,17 @@ main = do
       if isFile
         then removeFile fp
         else removeDirectoryRecursive fp
-  -}
 
+  putStrLn "Copying images..."
   createDirectoryIfMissing True  "out/images/"
   copyFiles "images/compressed/" "out/images/"
 
   putStrLn "Writing posts..."
   writePosts (templates M.! "post.html") globalContext posts config
+
+  putStrLn "Copying old blog..."
+  createDirectoryIfMissing True "out/wordpress"
+  copyFiles "old-blog/" "out/wordpress"
 
   putStrLn "Writing other pages..."
   {-
