@@ -170,7 +170,6 @@ main = do
         , Template.stringField "body-font" "'Alegreya Sans'"
         , Template.stringField "header-font" "'Playfair Display'"
         , Template.stringField "serif-font" "Alegreya"
-        , Template.stringField "mono-font" "Inconsolata"
         , fmap Template.TemplateValue templates
         ]
       config        = Config { outDir   = "out/"
