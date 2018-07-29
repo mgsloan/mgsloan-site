@@ -26,7 +26,7 @@ body
   background-color: #fffef8;
   /* border-top: 0.5em solid #c35; */
   padding-top: 0.2em;
-  color: rgba(0,0,0,0.85);
+  color: #456;
   font-family: {{body-font}}, sans-serif;
   font-feature-settings: 'liga', 'kern';
   line-height: 1.6;
