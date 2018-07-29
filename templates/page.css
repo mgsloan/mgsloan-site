@@ -272,6 +272,18 @@ li > p:first-child
   display: inline;
 }
 
+/* Nested list gets indented and uses square bullets. */
+li > ul
+{
+  margin-left: 1em;
+}
+
+li > ul > li:before
+{
+  content: "■";
+  transform: scale(0.5);
+}
+
 table
 {
   border-spacing: 0;
