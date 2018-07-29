@@ -182,11 +182,14 @@ main = do
     print files
     forM_ files $ \file -> do
       let fp = "out" </> file
-      isFile <- doesFileExist fp
-      print (fp, isFile)
-      if isFile
-        then removeFile fp
-        else removeDirectoryRecursive fp
+      if file == ".git"
+        then return ()
+        else do
+          isFile <- doesFileExist fp
+          print (fp, isFile)
+          if isFile
+            then removeFile fp
+            else removeDirectoryRecursive fp
 
   putStrLn "Copying images..."
   createDirectoryIfMissing True  "out/images/"
