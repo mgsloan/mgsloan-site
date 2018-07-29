@@ -129,7 +129,7 @@ makeAbbrs = Html.renderTags . Html.concatMapTagsWhere isBodyTag mkAbbr . Html.pa
 
 -- | Extra strings to wrap in Abbr.
 extraAbbrs :: [String]
-extraAbbrs = []
+extraAbbrs = ["GHCi"]
 
 -- Returns whether Calluna or Inconsolata has a glyph for the character. This
 -- function is optimistic, so getGlyphName still fails for unexpected glyphs.
