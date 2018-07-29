@@ -247,7 +247,7 @@ object files when possible.
       more appealing than the current recommended approach for newcomers, which is
       something like a 30 or 40 minute build process on my machine.
 
-[trac#15454](https://ghc.haskell.org/trac/ghc/ticket/15454)
+[trac#15454]: https://ghc.haskell.org/trac/ghc/ticket/15454
 
 ## Can we go three layers deep? Does time slow down?
 
