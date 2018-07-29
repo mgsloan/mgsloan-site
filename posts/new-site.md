@@ -30,12 +30,14 @@ answer to this would be the [hakyll][] static site generator.
 I didn't want to start from scratch - much more efficient to build off someone
 else's site! Many hakyll sites publish their source code, and there is a [list
 of sites using hakyll][], so I clicked every single one using Hakyll 4 to see
-which ones caught my eye. I noted down quite a few sites, but one that really
-caught my eye was [Ruud van Asseldonk's site][]. It has a lot of the attributes
-I was looking for. In particular, it prioritizes simplicity and keeping the
-download size minimal. It also looks great to me! With the combination of nice
-typography, the particular shade of red highlights, and the background color, it
-really reminded me of [Tufte's books][], which I thoroughly enjoyed.
+which ones caught my eye.
+
+I noted down quite a few sites, but one that really caught my eye was [Ruud van
+Asseldonk's site][]. It has a lot of the attributes I was looking for. In
+particular, it prioritizes simplicity and keeping the download size minimal. It
+also looks great to me! With the combination of nice typography, the particular
+shade of red highlights, and the background color, it really reminded me of
+[Tufte's books][], which I thoroughly enjoyed.
 
 So, I took a look at the [code for Ruud's site][], and was a bit surprised to
 see that it was using a custom static site generator instead of hakyll. At
