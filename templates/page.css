@@ -465,7 +465,10 @@ nav a
 }
 {{end}} /* if archive */
 
-/* Scale font size as the square root of the viewport width. 16px should be the
+/* Note for mgsloan-site: I bumped these down 1px because I thought it looked a
+   bit better with my font picks.
+ *
+ * Scale font size as the square root of the viewport width. 16px should be the
  * minimum font size, for a viewport width of 400px. At 1600px, the content
  * should fill half of the viewport. That means 36em is 800px, so the font size
  * should be 22px.
@@ -480,7 +483,7 @@ nav a
 
 @media(min-width: 470px)
 {
-  html { font-size: 17px; }
+  html { font-size: 16px; }
 
   /* Add some margin to the heading to make it line-wrap nicer. Smaller
    * viewports get more room because the words might not fit otherwise. */
@@ -493,7 +496,7 @@ nav a
 
 @media(min-width: 625px)
 {
-  html { font-size: 18px; }
+  html { font-size: 17px; }
 
  /* Full-width headings have been line-wrapped manually for a more balanced
   * result than what the browser would do. Even though at this size the line
@@ -519,7 +522,7 @@ nav a
  * maximum width (36em). */
 @media(min-width: 802px)
 {
-  html { font-size: 19px; }
+  html { font-size: 18px; }
 
   /* If we are on a large-ish screen anyway, give the header some room to
    * breathe. */
@@ -531,12 +534,12 @@ nav a
 
 @media(min-width: 1003px)
 {
-  html { font-size: 20px; }
+  html { font-size: 19px; }
 }
 
 @media(min-width: 1225px)
 {
-  html { font-size: 21px; }
+  html { font-size: 20px; }
 
   /* At this width it becomes feasible to hang the year headers in the margin. */
   {{if archive}}
@@ -587,9 +590,9 @@ nav a
   }
 }
 
-@media(min-width: 1496px) { html { font-size: 22px; } }
-@media(min-width: 1736px) { html { font-size: 23px; } }
-@media(min-width: 2025px) { html { font-size: 24px; } }
+@media(min-width: 1496px) { html { font-size: 21px; } }
+@media(min-width: 1736px) { html { font-size: 22px; } }
+@media(min-width: 2025px) { html { font-size: 23px; } }
 
 /* At the points where the font size changes, the viewport width in ems makes
  * a jump:
