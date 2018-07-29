@@ -57,8 +57,9 @@ some nice advantages:
   of your code changing? I'm guessing that you need to manually force it to do a
   rebuild, perhaps by deleting the results. Since Ruud's generator simply
   regenerates everything, I don't need to think about this. The generator also
-  starts with the most recent post, which is typically the on you are working
-  on.  So, overall rebuild speed is not a concern for me.
+  starts with the most recent post, which is typically the one you are working
+  on. Since the most recent post updates quickly, the overall rebuild speed is
+  not a concern for me.
 
 Due to these reasons, I decided to base my site off of Ruud's design and
 generator instead of using hakyll. This is not really a criticism of hakyll - I
