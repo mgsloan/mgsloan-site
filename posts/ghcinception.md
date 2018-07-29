@@ -310,10 +310,11 @@ interesting to dig into what's going on there.
 
 On to the question about how much slower this interpreted GHC is. The initial
 layering of having an interpreted GHC compile GHC definitely produces a massive
-slowdown in compilation speed. However, I hypothesize that each subsequent
-nesting would not compound the slowdown, because it's running object code. Even
-if the byte-code interpreter was being used, it's written in C, and so is part
-of the `ghc-stage2` binary, so the slowdown would not compound.
+slowdown in compilation speed. However, I each subsequent nesting would not
+compound the slowdown, because it's running object code. Even if the byte-code
+interpreter was being used, it's not being interpreted (it's written in C).
+Since the actual interpreter implementation is not being interpreted, the
+slowdown would not compound.
 
 So pretty much, GHCi nesting does not follow inception's rules of time slow down
 :-)
