@@ -57,10 +57,10 @@ Loaded GHCi configuration from ./utils/ghc-in-ghci/settings.ghci
 ...
 ```
 
-This does take a while to load, as it's loading 493 modules. On my machine it
+This takes a while to load, since it's loading 493 modules. On my machine it
 clocks in at around 8 minutes. The main reason that this takes so long is that
-it needs to do object code generation. I bet it'd also go a lot faster if I
-wasn't using an unoptimized `devel2` flavour build of `ghc-stage2`. This flavour
+it needs to do object code generation. I bet it'd also load faster if I wasn't
+using an unoptimized `devel2` flavour build of `ghc-stage2`. This flavour
 includes potentially expensive assertions.
 
 Once it has finished loading, you can use GHCi to ask for information as usual!
