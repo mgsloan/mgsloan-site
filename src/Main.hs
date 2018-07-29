@@ -126,7 +126,7 @@ writeIndex globalContext = writePage "/" context
 writeArchive :: Template.Context -> Template.Template -> [P.Post] -> Config -> IO ()
 writeArchive globalContext template posts = writePage "/" context template
   where context = M.unions [ P.archiveContext posts
-                           , Template.stringField "title"     "Writing by mgsloan"
+                           , Template.stringField "title"     "mgsloan"
                            , Template.stringField "bold-font" "true"
                            , Template.stringField "archive"   "true"
                            , globalContext ]
