@@ -39,7 +39,7 @@ reasonable guideline.
 
 This should result in GHCi loading up the code for GHC:
 
-```
+```haskell
 mgsloan@treetop:~/oss/haskell/ghc$ ./utils/ghc-in-ghci/run.sh -fobject-code -j8
 + export _GHC_TOP_DIR=./inplace/lib
 + exec ./inplace/bin/ghc-stage2 --interactive -ghci-script ./utils/ghc-in-ghci/settings.ghci -ghci-script ./utils/ghc-in-ghci/load-main.ghci -odir ./ghci-tmp -hidir ./ghci-tmp +RTS -A128m -RTS -fobject-code
@@ -96,7 +96,7 @@ The ghci script sets up some default arguments:
 :set args --interactive -ghci-script utils/ghc-in-ghci/inner.ghci
 ```
 
-Due to these defaults, all we need to do to get a nested GHCi is run `main`:
+Due to these defaults, just running `main` brings up a nested GHCi:
 
 ```haskell
 λ main
@@ -113,7 +113,7 @@ Prelude [inner]>
 
 There's a different GHCi prompt there because the `inner.ghci` contains
 
-```
+```haskell
 :set prompt "%s [inner]> "
 ```
 
@@ -148,7 +148,7 @@ index ecb404289a..32d7cffaab 100644
 
 Then I do a reload, run the inner GHCi, and try it out:
 
-```
+```haskell
 λ :r
 [ 22 of 493] Compiling Hooks[boot]      ( compiler/main/Hooks.hs-boot, ghci-tmp/Hooks.o-boot )
 ... Omitted about 40 boot modules that load really quickly ...
@@ -209,7 +209,7 @@ After [D4904][] was merged, I realized that `-fobject-code` should have been
 included in `settings.ghci`, and indeed it was in Csongor's version. Without it,
 you get errors like the following:
 
-```
+```haskell
 [ 16 of 493] Compiling State            ( compiler/utils/State.hs, interpreted )
 Error: bytecode compiler can't handle unboxed tuples and sums.
   Possibly due to foreign import/export decls in source.
@@ -256,7 +256,7 @@ object files when possible.
 A natural question is how deep can we go? Can GHCi run inside GHCi inside GHCi?!
 It turns out that it works directly, and the nesting works arbitrarily deep:
 
-```
+```haskell
 Prelude [inner]> :script utils/ghc-in-ghci/settings.ghci
 package flags have changed, resetting and loading new packages...
 Prelude [inner]> :load Main
@@ -292,7 +292,7 @@ I've tried removing the object files and loading GHCi inside GHCi inside GHCi,
 and it took about 9 minutes to load about 170 modules.  At that point, it
 exited with a panic:
 
-```
+```haskell
 <no location info>: error:
     ghc-stage2: panic! (the 'impossible' happened)
   (GHC version 8.7.20180718 for x86_64-unknown-linux):
