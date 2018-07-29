@@ -211,6 +211,7 @@ main = do
   writeArchive globalContext (templates M.! "archive.html") posts config
 
   copyFile "assets/favicon.png"          "out/favicon.png"
+  copyFile "assets/CNAME"                "out/CNAME"
 
   putStrLn "Writing atom feed..."
   writeFeed (templates M.! "feed.xml") posts config
