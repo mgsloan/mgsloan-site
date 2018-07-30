@@ -519,7 +519,8 @@ nav a
 {{end}} /* if archive */
 
 /* Note for mgsloan-site: I bumped these down 1px because I thought it looked a
-   bit better with my font picks.
+ * bit better with my font picks. I also stopped the scaling at 19px because I
+ * think otherwise it's too hard to read.
  *
  * Scale font size as the square root of the viewport width. 16px should be the
  * minimum font size, for a viewport width of 400px. At 1600px, the content
@@ -592,8 +593,6 @@ nav a
 
 @media(min-width: 1225px)
 {
-  html { font-size: 20px; }
-
   /* At this width it becomes feasible to hang the year headers in the margin. */
   {{if archive}}
   .archive h2
@@ -642,10 +641,6 @@ nav a
     margin-right: 3em;
   }
 }
-
-@media(min-width: 1496px) { html { font-size: 21px; } }
-@media(min-width: 1736px) { html { font-size: 22px; } }
-@media(min-width: 2025px) { html { font-size: 23px; } }
 
 /* At the points where the font size changes, the viewport width in ems makes
  * a jump:
