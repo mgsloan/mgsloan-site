@@ -11,7 +11,7 @@ Here's a description of the generator written by Ruud van Asseldonk, from his
 > an aggressive font subsetter. One of my objectives was to cut all the crap
 > (which almost by definition includes javascript) without compromising on
 > design. An average page of my site weighs less than jQuery alone (which
-> jokingly describes itself as “lightweight footprint”). That includes webfonts.
+> describes itself as “lightweight footprint”). That includes webfonts.
 
 I have disabled the clever webfont subsetting support, because instead I am
 using some popular fonts served by google. My reasoning is that for many users
