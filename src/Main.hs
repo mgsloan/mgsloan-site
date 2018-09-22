@@ -22,7 +22,11 @@ import qualified Template
 -- Applies the IO-performing function f to every file in a given directory if
 -- the filename satisfies the predicate p.
 mapFilesIf :: (FilePath -> Bool) -> (FilePath -> IO a) -> FilePath -> IO [a]
-mapFilesIf p f dir = enumerateFiles >>= filterM doesFileExist >>= mapM f
+mapFilesIf p f dir = do
+  dirExists <- doesDirectoryExist dir
+  if dirExists
+    then enumerateFiles >>= filterM doesFileExist >>= mapM f
+    else return []
   -- Prepend the directory names to the names returned by getDirectoryContents.
   where enumerateFiles = fmap (filter p . fmap (dir </>)) $ getDirectoryContents dir
 
@@ -174,6 +178,7 @@ main = do
         ]
       config        = Config { outDir   = "out/"
                              , imageDir = "images/compressed/" }
+      draftConfig = config { outDir = "out-drafts/" }
 
   {-
   outExists <- doesDirectoryExist "out"
@@ -191,6 +196,21 @@ main = do
             then removeFile fp
             else removeDirectoryRecursive fp
   -}
+
+  drafts    <- readPosts     "drafts/"
+  if length drafts < 2
+    then putStrLn "To use drafts mechanism, need more than 2 drafts"
+    else do
+      -- TODO Have separate draft images.  Separate images per post?
+      putStrLn "Copying draft images..."
+      createDirectoryIfMissing True  "out-drafts/images/"
+      copyFiles "images/compressed/" "out-drafts/images/"
+
+      putStrLn "Writing draft posts..."
+      writePosts (templates M.! "post.html") globalContext drafts draftConfig
+
+      putStrLn "Writing draft index..."
+      writeArchive globalContext (templates M.! "archive.html") drafts draftConfig
 
   putStrLn "Copying images..."
   createDirectoryIfMissing True  "out/images/"

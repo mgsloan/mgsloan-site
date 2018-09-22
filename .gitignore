@@ -1,3 +1,6 @@
+# Draft posts
+/drafts/
+
 # Build output
 /.stack-work
 /dist
@@ -16,6 +19,7 @@
 
 # Generated blog output
 /out
+/out-drafts
 
 # Python virtualenv
 /venv
