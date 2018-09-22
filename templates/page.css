@@ -406,6 +406,8 @@ pre:hover::-webkit-scrollbar
 .ch, .st           { color: #d80; } /* Character, string */
 .co                { color: #789; } /* Comment */
 
+{{if img}}
+
 img
 {
   width: 100%;
@@ -422,6 +424,8 @@ img
   margin-top: -0.2em;
   margin-bottom: -0.6em;
 }
+
+{{end}} /* if img */
 
 blockquote
 {

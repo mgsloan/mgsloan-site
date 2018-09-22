@@ -118,11 +118,15 @@ context p = fmap Template.StringValue ctx
                                , ("part", fmap toRoman $ part p)
                                , ("bold-font", boldFontField)
                                , ("italic-font", italicFontField)
+                               , ("math", mathField)
+                               , ("img", imgField)
                                , ("mono-font", monoFontField)
                                , ("serif-italic-font", serifItalicFontField) ]
         usesSerifItalic      = (Type.usesSerifItalicFont $ body p) || (isJust $ subheader p)
         boldFontField        = booleanField $ Type.usesBoldFont $ body p
         italicFontField      = booleanField $ usesItalicFont p
+        mathField            = booleanField $ Html.hasMath $ body p
+        imgField             = booleanField $ Html.hasImg $ body p
         monoFontField        = booleanField $ usesMonoFont p
         serifItalicFontField = booleanField $ usesSerifItalic
 
@@ -139,17 +143,17 @@ parse postSlug contents = let
   addRunIn html = foldl Html.makeRunIn html (fmap length runIn)
   refineType    = addRunIn . Type.expandPunctuation . Type.makeAbbrs
   parseDate     = parseTimeOrError True defaultTimeLocale "%F"
-  in Post { title     = postTitle
-          , header    = brokenHeading
-          , subheader = M.lookup "subheader" frontMatter
-          , part      = fmap read $ M.lookup "part" frontMatter
-          , date      = parseDate $ frontMatter M.! "date"
-          , slug      = postSlug
-          , synopsis  = frontMatter M.! "synopsis"
-          , body      = refineType
-                      $ Html.cleanTables
-                      $ Html.addAnchors
-                      $ renderMarkdown bodyContents
+  in Post { title       = postTitle
+          , header      = brokenHeading
+          , subheader   = M.lookup "subheader" frontMatter
+          , part        = fmap read $ M.lookup "part" frontMatter
+          , date        = parseDate $ frontMatter M.! "date"
+          , slug        = postSlug
+          , synopsis    = frontMatter M.! "synopsis"
+          , body        = refineType
+                        $ Html.cleanTables
+                        $ Html.addAnchors
+                        $ renderMarkdown bodyContents
           }
 
 -- Renders markdown to html using Pandoc with my settings.
@@ -168,9 +172,9 @@ renderMarkdown md = case fmap (writeHtmlString wopt) (readMarkdown ropt md) of
         wopt = def { writerHighlight  = True }
 
 -- Related content for a post, for the further reading section in the footer.
-data RelatedContent = Further Post
-                    | Series [Post]
-                    deriving (Show) -- TODO: this is for debugging only, remove.
+data RelatedContent
+  = Further Post
+  | Series [Post]
 
 -- Returns the template expansion context for related content.
 relatedContext :: RelatedContent -> Template.Context

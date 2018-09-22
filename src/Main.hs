@@ -95,7 +95,10 @@ writePosts tmpl ctx posts config =
                               , P.relatedContext related
                               , ctx]
           html = Template.apply tmpl context
-      withImages  <- Image.processImages (imageDir config) html
+      -- Ignores referenced images - ruuda's blog uses this for font
+      -- subsetting based on SVG contents, but I don't need that
+      -- feature.
+      (_imgPaths, withImages) <- Image.processImages (imageDir config) html
       let minified = minifyHtml withImages
       createDirectoryIfMissing True $ takeDirectory destFile
       writeFile destFile minified
