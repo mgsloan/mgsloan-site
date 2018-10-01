@@ -18,6 +18,7 @@ import qualified Data.Map as M
 import qualified Image
 import qualified Post as P
 import qualified Template
+import qualified Mode
 
 -- Applies the IO-performing function f to every file in a given directory if
 -- the filename satisfies the predicate p.
@@ -63,7 +64,8 @@ readPosts = mapFilesIf (\fp -> isMarkdown fp && isn'tLicense fp) readPost
 
 -- Holds the output directory and input image directory.
 data Config = Config { outDir   :: FilePath
-                     , imageDir :: FilePath }
+                     , imageDir :: FilePath
+                     , outMode  :: Mode.Mode }
 
 -- Compresses the given file to a new file with .gz/br appended to the filename.
 compressFile :: FilePath -> IO ()
@@ -98,7 +100,7 @@ writePosts tmpl ctx posts config =
       -- Ignores referenced images - ruuda's blog uses this for font
       -- subsetting based on SVG contents, but I don't need that
       -- feature.
-      (_imgPaths, withImages) <- Image.processImages (imageDir config) html
+      (_imgPaths, withImages) <- Image.processImages (outMode config) (imageDir config) html
       let minified = minifyHtml withImages
       createDirectoryIfMissing True $ takeDirectory destFile
       writeFile destFile minified
@@ -180,8 +182,12 @@ main = do
         , fmap Template.TemplateValue templates
         ]
       config        = Config { outDir   = "out/"
-                             , imageDir = "images/compressed/" }
-      draftConfig = config { outDir = "out-drafts/" }
+                             , imageDir = "images/compressed/"
+                             , outMode  = Mode.Published
+                             }
+      draftConfig = config { outDir = "out-drafts/"
+                           , outMode = Mode.Draft
+                           }
 
   {-
   outExists <- doesDirectoryExist "out"

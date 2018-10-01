@@ -15,6 +15,7 @@ import           System.FilePath ((</>), takeFileName)
 import qualified Text.HTML.TagSoup as S
 
 import qualified Html
+import           Mode
 
 type Attributes = [(String, String)]
 
@@ -30,8 +31,8 @@ makeDimensions img = [ ("width",  show $ dynamicMap imageWidth  img)
 
 -- Given the attributes of an <img> tag, which must include the src attribute,
 -- adds width and height attributes.
-addDimensions :: FilePath -> Attributes -> IO Attributes
-addDimensions imgDir attrs = fmap (attrs ++) dimensions
+addDimensions :: Mode -> FilePath -> Attributes -> IO Attributes
+addDimensions mode imgDir attrs = fmap (attrs ++) dimensions
   where
     src        = getSrc attrs
     imgPath    = imgDir </> (takeFileName src)
@@ -41,7 +42,16 @@ addDimensions imgDir attrs = fmap (attrs ++) dimensions
         -- handle those. I could extract the size from the svg in a different
         -- way, but meh.
         then pure []
-        else fmap (either error makeDimensions) (readImage imgPath)
+        else do
+          eres <- readImage imgPath
+          case eres of
+            Left e ->
+              case mode of
+                Draft -> do
+                  putStrLn $ "Ignoring failure to compute image dimensions in draft: " ++ e
+                  pure []
+                Published -> error e
+            Right img -> pure $ makeDimensions img
 
 -- Maps an IO-performing function over the attributes of all <img> tags, and
 -- replaces <img> tags with an svg source with <object> tags instead, because
@@ -81,8 +91,8 @@ getSrcPaths tags =
 
 -- Sets the width and height attributes of all <img> tags, turn <img> tags for
 -- svg images into <object> tags.
-addDimensionsAll :: FilePath -> [Html.Tag] -> IO [Html.Tag]
-addDimensionsAll imgDir = mapImgAttributes $ addDimensions imgDir
+addDimensionsAll :: Mode -> FilePath -> [Html.Tag] -> IO [Html.Tag]
+addDimensionsAll mode imgDir = mapImgAttributes $ addDimensions mode imgDir
 
 isImgCloseTag :: Html.Tag -> Bool
 isImgCloseTag tag = case tag of
@@ -92,11 +102,11 @@ isImgCloseTag tag = case tag of
 -- Given a piece of html, adds the image dimensions to the attributes of every
 -- <img> tag and ensures that there are no closing </img> tags. Returns a list
 -- of referenced image file paths, and the new html.
-processImages :: FilePath -> String -> IO ([FilePath], String)
-processImages imgDir html =
+processImages :: Mode -> FilePath -> String -> IO ([FilePath], String)
+processImages mode imgDir html =
   let
     tags = filter (not . isImgCloseTag) $ Html.parseTags html
     srcPaths = getSrcPaths tags
   in do
-    newHtml <- fmap Html.renderTags $ addDimensionsAll imgDir tags
+    newHtml <- fmap Html.renderTags $ addDimensionsAll mode imgDir tags
     pure (srcPaths, newHtml)
