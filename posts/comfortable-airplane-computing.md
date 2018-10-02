@@ -1,5 +1,5 @@
 ---
-title: Computing comfortably at 40,000 feet
+title: Computing comfortably at 30,000 feet
 break: comfortably at
 date: 2018-10-01
 synopsis: How to use a laptop on an airline flight with decent ergonomics.
