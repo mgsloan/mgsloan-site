@@ -1,5 +1,6 @@
 -r
 --reload posts
+--reload drafts
 --reload templates
 --reload images/compressed
 --reload assets
