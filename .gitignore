@@ -24,4 +24,5 @@
 # Python virtualenv
 /venv
 
-todo.md
+/todo.md
+/old/
