@@ -56,8 +56,9 @@ perching it on your knees.  However, it's bound to eventually fall one
 way or another, perhaps due to turbulence. I imagine that could be
 quite catastrophic if your neighbor just purchased some red wine.
 
-The first step is to put some variety of strap around the tray table,
-like this:
+The way I resolve this issue is by attaching the laptop to the folded
+tray table. The first step is to put some variety of strap around the
+tray table:
 
 ![strap around tray table](/images/airplane-computing-strap.jpg)
 
@@ -215,8 +216,8 @@ ergonomics.
   table?
 
 * It would be really nice if laptops had detachable screens, such that
-  the screen could still be used while detached. Perhaps such a thing
-  already exists?
+  the screen and keyboard could still be used while detached. Perhaps
+  such a thing already exists?
 
 Feel free to contact me at <mgsloan@gmail.com> if you've given
 something like this a try, have figured out variations, or have
