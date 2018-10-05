@@ -148,9 +148,8 @@ smaller.
 
 Once your screen is elevated closer to eye level, you can sit back,
 and productively enjoy your flight. So far my experience with doing
-this has been quite positive - it makes the prospect of flying places
-much more attractive. I no longer feel that I need to choose between
-health and computer work!
+this has been quite positive - I no longer feel that I need to choose
+between health and computering while flying!
 
 There is a bit more setup to this than just taking your laptop out of
 your bag - at first it might even seem to be too much of a
