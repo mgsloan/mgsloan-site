@@ -2,23 +2,12 @@
 title: A new website!
 date: 2018-07-27
 synopsis: A brief introduction to my new site, future plans, and how it works.
-run-in: Publishing posts on the internet
+run-in: My past attempt at blogging
 ---
-
-Publishing posts on the internet has not been my priority in the past. I'm
-working to shift that a bit. While my focus will still be on work and open
-source software, I am looking forward to spending a few more cycles on sharing
-ideas, tutorials, musings, and articles.
 
 My past attempt at blogging fizzled more than 6 years ago, and I only wrote a
 few posts. I kept a single html page around for posterity. You can visit it
 [here](/wordpress) if you are curious to see what I was writing about back then.
-Mostly some fun ideas using Template Haskell :-)
-
-I'm planning to have a wide variety in the degree of effort and tone in my
-posts. The point of this is to reduce the obstacles to posting things up. I
-figure that publishing a bunch of medium-effort rough posts is better than
-publishing very few high-effort posts. We'll see how it goes!
 
 ## How the site generation works
 
