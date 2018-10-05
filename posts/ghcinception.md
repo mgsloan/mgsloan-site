@@ -30,7 +30,7 @@ located at `/inplace/bin/ghc-stage2`, then you can do the following to load GHC
 into GHCi:
 
 ```
-$ ./utils/ghc-in-ghci/run.sh -fobject-code -j8
+$ ./utils/ghc-in-ghci/run.sh -j8
 ```
 
 Tweak the `N` in `-jN` as is suitable for your system - it indicates the degree
@@ -198,34 +198,14 @@ I opened a couple patches to GHC that got merged yesterday:
 * [D4986][], which makes some code changes to GHC that allow it all to be loaded
   into GHCi at once. These changes have no effect on the normal build.
 
+* [D5015][], fix adding back in `-fobject-code`, which is needed due
+  to use of unboxed tuples.
+
 [D4904]: https://phabricator.haskell.org/D4904
 [D4986]: https://phabricator.haskell.org/D4986
+[D5015]: https://phabricator.haskell.org/D5015
 [mpickering email]: https://mail.haskell.org/pipermail/ghc-devs/2018-May/015810.html
 [JaffaCake email]: https://mail.haskell.org/pipermail/ghc-devs/2018-June/015844.html
-
-## Why is `-fobject-code` needed?
-
-After [D4904][] was merged, I realized that `-fobject-code` should have been
-included in `settings.ghci`, and indeed it was in Csongor's version. Without it,
-you get errors like the following:
-
-```haskell
-[ 16 of 493] Compiling State            ( compiler/utils/State.hs, interpreted )
-Error: bytecode compiler can't handle unboxed tuples and sums.
-  Possibly due to foreign import/export decls in source.
-  Workaround: use -fobject-code, or compile this module to .o separately.
-```
-
-I've opened another patch, [D5015][] which adds this flag and improves how
-`-odir` and `-hidir` are specified. I'll update this post once that patch is
-merged.
-
-It is unfortunate that `-fobject-code` is required, because it makes the load
-times take much longer than they would be otherwise. There are some benefits to
-it, though - the result executes faster, and subsequent GHCi loads will use the
-object files when possible.
-
-[D5015]: https://phabricator.haskell.org/D5015
 
 ## Next steps
 
