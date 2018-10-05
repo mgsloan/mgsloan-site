@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/mgsloan
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://mgsloan.com
+  * I am mgsloan (https://keybase.io/mgsloan) on keybase.
+  * I have a public key ASD0wSGDjAfr3397iicKObFGTTGmQyUVookmyd7W7GdH-go
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0120f4c121838c07ebdf7f7b8a270a39b1464d31a6432515a28926c9ded6ec6747fa0a",
+      "host": "keybase.io",
+      "kid": "0120f4c121838c07ebdf7f7b8a270a39b1464d31a6432515a28926c9ded6ec6747fa0a",
+      "uid": "db3b0305cf39d8beac5952e87c0e9819",
+      "username": "mgsloan"
+    },
+    "merkle_root": {
+      "ctime": 1538724707,
+      "hash": "05c68625ab59d5207793311b58b190253f87995297d12f8b1c3a755a60153b7dab2ed5d9cfc8387b6ea4325e2a27579823c5871bd9f9ec87566d23fb86c40af2",
+      "hash_meta": "64bdf6a8e7a074ee3c03e76c809eade27d002c9899f519b573d7a56c3a64ff6f",
+      "seqno": 3748795
+    },
+    "service": {
+      "entropy": "yosPwkyRZSIgguXWxGdyYVwo",
+      "hostname": "mgsloan.com",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "2.6.0"
+  },
+  "ctime": 1538724840,
+  "expire_in": 504576000,
+  "prev": "df153085c98a502cf67225dcd86fa3bc867c16bffcf49ad568ff02af31d061f2",
+  "seqno": 56,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEg9MEhg4wH699/e4onCjmxRk0xpkMlFaKJJsne1uxnR/oKp3BheWxvYWTESpcCOMQg3xUwhcmKUCz2ciXc2G+jvIZ8Fr/89JrVaP8CrzHQYfLEIL71MODJE+XhnTxCiabPpYzj17JyUg0FyvaiB8v3DVTfAgHCo3NpZ8RAt8YOPtz0lDdQxmoZj5/WrgFkRVjWiRRRU6fuhZ3EXajzPXkuJ1GSOkEMSwnkg2hnMzPmqMKh2lrBtcxhqlgzCahzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIBNPjn6emvlX7oHoNLkNE17zkg82YOVWOZwZsw0HRhHKo3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/mgsloan
+
+==================================================================

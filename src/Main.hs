@@ -241,6 +241,7 @@ main = do
 
   copyFile "assets/favicon.png"          "out/favicon.png"
   copyFile "assets/CNAME"                "out/CNAME"
+  copyFile "assets/keybase.txt"          "out/keybase.txt"
 
   putStrLn "Writing atom feed..."
   writeFeed (templates M.! "feed.xml") posts config
