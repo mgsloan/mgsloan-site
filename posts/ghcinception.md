@@ -318,3 +318,9 @@ slowdown would not compound.
 
 So pretty much, GHCi nesting does not follow inception's rules of time slow down
 :-)
+
+## Discussion / Related Links
+
+* [Discussion on r/haskell](https://www.reddit.com/r/haskell/comments/92szf7/ghc_inside_ghci)
+* [Mentioned in Haskell Weekly News!](https://haskellweekly.news/issues/118.html)
+* [GHC wiki page](https://ghc.haskell.org/trac/ghc/wiki/Building/InGhci)
