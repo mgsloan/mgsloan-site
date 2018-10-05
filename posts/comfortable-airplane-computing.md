@@ -222,3 +222,8 @@ ergonomics.
 Feel free to contact me at <mgsloan@gmail.com> if you've given
 something like this a try, have figured out variations, or have
 questions. I'm curious to see what y'all come up with!
+
+## Discussion Links
+
+* [Discussion on r/thinkpad](https://www.reddit.com/r/thinkpad/comments/9kyzd1/computing_comfortably_at_30000_feet/)
+* [Post on twitter](https://twitter.com/mg_sloan/status/1047301574542811138)
