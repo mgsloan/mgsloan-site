@@ -218,6 +218,11 @@ ergonomics.
   the screen and keyboard could still be used while detached. Perhaps
   such a thing already exists?
 
+  - Edit: In discussion with others, I realized that you could simply
+    use a tablet with a bluetooth keyboard. There may also be
+    aftermarket bluetooth keyboards that can be connected directly
+    with devices like the Microsoft Surface, but I haven't looked.
+
 Feel free to contact me at <mgsloan@gmail.com> if you've given
 something like this a try, have figured out variations, or have
 questions. I'm curious to see what y'all come up with!
@@ -226,3 +231,11 @@ questions. I'm curious to see what y'all come up with!
 
 * [Discussion on r/thinkpad](https://www.reddit.com/r/thinkpad/comments/9kyzd1/computing_comfortably_at_30000_feet/)
 * [Post on twitter](https://twitter.com/mg_sloan/status/1047301574542811138)
+* [Discussion on keyboard.io forums](https://community.keyboard.io/t/flexible-camera-mounts-ergonomic-computer-use-on-airplanes/2078)
+
+  - [In that thread][jazzfan1980], `jazzfan1980` mentions there that they have a
+    similar setup involving a commercial product called
+    [tablethookz][], but adapted to a Surface Pro.
+
+[jazzfan1980]: https://community.keyboard.io/t/flexible-camera-mounts-ergonomic-computer-use-on-airplanes/2078/4
+[tablethookz]: https://tablethookz.com/
