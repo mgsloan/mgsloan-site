@@ -218,10 +218,10 @@ ergonomics.
   the screen and keyboard could still be used while detached. Perhaps
   such a thing already exists?
 
-  - Edit: In discussion with others, I realized that you could simply
-    use a tablet with a bluetooth keyboard. There may also be
-    aftermarket bluetooth keyboards that can be connected directly
-    with devices like the Microsoft Surface, but I haven't looked.
+    - Edit: In discussion with others, I realized that you could
+      simply use a tablet with a bluetooth keyboard. There may also be
+      aftermarket bluetooth keyboards that can be connected directly
+      with devices like the Microsoft Surface, but I haven't looked.
 
 Feel free to contact me at <mgsloan@gmail.com> if you've given
 something like this a try, have figured out variations, or have
