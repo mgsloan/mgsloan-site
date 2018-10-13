@@ -485,6 +485,13 @@ footer
   padding-top: 1.8em;
 }
 
+#profile-links
+{
+  clear: both;
+  text-align: center;
+  margin-left: 2.5em;
+}
+
 footer span
 {
   margin-left: 0.25em;
