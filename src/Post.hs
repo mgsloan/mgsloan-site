@@ -141,7 +141,7 @@ parse postSlug contents = let
   brokenHeading = foldr addBreak postHeading breakAt
   runIn         = M.lookup "run-in" frontMatter
   addRunIn html = foldl Html.makeRunIn html (fmap length runIn)
-  refineType    = addRunIn . Type.expandPunctuation . Type.makeAbbrs
+  refineType    = addRunIn . Type.expandPunctuation . Html.renderTags . Type.makeAbbrsTags
   parseDate     = parseTimeOrError True defaultTimeLocale "%F"
   in Post { title       = postTitle
           , header      = brokenHeading
@@ -153,6 +153,7 @@ parse postSlug contents = let
           , body        = refineType
                         $ Html.cleanTables
                         $ Html.addAnchors
+                        $ Html.parseTags
                         $ renderMarkdown bodyContents
           }
 

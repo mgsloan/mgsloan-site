@@ -334,8 +334,8 @@ makeRunIn html n  = prefix ++ (drop 3 runIn) ++ "</span>" ++ after
 -- If you tell Pandoc to write html5, it will just add style attributes instead.
 -- I always align left anyway, so strip the attribute altogether. Furthermore,
 -- I do not use the odd and even classes, so strip them to save space.
-cleanTables :: String -> String
-cleanTables = renderTags . mapTagsWhere isTable stripAttrs . parseTags
+cleanTables :: [Tag] -> [Tag]
+cleanTables = mapTagsWhere isTable stripAttrs
   where filterAlign = filter $ (/= "align") . fst
         filterEven  = delete ("class", "even")
         filterOdd   = delete ("class", "odd")
@@ -345,8 +345,8 @@ cleanTables = renderTags . mapTagsWhere isTable stripAttrs . parseTags
           _                    -> tag
 
 -- Add an empty <a> tag to every <h2> that has an id, and link it to that id.
-addAnchors :: String -> String
-addAnchors = renderTags . concatMap expandHeader . parseTags
+addAnchors :: [Tag] -> [Tag]
+addAnchors = concatMap expandHeader
   where
     emptyA href = [S.TagOpen "a" [("href", href)], S.TagClose "a"]
     expandHeader tag = case tag of

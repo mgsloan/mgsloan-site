@@ -7,6 +7,7 @@
 module Type ( SubsetCommand
             , expandPunctuation
             , makeAbbrs
+            , makeAbbrsTags
             , subsetArtifact
             , subsetFonts
             , usesBoldFont
@@ -116,9 +117,12 @@ splitAbbrs = filter (not . abbrNull) . foldr prepend [MixedCaps ""] . splitWords
                   ((all isAsciiUpper word) && (length word >= 2)) ||
                   word `elem` extraAbbrs
 
--- Inserts <abbr> tags around words in all-caps.
 makeAbbrs :: String -> String
-makeAbbrs = Html.renderTags . Html.concatMapTagsWhere isBodyTag mkAbbr . Html.parseTags
+makeAbbrs = Html.renderTags . makeAbbrsTags . Html.parseTags
+
+-- Inserts <abbr> tags around words in all-caps.
+makeAbbrsTags :: [Html.Tag] -> [Html.Tag]
+makeAbbrsTags = Html.concatMapTagsWhere isBodyTag mkAbbr
   where mkAbbr (S.TagText str)      = concatMap insertAbbrs $ splitAbbrs str
         mkAbbr tag                  = [tag]
         insertAbbrs (MixedCaps str) = [S.TagText str]
