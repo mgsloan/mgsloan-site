@@ -262,9 +262,12 @@ pushCmd :: IO ()
 pushCmd = shelly $ do
   -- Check if the repo is clean.
   -- https://stackoverflow.com/a/3879077
-  errExit False $ run_ "git" ["diff-index", "--quiet", "HEAD", "--"]
-  code <- lastExitCode
-  when (code /= 0) $
+  let checkIsDirty = do
+        errExit False $ run_ "git" ["diff-index", "--quiet", "HEAD", "--"]
+        code <- lastExitCode
+        return (code /= 0)
+  isDirty <- checkIsDirty
+  when isDirty $
     fail "Site repository appears to be dirty, so cannot push."
   let checkMaster repo = chdir repo $ do
         output <- run "git" ["rev-parse", "--abbrev-ref", "HEAD"]
@@ -289,5 +292,11 @@ pushCmd = shelly $ do
   when shouldPush $ do
     run_ "git" ["push"]
     shortSha <- T.take 7 <$> run "git" ["rev-parse", "HEAD"]
-    chdir "out" $ run_ "git" ["commit", "-m", "Update to " <> shortSha]
-    chdir "out" $ run_ "git" ["push"]
+    chdir "out" $ do
+      outputDirty <- checkIsDirty
+      if outputDirty
+        then do
+          run_ "git" ["commit", "-m", "Update to " <> shortSha]
+          run_ "git" ["push"]
+        else do
+          echo "out/ repo is clean, so not committing or pushing it."
