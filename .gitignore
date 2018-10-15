@@ -1,5 +1,6 @@
 # Draft posts
 /drafts/
+/images/original/draft/
 
 # Build output
 /.stack-work
@@ -24,5 +25,7 @@
 # Python virtualenv
 /venv
 
+/notes.md
 /todo.md
 /old/
+/old-code.hs
