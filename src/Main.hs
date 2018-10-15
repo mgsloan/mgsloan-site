@@ -1,4 +1,7 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 -- Copyright 2015 Ruud van Asseldonk
+-- Copyright 2018 Michael G Sloan
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License version 3. See
@@ -8,11 +11,11 @@ import Data.Monoid ((<>))
 import Data.Time.Calendar (toGregorian)
 import Data.Time.Clock (getCurrentTime, utctDay)
 import Minification (minifyHtml)
+import System.Environment
 import System.Directory
 import System.FilePath
-{-
-import System.Process
--}
+import Shelly hiding ((</>), FilePath)
+import qualified Data.Text as T
 import qualified Control.Concurrent.Async as Async
 import qualified Data.Map as M
 import qualified Image
@@ -163,6 +166,14 @@ writeFeed template posts config = do
 
 main :: IO ()
 main = do
+  args <- getArgs
+  case args of
+    ["push"] -> pushCmd
+    [] -> regenerateCmd
+    _ -> error $ "Unrecognized arguments: " ++ show args
+
+regenerateCmd :: IO ()
+regenerateCmd = do
   templates <- readTemplates "templates/"
   posts     <- readPosts     "posts/"
 
@@ -245,3 +256,38 @@ main = do
 
   putStrLn "Writing atom feed..."
   writeFeed (templates M.! "feed.xml") posts config
+
+-- Push to both repos.
+pushCmd :: IO ()
+pushCmd = shelly $ do
+  -- Check if the repo is clean.
+  -- https://stackoverflow.com/a/3879077
+  errExit False $ run_ "git" ["diff-index", "--quiet", "HEAD", "--"]
+  code <- lastExitCode
+  when (code /= 0) $
+    fail "Site repository appears to be dirty, so cannot push."
+  let checkMaster repo = chdir repo $ do
+        output <- run "git" ["rev-parse", "--abbrev-ref", "HEAD"]
+        when (output /= "master\n") $
+          fail $ show repo ++ " needs to be on master branch to push."
+  -- Check if both repos are on master.
+  checkMaster "."
+  checkMaster "out"
+  -- Rebuild the site.
+  liftIO regenerateCmd
+  -- Add all untracked and
+  shouldPush <- chdir "out" $ do
+    run_ "git" ["add", "-A"]
+    run_ "git" ["status"]
+    echo_n "Does this status for the output repo look good? "
+    response <- liftIO getLine
+    case response :: String of
+      "y" -> return True
+      _ -> do
+        echo "Response was not 'y', so not pushing"
+        return False
+  when shouldPush $ do
+    run_ "git" ["push"]
+    shortSha <- T.take 7 <$> run "git" ["rev-parse", "HEAD"]
+    chdir "out" $ run_ "git" ["commit", "-m", "Update to " <> shortSha]
+    chdir "out" $ run_ "git" ["push"]
