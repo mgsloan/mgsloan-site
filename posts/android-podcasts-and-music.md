@@ -60,7 +60,15 @@ both:
   second, so that pause / play applies to it.
 
 * This works fine with google maps also providing audio
-  directions. Three audio streams, hah!
+  directions. Three audio streams, hah! Also, note that you can change
+  the maps voice. I prefer the "English (UK)" voice over the "English
+  (US)" voice:
+
+  1. Press the 3 horizontal bars next on the left side of the search
+     box, to open up the sidebar.
+
+  2. Press "settings", then "navigation settings", then "Voice
+     selection".
 
 * Instead of a regular aux cable in the car, I use a TRRS cable from
   some headphones which has an inline button to control play /
