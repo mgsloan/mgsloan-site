@@ -260,6 +260,12 @@ ul > li:before
   top: -0.15em;
 }
 
+ul.affiliate > li:before
+{
+  content: '$';
+  transform: scale(1);
+}
+
 ol > li:before
 {
   content: counter(ol, decimal);

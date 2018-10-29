@@ -1,12 +1,14 @@
 -- Copyright 2015 Ruud van Asseldonk
+-- Copyright 2018 Michael Sloan
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License version 3. See
 -- the licence file in the root of the repository.
 
+{-# LANGUAGE LambdaCase #-}
+
 module Html ( Tag
             , TagProperties
-            , makeRunIn
             , addAnchors
             , applyTagsWhere
             , classifyTags
@@ -14,10 +16,10 @@ module Html ( Tag
             , concatMapTagsWhere
             , filterTags
             , getTextInTag
-            , hasUl
             , hasH2
-            , hasMath
             , hasImg
+            , hasMath
+            , hasUl
             , isA
             , isAbbr
             , isArchive
@@ -37,21 +39,23 @@ module Html ( Tag
             , isRunIn
             , isScript
             , isSmcp
-            , isSubtitle
-            , isSub
-            , isSup
             , isStrong
             , isStyle
+            , isSub
+            , isSubtitle
+            , isSup
             , isTable
             , isTeaser
             , isTeaserLink
             , isTh
             , isUl
             , isVar
+            , makeRunIn
             , mapTagsWhere
             , mapText
             , mapTextWith
             , maxOlLength
+            , modifyLinks
             , parseTags
             , renderTags
             ) where
@@ -59,8 +63,9 @@ module Html ( Tag
 -- This module contains utility functions for dealing with html.
 
 import           Control.Monad (join, msum)
-import           Data.List (delete, intersperse)
+import           Data.List (delete, find, intersperse)
 import           Data.Maybe (catMaybes)
+import           Network.URI (parseURIReference, uriToString, URI(..), URIAuth(..))
 import qualified Text.HTML.TagSoup as S
 
 type Tag = S.Tag String
@@ -352,3 +357,100 @@ addAnchors = concatMap expandHeader
     expandHeader tag = case tag of
       h2 @ (S.TagOpen "h2" [("id", anchor)]) -> h2 : emptyA ('#' : anchor)
       otherTag -> [otherTag]
+
+-- Probably overkill.. Automatically add affiliate tags and footnote
+-- about it.
+modifyLinks :: [Tag] -> [Tag]
+modifyLinks = go False
+  where
+    go hasAffiliate = \case
+      [] ->
+        if hasAffiliate
+          then footnotesHeader ++ affiliateNote
+          else []
+      (tag@(S.TagOpen "a" attrs) : tags) ->
+        case getAttr "href" attrs of
+          Nothing -> tag : go hasAffiliate tags
+          Just href ->
+            case parseURIReference href of
+              Nothing -> error $ concat
+                ["Expected href in <a> tag, ", show href, ", to be a valid url."]
+              Just uri
+                | isAmazonUri uri ->
+                    let href' = flip (uriToString id) "" $
+                          uri
+                            { uriAuthority = Just URIAuth
+                              { uriUserInfo = ""
+                              , uriRegName = "smile.amazon.com"
+                              , uriPort = ""
+                              }
+                            , uriQuery = "?tag=mgsloan-20"
+                            }
+                     in S.TagOpen "a" (setAttr "href" href' attrs) : addSuperScript tags
+                | otherwise ->
+                  tag : go hasAffiliate tags
+      -- Drop hr, add header, and add footnote for #amazon-links if needed.
+      (divTag@(S.TagOpen "div" [("class", "footnotes")]) : afterDiv) ->
+        case afterDiv of
+          ( S.TagText _ :
+            S.TagOpen "hr" _ :
+            S.TagClose "hr" :
+            S.TagText _ :
+            rest ) ->
+              footnotesHeader ++ [divTag] ++ rest ++
+              if hasAffiliate then affiliateNote else []
+          _ -> error $ "Unexpected tags after footnotes div: " ++ show afterDiv
+      (tag : tags) -> tag : go hasAffiliate tags
+    footnotesHeader =
+      [ S.TagOpen "h2" []
+      , S.TagText "Footnotes"
+      , S.TagClose "h2"
+      ]
+    -- TODO: Might layout more consistently as an additional li in the
+    -- footnotes list.
+    --
+    -- TODO: Support affiliate links in footnotes?
+    affiliateNote =
+      [ S.TagOpen "ul" [("class", "affiliate")]
+      , S.TagOpen "li" [("id", "affiliate-note")]
+      , S.TagOpen "p" []
+      , S.TagText (unwords
+        [ "Some links are amazon affiliate links, which send me some a bit of money when you make purchases."
+        , "The purpose of this blog is sharing information, not making money."
+        , "But I figure may as well add them, and I'd appreciate you using them!"
+        ])
+      , S.TagClose "p"
+      , S.TagClose "li"
+      , S.TagClose "ul"
+      ]
+    addSuperScript = \case
+      [] -> []
+      ((S.TagOpen "a" _) : _) ->
+        error "Didn't expect opening <a> tag inside amazon <a> tag"
+      (S.TagClose "a" : tags) ->
+        S.TagClose "a" :
+        S.TagOpen "sup" [] :
+        S.TagOpen "a" [("href", "#affiliate-note")] :
+        S.TagText "$" :
+        S.TagClose "a" :
+        S.TagClose "sup" :
+        go True tags
+      (tag : tags) ->
+        tag : addSuperScript tags
+
+getAttr :: String -> [S.Attribute String] -> Maybe String
+getAttr name = fmap snd . find ((name ==) . fst)
+
+setAttr :: String -> String -> [S.Attribute String] -> [S.Attribute String]
+setAttr name val = map modifyAttr
+  where
+    modifyAttr unmodified@(name', _)
+      | name == name' = (name', val)
+      | otherwise = unmodified
+
+isAmazonUri :: URI -> Bool
+isAmazonUri uri =
+  case uriAuthority uri of
+    Nothing -> False
+    Just authority ->
+      uriRegName authority `elem` ["amazon.com", "smile.amazon.com"]

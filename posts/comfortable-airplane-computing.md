@@ -93,7 +93,7 @@ fairly visible in this picture:
 The resulting comfort and health totally makes up for looking a bit
 unconventional :)
 
-[zip-ties]: https://smile.amazon.com/dp/B003L11F5Y/ref=psdc_507844_t1_B01AGNKEXI
+[zip-ties]: https://smile.amazon.com/dp/B003L11F5Y
 
 
 ## Recommendation: Get a decent keyboard

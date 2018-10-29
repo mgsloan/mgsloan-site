@@ -151,6 +151,7 @@ parse postSlug contents = let
           , slug        = postSlug
           , synopsis    = frontMatter M.! "synopsis"
           , body        = refineType
+                        $ Html.modifyLinks
                         $ Html.cleanTables
                         $ Html.addAnchors
                         $ Html.parseTags
@@ -169,6 +170,7 @@ renderMarkdown md = case fmap (writeHtmlString wopt) (readMarkdown ropt md) of
                                         S.insert Ext_simple_tables $
                                         S.insert Ext_auto_identifiers $
                                         S.insert Ext_ascii_identifiers $
+                                        S.insert Ext_footnotes $
                                         def }
         wopt = def { writerHighlight  = True }
 
