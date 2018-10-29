@@ -54,6 +54,10 @@ both:
 
 ## Miscellania
 
+* Some podcasts aren't very loud. It can also be helpful to enable
+  Podcast Addict's "Volume boost" setting, which is within the "Audio
+  Player" settings.
+
 * One thing to note is that if you use headphones with a button that
   controls pause / play / next, then it will apply to the last app you
   hit the play button on.  I typically prefer to play the podcasts
