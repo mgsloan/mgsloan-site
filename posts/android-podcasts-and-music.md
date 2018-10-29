@@ -56,7 +56,12 @@ both:
 
 * Some podcasts aren't very loud. It can also be helpful to enable
   Podcast Addict's "Volume boost" setting, which is within the "Audio
-  Player" settings.
+  Player" settings. This requires enabling "Audio effects".
+
+* Enabling audio effects can also be used to set a different playback
+  speed. For example, I have a default set to 1.5x speed, since I'm
+  mostly listening to informational podcasts rather than podcasts
+  where timing and pace is significant.
 
 * One thing to note is that if you use headphones with a button that
   controls pause / play / next, then it will apply to the last app you
