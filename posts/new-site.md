@@ -1,7 +1,7 @@
 ---
 title: A new website!
 date: 2018-07-27
-synopsis: A brief introduction to my new site, future plans, and how it works.
+synopsis: A brief introduction to my new site, and how it works.
 run-in: My past attempt at blogging
 ---
 
