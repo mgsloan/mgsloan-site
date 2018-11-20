@@ -5,9 +5,8 @@ synopsis: A brief introduction to my new site, future plans, and how it works.
 run-in: My past attempt at blogging
 ---
 
-My past attempt at blogging fizzled more than 6 years ago, and I only wrote a
-few posts. I kept a single html page around for posterity. You can visit it
-[here](/wordpress) if you are curious to see what I was writing about back then.
+Welcome to my new blog site!  I kept around the old blog [as a single
+page](/wordpress), for posterity.
 
 ## How the site generation works
 
@@ -70,3 +69,8 @@ proprietary [calluna][] family of fonts. Particularly due to the fonts, I think
 [code for Ruud's site]: https://github.com/ruuda/blog
 [google fonts]: https://fonts.google.com/
 [calluna]: https://www.exljbris.com/calluna.html
+
+## Old blog
+
+I kept a single html page around for posterity. You can visit it
+if you are curious to see what I was writing about back then.
