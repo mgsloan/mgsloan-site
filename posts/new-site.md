@@ -69,8 +69,3 @@ proprietary [calluna][] family of fonts. Particularly due to the fonts, I think
 [code for Ruud's site]: https://github.com/ruuda/blog
 [google fonts]: https://fonts.google.com/
 [calluna]: https://www.exljbris.com/calluna.html
-
-## Old blog
-
-I kept a single html page around for posterity. You can visit it
-if you are curious to see what I was writing about back then.
