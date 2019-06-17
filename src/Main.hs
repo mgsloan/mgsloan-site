@@ -298,7 +298,7 @@ pushCmd = shelly $ do
       outputDirty <- checkIsDirty
       if outputDirty
         then do
-          run_ "git" ["commit", "-m", "Update to " <> shortSha]
+          run_ "git" ["commit", "-m", "Update to mgsloan/mgsloan-site@" <> shortSha]
           run_ "git" ["push"]
         else do
           echo "out/ repo is clean, so not committing or pushing it."
