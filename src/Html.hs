@@ -384,7 +384,7 @@ modifyLinks = go False
                               , uriRegName = "smile.amazon.com"
                               , uriPort = ""
                               }
-                            , uriQuery = "?tag=mgsloan-20"
+                            , uriQuery = "?tag=mgsloan0c-20"
                             }
                      in S.TagOpen "a" (setAttr "href" href' attrs) : addSuperScript tags
                 | otherwise ->
