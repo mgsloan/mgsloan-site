@@ -121,6 +121,7 @@ used it on a long flight in early 2018, and somehow ended up with a
 whole row to myself:
 
 ![kinesis on airplane](/images/airplane-computing-kinesis.jpg)
+![kinesis on airplane 2](/images/airplane-computing-kinesis-2.jpg)
 
 All of these keyboards share the following great attributes:
 
