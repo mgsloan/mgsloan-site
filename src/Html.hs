@@ -415,9 +415,9 @@ modifyLinks = go False
       , S.TagOpen "li" [("id", "affiliate-note")]
       , S.TagOpen "p" []
       , S.TagText (unwords
-        [ "Some links are amazon affiliate links, which send me some a bit of money when you make purchases."
+        [ "Some links are amazon affiliate links, which sometimes send me a bit of money when you make purchases after clicking them."
         , "The purpose of this blog is sharing information, not making money."
-        , "But I figure may as well add them, and I'd appreciate you using them!"
+        , "But I figure I may as well add them, and I'd appreciate you using them!"
         ])
       , S.TagClose "p"
       , S.TagClose "li"
