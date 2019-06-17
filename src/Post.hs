@@ -1,3 +1,5 @@
+{-# LANGUAGE ViewPatterns #-}
+
 -- Copyright 2015 Ruud van Asseldonk
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -96,10 +98,11 @@ booleanField b = if b then Just "true" else Nothing
 -- Given a string, and a substring consisting of two words, inserts a <br> tag
 -- and a space between the two words in the original string.
 addBreak :: String -> String -> String
-addBreak between = Text.unpack . Text.replace textBetween broken . Text.pack
-  where [brAfter, brBefore] = words between
-        textBetween         = Text.pack between
+addBreak between@(words -> [brAfter, brBefore]) =
+  Text.unpack . Text.replace textBetween broken . Text.pack
+  where textBetween         = Text.pack between
         broken              = Text.pack $ brAfter ++ "<br> " ++ brBefore
+addBreak _ = id
 
 -- Returns the template expansion context for the post.
 context :: Post -> Template.Context
