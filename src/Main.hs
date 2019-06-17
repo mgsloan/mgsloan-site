@@ -197,6 +197,7 @@ regenerateCmd = do
                              , outMode  = Mode.Published
                              }
       draftConfig = config { outDir = "out-drafts/"
+                           , imageDir = "images/compressed/draft"
                            , outMode = Mode.Draft
                            }
 
@@ -223,8 +224,9 @@ regenerateCmd = do
     else do
       -- TODO Have separate draft images.  Separate images per post?
       putStrLn "Copying draft images..."
-      createDirectoryIfMissing True  "out-drafts/images/"
-      copyFiles "images/compressed/" "out-drafts/images/"
+      createDirectoryIfMissing True "out-drafts/images/"
+      copyFiles "images/compressed/draft/" "out-drafts/images/"
+
 
       putStrLn "Writing draft posts..."
       writePosts (templates M.! "post.html") globalContext drafts draftConfig

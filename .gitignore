@@ -1,6 +1,7 @@
 # Draft posts
 /drafts/
 /images/original/draft/
+/images/compressed/draft/
 
 # Build output
 /.stack-work
