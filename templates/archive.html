@@ -3,8 +3,8 @@
     <div id="content" class="archive">
       <header>
         <h1>Michael Sloan</h1>
-        <i>Various postings</i>
       </header>
+      <p><i>Here are some things I've written:</i></p>
       {{foreach archive-year}}
         <h2>{{year}}</h2>
         {{foreach post}}
@@ -12,6 +12,7 @@
           <p>{{synopsis-html}} <a href="{{url}}" class="smcp">Read full post</a></p>
         {{end}}
       {{end}}
+      <p><i>I hope you found something interesting or helpful!</i></p>
     </div>
     {{include footer.html}}
   </body>
