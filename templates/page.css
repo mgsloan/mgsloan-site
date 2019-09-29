@@ -316,11 +316,13 @@ code
   font-family: Inconsolata, monospace;
   word-break: break-word;
   background-color: rgba(27,31,35,0.07);
+  padding: 0.2em;
 }
 
 pre > code
 {
   background-color: transparent;
+  padding: 0;
 }
 
 pre
