@@ -115,7 +115,7 @@ like the instance declaration before `=>`.
       with b ~ Product Bool
 ```
 
-## More than just errors
+## Useful for more than just errors
 
 It might also be quite useful to ask for an explanation when instances
 successfully resolve. Imagine if we could ask GHCi to explain such
