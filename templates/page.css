@@ -19,6 +19,7 @@ code, em, strong
 html
 {
   font-size: 16px;
+  zoom: 1.15;
 }
 
 body
