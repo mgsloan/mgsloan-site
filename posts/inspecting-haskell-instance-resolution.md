@@ -16,7 +16,7 @@ version 8.6.4, it reports:
 
 It's easy to imagine that the programmer might be very puzzled by this
 error - they might ask "Where in the world did Semigroup come from??".
-They'd be quite justified in their puzzlement, considering that the
+They'd be quite justified in their perplexity, considering that the
 error message is naming something that isn't in their code.
 
 GHC's instance resolution is doing something like this:
@@ -227,7 +227,7 @@ better to implement it directly in GHC, but at the time I was much
 more familiar with Template Haskell, and the perverse cleverness of
 the approach has some appeal.
 
-With a set of extensions enabled, running the following code:
+With a set of extensions enabled, the following code can be run,
 
 ```haskell
 import ExplainInstance
@@ -235,7 +235,7 @@ import ExplainInstance
 $(explainInstanceError [t| Monoid (Maybe Int) |])
 ```
 
-Results in this output:
+resulting in the following output:
 
 ```haskell
 instance Semigroup a => Monoid (Maybe a)
@@ -281,6 +281,8 @@ method, which reifies the tree of instance resolution as a value.
 
 ## More elaborate example of explain-instance
 
+Once again with a bunch of extensions, the following code can be run,
+
 ```haskell
 import ExplainInstance
 import Text.Printf
@@ -288,7 +290,7 @@ import Text.Printf
 $(explainInstance [t| PrintfType (Int -> Int -> String) |])
 ```
 
-Output:
+resulting in the following output:
 
 ```haskell
 instance (PrintfArg a, PrintfType r) => PrintfType (a -> r)
