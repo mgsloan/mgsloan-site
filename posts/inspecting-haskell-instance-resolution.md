@@ -204,8 +204,8 @@ thought through how this would interact with `QuantifiedConstraints`.
 
 In order to make this a fair comparison with the prior example, I
 flipped the constraint order.  Since the instance is actually
-`(PrintfArg a, PrintfType r) => PrintfType (a -> r)`, the tree would
-more likely look like:
+`(PrintfArg a, PrintfType r) => PrintfType (a -> r)`, a tree that
+followed the order in this definition would look like:
 
 ```haskell
 > :explain PrintfType (Integer -> Integer -> String -> IO ())
@@ -320,7 +320,7 @@ My purpose in writing this post is to dust off a very old back-burner
 project that I think has merit, in the hopes that it might be
 inspiring or perhaps interesting. So, as much as it appeals to me to
 champion this idea and see it to fruition, I don't see that being
-practical for me to do any time soon.
+practical for me to do so any time soon.
 
 So, if you find these ideas or some variant inspiring, please do run
 with it and make it happen! A natural next step might be to write up a
