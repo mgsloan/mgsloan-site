@@ -56,7 +56,7 @@ describe the constraint that couldn't be resolved, and shows where it
 came from.
 
 Let's consider a slightly more complicated example, where I evaluate
-`mempty :: Maybe (Product Bool)`, where `Product` comes from
+`mempty :: Maybe (Product Bool)`, where [`Product`][] comes from
 [`Data.Monoid`][].  For this, GHC 8.6.4 reports:
 
 ```
@@ -327,6 +327,7 @@ GHC proposal or GHC ticket about this, seeking some consensus about
 the details.
 
 [`Data.Monoid`]: http://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Monoid.html
+[`Product`]: http://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Monoid.html#t:Product
 [`Text.Printf`]: http://hackage.haskell.org/package/base-4.12.0.0/docs/Text-Printf.html
 [`base`]: http://hackage.haskell.org/package/base
 [error-monoid-maybe-int-ddump]: https://gist.github.com/mgsloan/401103e984fc70633cb345c0569fa982
