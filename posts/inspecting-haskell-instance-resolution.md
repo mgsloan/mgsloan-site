@@ -319,8 +319,8 @@ See [the repository][github examples] for more examples.
 My purpose in writing this post is to dust off a very old back-burner
 project that I think has merit, in the hopes that it might be
 inspiring or perhaps interesting. So, as much as it appeals to me to
-champion this idea and see it to fruition, I don't see that being
-practical for me to do so any time soon.
+champion this idea and see it to fruition, I don't see that as being
+practical for me to do any time soon.
 
 So, if you find these ideas or some variant inspiring, please do run
 with it and make it happen! A natural next step might be to write up a
