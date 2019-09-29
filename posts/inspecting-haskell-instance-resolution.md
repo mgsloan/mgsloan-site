@@ -75,13 +75,14 @@ Instead, I think it would be better to report something like this:
     a ~ Bool
     b ~ Product Bool
 ```
+The "with" clause above defines how the type variables in the
+instances are being instantiated.  This is nice because then the
+instance resolution trace looks like a list of instance heads.
 
 ## Alternative: No "with" clause
 
-The "with" clause above defines how the type variables in the
-instances are being instantiated.  This is nice because then the
-instance resolution trace looks like a list of instance heads.  It
-seems clearer to avoid having type variables entirely, though:
+Instead of including the `with` clauses, it seems less convoluted to
+substitute the variables with the types:
 
 ```
 • No instance for (Monoid (Maybe (Product Bool))) arising from a use of ‘mempty’
