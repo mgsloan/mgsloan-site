@@ -203,7 +203,7 @@ selectRelated posts = fmap nextElsePrev prevPostNext
         nextElsePrev x = case x of
           (_, post, Just next) -> (post, Further next)
           (Just prev, post, _) -> (post, Further prev)
-          _                    -> error "At least two posts are required."
+          (_, post, _) -> (post, Further post)
 
 -- Returns a context for a group of posts that share the same year.
 archiveYearContext :: [Post] -> Template.Context

@@ -8,6 +8,7 @@
 -- the licence file in the root of the repository.
 import Control.Monad
 import Data.Monoid ((<>))
+import Data.List (isInfixOf)
 import Data.Time.Calendar (toGregorian)
 import Data.Time.Clock (getCurrentTime, utctDay)
 import Minification (minifyHtml)
@@ -169,37 +170,23 @@ main = do
   args <- getArgs
   case args of
     ["push"] -> pushCmd
+    ["render-draft", draftTitlePortion] -> renderDraftCmd draftTitlePortion
     [] -> regenerateCmd
     _ -> error $ "Unrecognized arguments: " ++ show args
+
+renderDraftCmd :: String -> IO ()
+renderDraftCmd draftTitlePortion = do
+  templates <- readTemplates "templates/"
+  drafts <- readPosts "drafts/"
+  globalContext <- makeGlobalContext templates
+  [draft] <- return $ filter ((draftTitlePortion `isInfixOf`) . P.title) drafts
+  writePosts (templates M.! "post.html") globalContext [draft] draftConfig
 
 regenerateCmd :: IO ()
 regenerateCmd = do
   templates <- readTemplates "templates/"
   posts     <- readPosts     "posts/"
-
-  -- Create a context with the field "year" set to the current year, and create
-  -- a context that contains all of the templates, to handle includes.
-  (year, _month, _day) <- fmap (toGregorian . utctDay) getCurrentTime
-  let yearString = show year
-      globalContext = M.unions
-        [ Template.stringField "year" yearString
-        , Template.stringField "year-range" $
-          if yearString == "2018"
-            then "2018"
-            else "2018-" ++ yearString
-        , Template.stringField "body-font" "'Alegreya Sans'"
-        , Template.stringField "header-font" "'Playfair Display'"
-        , Template.stringField "serif-font" "Alegreya"
-        , fmap Template.TemplateValue templates
-        ]
-      config        = Config { outDir   = "out/"
-                             , imageDir = "images/compressed/"
-                             , outMode  = Mode.Published
-                             }
-      draftConfig = config { outDir = "out-drafts/"
-                           , imageDir = "images/compressed/draft"
-                           , outMode = Mode.Draft
-                           }
+  globalContext <- makeGlobalContext templates
 
   {-
   outExists <- doesDirectoryExist "out"
@@ -219,27 +206,24 @@ regenerateCmd = do
   -}
 
   drafts    <- readPosts     "drafts/"
-  if length drafts < 2
-    then putStrLn "To use drafts mechanism, need more than 2 drafts"
-    else do
-      -- TODO Have separate draft images.  Separate images per post?
-      putStrLn "Copying draft images..."
-      createDirectoryIfMissing True "out-drafts/images/"
-      copyFiles "images/compressed/draft/" "out-drafts/images/"
+  unless (null drafts) $ do
+    -- TODO Have separate draft images.  Separate images per post?
+    putStrLn "Copying draft images..."
+    createDirectoryIfMissing True "out-drafts/images/"
+    copyFiles "images/compressed/draft/" "out-drafts/images/"
 
+    putStrLn "Writing draft posts..."
+    writePosts (templates M.! "post.html") globalContext drafts draftConfig
 
-      putStrLn "Writing draft posts..."
-      writePosts (templates M.! "post.html") globalContext drafts draftConfig
-
-      putStrLn "Writing draft index..."
-      writeArchive globalContext (templates M.! "archive.html") drafts draftConfig
+    putStrLn "Writing draft index..."
+    writeArchive globalContext (templates M.! "archive.html") drafts draftConfig
 
   putStrLn "Copying images..."
   createDirectoryIfMissing True  "out/images/"
   copyFiles "images/compressed/" "out/images/"
 
   putStrLn "Writing posts..."
-  writePosts (templates M.! "post.html") globalContext posts config
+  writePosts (templates M.! "post.html") globalContext posts baseConfig
 
   putStrLn "Copying old blog..."
   createDirectoryIfMissing True "out/wordpress"
@@ -247,17 +231,17 @@ regenerateCmd = do
 
   putStrLn "Writing other pages..."
   {-
-  writeIndex   globalContext (templates M.! "index.html")   config
-  writeContact globalContext (templates M.! "contact.html") config
+  writeIndex   globalContext (templates M.! "index.html")   baseConfig
+  writeContact globalContext (templates M.! "contact.html") baseConfig
   -}
-  writeArchive globalContext (templates M.! "archive.html") posts config
+  writeArchive globalContext (templates M.! "archive.html") posts baseConfig
 
   copyFile "assets/favicon.png"          "out/favicon.png"
   copyFile "assets/CNAME"                "out/CNAME"
   copyFile "assets/keybase.txt"          "out/keybase.txt"
 
   putStrLn "Writing atom feed..."
-  writeFeed (templates M.! "feed.xml") posts config
+  writeFeed (templates M.! "feed.xml") posts baseConfig
 
 -- Push to both repos.
 pushCmd :: IO ()
@@ -302,3 +286,33 @@ pushCmd = shelly $ do
           run_ "git" ["push"]
         else do
           echo "out/ repo is clean, so not committing or pushing it."
+
+makeGlobalContext :: M.Map String Template.Template -> IO (M.Map String Template.ContextValue)
+makeGlobalContext templates = do
+  -- Create a context with the field "year" set to the current year, and create
+  -- a context that contains all of the templates, to handle includes.
+  (year, _month, _day) <- fmap (toGregorian . utctDay) getCurrentTime
+  let yearString = show year
+  return $ M.unions
+        [ Template.stringField "year" yearString
+        , Template.stringField "year-range" $
+          if yearString == "2018"
+            then "2018"
+            else "2018-" ++ yearString
+        , Template.stringField "body-font" "'Alegreya Sans'"
+        , Template.stringField "header-font" "'Playfair Display'"
+        , Template.stringField "serif-font" "Alegreya"
+        , fmap Template.TemplateValue templates
+        ]
+
+baseConfig :: Config
+baseConfig = Config { outDir   = "out/"
+                    , imageDir = "images/compressed/"
+                    , outMode  = Mode.Published
+                    }
+
+draftConfig :: Config
+draftConfig = baseConfig { outDir = "out-drafts/"
+                         , imageDir = "images/compressed/draft"
+                         , outMode = Mode.Draft
+                         }
