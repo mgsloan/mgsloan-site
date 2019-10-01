@@ -95,10 +95,8 @@ substitute the variables with the types:
 This is more compact and clear for this example, but not quite as
 informative. Specifically, the user can't tell which parts of the
 constraints come from the instance definitions, and which parts are
-substituted type variables.
-
-One way to differentiate this might be to use ANSI terminal color
-codes to show where substitution has occurred!
+substituted type variables. One way to differentiate this might be to
+use ANSI terminal color codes to show where substitution has occurred!
 
 ## Alternative: Full instance context and head
 
