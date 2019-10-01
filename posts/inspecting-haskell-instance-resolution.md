@@ -332,3 +332,20 @@ the details.
 [error-monoid-maybe-int-ddump]: https://gist.github.com/mgsloan/401103e984fc70633cb345c0569fa982
 [explain-instance]: http://github.com/mgsloan/explain-instance
 [github examples]: https://github.com/mgsloan/explain-instance/tree/master/examples
+
+## Discussion / Related Links
+
+* [Discussion on r/haskell](https://www.reddit.com/r/haskell/comments/dask9a/inspecting_haskell_instance_resolution/)
+
+* [GHC ticket proposing :elab](https://gitlab.haskell.org/ghc/ghc/issues/15613),
+  a GHCi command similar to `:explain`, proposed by IcelandJack
+  (Baldur Blöndal).
+
+* [A 2016 Haskell-cafe post by Tom Ellis](https://mail.haskell.org/pipermail/haskell-cafe/2016-August/124622.html),
+  suggesting a similar change to the error messages.
+
+* [A 2016 Haskell-cafe post by me](https://mail.haskell.org/pipermail/haskell-cafe/2016-October/125355.html),
+  describing explain-instance. I forgot I'd sent this email, but was
+  [reminded by Tom Ellis in the Reddit discussion](https://www.reddit.com/r/haskell/comments/dask9a/inspecting_haskell_instance_resolution/f1ttd1a/).
+  Particularly surprising is that this email also chose `:explain` for
+  the GHCi command.
