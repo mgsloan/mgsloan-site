@@ -416,8 +416,8 @@ modifyLinks = go False
       , S.TagOpen "p" []
       , S.TagText (unwords
         [ "Some links are amazon affiliate links, which sometimes send me a bit of money when you make purchases after clicking them."
-        , "The purpose of this blog is sharing information, not making money."
-        , "But I figure I may as well add them, and I'd appreciate you using them!"
+        , "The purpose of this blog is sharing information and ideas, not making money."
+        , "But I figure I may as well add them, and I appreciate usage of them!"
         ])
       , S.TagClose "p"
       , S.TagClose "li"
