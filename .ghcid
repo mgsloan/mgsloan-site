@@ -1,4 +1,3 @@
--r
 --reload posts
 --reload drafts
 --reload templates

@@ -79,11 +79,11 @@ $ npm install -g livereload
 Then, in one terminal run the following:
 
 ```
-$ ghcid
+$ ghcid -r :main
 ```
 
-This runs `ghcid`, which reads the `.ghcid` file, configuring it to run `main`
-and watch a few directories for changes.
+This runs `ghcid`, which reads the `.ghcid` file, configuring it to
+watch a few directories for changes.
 
 ## Run python3 http server
 
