@@ -115,16 +115,6 @@ writeArchive globalContext template posts = writePage "/" context template
                            , Template.stringField "archive"   "true"
                            , globalContext ]
 
-{-
--- Given the contact template and the global context, writes the contact page
--- to the destination directory.
-writeContact :: Template.Context -> Template.Template -> Config -> IO ()
-writeContact globalContext = writePage "/contact" context
-  where context = M.unions [ Template.stringField "title" "Contact mgsloan"
-                           , Template.stringField "light" "true"
-                           , globalContext ]
--}
-
 -- Given the feed template and list of posts, writes an atom feed.
 writeFeed :: Template.Template -> [P.Post] -> Config -> IO ()
 writeFeed template posts config = do
@@ -190,9 +180,6 @@ regenerateCmd = do
   copyFiles "assets/old-blog/" "out/wordpress"
 
   putStrLn "Writing other pages..."
-  {-
-  writeContact globalContext (templates M.! "contact.html") baseConfig
-  -}
   writeArchive globalContext (templates M.! "archive.html") posts baseConfig
 
   copyFile "assets/favicon.png"          "out/favicon.png"
