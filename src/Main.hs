@@ -164,6 +164,13 @@ regenerateCmd = do
     putStrLn "Writing draft index..."
     writeArchive globalContext (templates M.! "archive.html") drafts draftConfig
 
+  oldDrafts <- readPosts "draft/posts-old/"
+  unless (null oldDrafts) $ do
+    putStrLn "Writing old draft posts..."
+    writePosts (templates M.! "post.html") globalContext oldDrafts oldDraftConfig
+    putStrLn "Writing old draft index..."
+    writeArchive globalContext (templates M.! "archive.html") oldDrafts oldDraftConfig
+
   putStrLn "Writing posts..."
   writePosts (templates M.! "post.html") globalContext posts baseConfig
 
@@ -270,3 +277,8 @@ draftConfig :: Config
 draftConfig = baseConfig { outDir = "draft/out"
                          , outMode = Mode.Draft
                          }
+
+oldDraftConfig :: Config
+oldDraftConfig = baseConfig { outDir = "draft/out-old"
+                            , outMode = Mode.Draft
+                            }
