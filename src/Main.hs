@@ -57,8 +57,10 @@ readPosts dir = do
             return []
 
 -- Holds the output directory and input image directory.
-data Config = Config { outDir   :: FilePath
-                     , outMode  :: Mode.Mode }
+data Config = Config
+  { outDir   :: FilePath
+  , outMode  :: Mode.Mode
+  }
 
 -- Given the post template and the global context, expands the template for all
 -- of the posts and writes them to the output directory. This also prints a list
@@ -78,9 +80,10 @@ writePosts tmpl ctx posts config =
     writePost post related = do
       let destFile = (outDir config) </> (drop 1 $ P.url post) </> "index.html"
           destDir = takeDirectory destFile
-          context  = M.unions [ P.context post
-                              , P.relatedContext related
-                              , ctx]
+          context  = M.unions
+            [ P.context post
+            , P.relatedContext related
+            , ctx]
           html = Template.apply tmpl context
           imagesDir = P.sourceDir post </> "images"
           destImagesDir = destDir </> "images"
@@ -109,18 +112,21 @@ writePage url pageContext template config = do
 -- to the destination directory.
 writeArchive :: Template.Context -> Template.Template -> [P.Post] -> Config -> IO ()
 writeArchive globalContext template posts = writePage "/" context template
-  where context = M.unions [ P.archiveContext posts
-                           , Template.stringField "title"     "mgsloan"
-                           , Template.stringField "bold-font" "true"
-                           , Template.stringField "archive"   "true"
-                           , globalContext ]
+  where
+    context = M.unions
+      [ P.archiveContext posts
+      , Template.stringField "title"     "mgsloan"
+      , Template.stringField "bold-font" "true"
+      , Template.stringField "archive"   "true"
+      , globalContext
+      ]
 
 -- Given the feed template and list of posts, writes an atom feed.
 writeFeed :: Template.Template -> [P.Post] -> Config -> IO ()
 writeFeed template posts config = do
-  let url      = "/feed.xml"
-      context  = P.feedContext posts
-      atom     = Template.apply template context
+  let url = "/feed.xml"
+      context = P.feedContext posts
+      atom = Template.apply template context
       destFile = (outDir config) </> (tail url)
   createDirectoryIfMissing True (outDir config)
   writeFile destFile atom
@@ -145,12 +151,12 @@ renderDraftCmd draftTitlePortion = do
 regenerateCmd :: IO ()
 regenerateCmd = do
   templates <- readTemplates "templates/"
-  posts     <- readPosts     "posts/"
+  posts <- readPosts "posts/"
   globalContext <- makeGlobalContext templates
 
   -- cleanOutputDir
 
-  drafts    <- readPosts     "drafts/"
+  drafts <- readPosts "drafts/"
   unless (null drafts) $ do
     putStrLn "Writing draft posts..."
     writePosts (templates M.! "post.html") globalContext drafts draftConfig
@@ -167,9 +173,9 @@ regenerateCmd = do
   putStrLn "Writing other pages..."
   writeArchive globalContext (templates M.! "archive.html") posts baseConfig
 
-  copyFile "assets/favicon.png"          "out/favicon.png"
-  copyFile "assets/CNAME"                "out/CNAME"
-  copyFile "assets/keybase.txt"          "out/keybase.txt"
+  copyFile "assets/favicon.png" "out/favicon.png"
+  copyFile "assets/CNAME"       "out/CNAME"
+  copyFile "assets/keybase.txt" "out/keybase.txt"
 
   putStrLn "Writing atom feed..."
   writeFeed (templates M.! "feed.xml") posts baseConfig
@@ -226,16 +232,16 @@ makeGlobalContext templates = do
   (year, _month, _day) <- fmap (toGregorian . utctDay) getCurrentTime
   let yearString = show year
   return $ M.unions
-        [ Template.stringField "year" yearString
-        , Template.stringField "year-range" $
-          if yearString == "2018"
-            then "2018"
-            else "2018-" ++ yearString
-        , Template.stringField "body-font" "'Alegreya Sans'"
-        , Template.stringField "header-font" "'Playfair Display'"
-        , Template.stringField "serif-font" "Alegreya"
-        , fmap Template.TemplateValue templates
-        ]
+    [ Template.stringField "year" yearString
+    , Template.stringField "year-range" $
+      if yearString == "2018"
+        then "2018"
+        else "2018-" ++ yearString
+    , Template.stringField "body-font" "'Alegreya Sans'"
+    , Template.stringField "header-font" "'Playfair Display'"
+    , Template.stringField "serif-font" "Alegreya"
+    , fmap Template.TemplateValue templates
+    ]
 
 cleanOutputDir :: IO ()
 cleanOutputDir = do
