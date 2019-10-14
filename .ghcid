@@ -1,5 +1,5 @@
 --reload posts
---reload drafts
+--reload draft/posts
+--reload draft/posts-old
 --reload templates
---reload images/compressed
 --reload assets
