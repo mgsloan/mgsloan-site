@@ -198,24 +198,10 @@ regenerateCmd = do
 
   drafts    <- readPosts     "drafts/"
   unless (null drafts) $ do
-    -- TODO Have separate draft images.  Separate images per post?
-    {-
-    putStrLn "Copying draft images..."
-    createDirectoryIfMissing True "out-drafts/images/"
-    copyFiles "images/compressed/draft/" "out-drafts/images/"
-    -}
-
     putStrLn "Writing draft posts..."
     writePosts (templates M.! "post.html") globalContext drafts draftConfig
-
     putStrLn "Writing draft index..."
     writeArchive globalContext (templates M.! "archive.html") drafts draftConfig
-
-  {-
-  putStrLn "Copying images..."
-  createDirectoryIfMissing True  "out/images/"
-  copyFiles "images/compressed/" "out/images/"
-  -}
 
   putStrLn "Writing posts..."
   writePosts (templates M.! "post.html") globalContext posts baseConfig
