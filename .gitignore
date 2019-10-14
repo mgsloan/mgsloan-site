@@ -1,33 +1,5 @@
-# Draft posts
+/.stack-work/
 /drafts/
-/old-drafts/
-/images/original/draft/
-/images/compressed/draft/
-
-# Build output
-/.stack-work
-/dist
-
-# Cabal sandbox
-/.cabal-sandbox
-/cabal.sandbox.config
-
-# Editor files
-*.swp
-*.swo
-
-# Fonts, original and processed
-/fonts/generated
-/fonts/original
-
-# Generated blog output
-/out
-/out-drafts
-
-# Python virtualenv
-/venv
-
-/notes.md
+/out-drafts/
+/out/
 /todo.md
-/old/
-/old-code.hs
