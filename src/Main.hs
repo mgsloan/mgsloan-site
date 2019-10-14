@@ -42,6 +42,7 @@ readTemplates dir = do
 -- Reads and renders all posts in the given directory.
 readPosts :: FilePath -> IO [P.Post]
 readPosts dir = do
+  createDirectoryIfMissing True dir
   posts <- map (dir </>) <$> listDirectory dir
   fmap concat $ forM posts $ \postDir -> do
     let postName = takeFileName postDir
