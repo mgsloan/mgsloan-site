@@ -105,15 +105,6 @@ writePage url pageContext template config = do
   createDirectoryIfMissing True destDir
   writeFile destFile html
 
-{-
-writeIndex :: Template.Context -> Template.Template -> Config -> IO ()
-writeIndex globalContext = writePage "/" context
-  where context = M.unions [ Template.stringField "title"     "mgsloan's blog"
-                           , Template.stringField "bold-font" "true"
-                           , Template.stringField "light"     "true"
-                           , globalContext ]
--}
-
 -- Given the archive template and the global context, writes the archive page
 -- to the destination directory.
 writeArchive :: Template.Context -> Template.Template -> [P.Post] -> Config -> IO ()
@@ -200,7 +191,6 @@ regenerateCmd = do
 
   putStrLn "Writing other pages..."
   {-
-  writeIndex   globalContext (templates M.! "index.html")   baseConfig
   writeContact globalContext (templates M.! "contact.html") baseConfig
   -}
   writeArchive globalContext (templates M.! "archive.html") posts baseConfig
