@@ -222,7 +222,7 @@ regenerateCmd = do
 
   putStrLn "Copying old blog..."
   createDirectoryIfMissing True "out/wordpress"
-  copyFiles "old-blog/" "out/wordpress"
+  copyFiles "assets/old-blog/" "out/wordpress"
 
   putStrLn "Writing other pages..."
   {-
