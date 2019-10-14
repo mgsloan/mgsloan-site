@@ -50,7 +50,7 @@ both:
   intelligible, since they aren't competing as much with the music,
   amplitude-wise.
 
-![Podcast Addict and Spotify settings](/images/android-audio.png)
+![Podcast Addict and Spotify settings](./images/android-audio.png)
 
 ## Miscellania
 

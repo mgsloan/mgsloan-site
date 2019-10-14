@@ -7,6 +7,7 @@
 -- the licence file in the root of the repository.
 
 module Post ( Post
+            , sourceDir
             , archiveContext
             , body
             , context
@@ -50,7 +51,8 @@ extractFrontMatter = parseFM M.empty . drop 1 . lines
           where (key, delimValue) = break (== ':') line
                 value = drop 2 delimValue -- Drop the colon and space.
 
-data Post = Post { title     :: String
+data Post = Post { sourceDir :: FilePath
+                 , title     :: String
                  , header    :: String
                  , subheader :: Maybe String
                  , part      :: Maybe Int
@@ -135,8 +137,8 @@ context p = fmap Template.StringValue ctx
 
 -- Given a slug and the contents of the post file (markdown with front matter),
 -- renders the body to html and parses the metadata.
-parse :: String -> String -> Post
-parse postSlug contents = let
+parse :: FilePath -> String -> String -> Post
+parse dir postSlug contents = let
   (frontMatter, bodyContents) = extractFrontMatter contents
   postTitle     = frontMatter M.! "title"
   postHeading   = fromMaybe postTitle $ M.lookup "header" frontMatter
@@ -146,7 +148,8 @@ parse postSlug contents = let
   addRunIn html = foldl Html.makeRunIn html (fmap length runIn)
   refineType    = addRunIn . Type.expandPunctuation . Html.renderTags . Type.makeAbbrsTags
   parseDate     = parseTimeOrError True defaultTimeLocale "%F"
-  in Post { title       = postTitle
+  in Post { sourceDir   = dir
+          , title       = postTitle
           , header      = brokenHeading
           , subheader   = M.lookup "subheader" frontMatter
           , part        = fmap read $ M.lookup "part" frontMatter

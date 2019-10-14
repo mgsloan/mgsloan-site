@@ -231,7 +231,7 @@ I opened a couple patches to GHC that got merged yesterday:
 
 ## Can we go three layers deep? Does time slow down?
 
-![inception screenshot](/images/inception.jpg)
+![inception screenshot](./images/inception.jpg)
 
 A natural question is how deep can we go? Can GHCi run inside GHCi inside GHCi?!
 It turns out that it works directly, and the nesting works arbitrarily deep:

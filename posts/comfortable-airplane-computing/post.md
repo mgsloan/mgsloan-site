@@ -13,7 +13,7 @@ tilt your head forward, probably slouch your back, while
 simultaneously probably putting your wrists at funny angles. So, the
 proposed usage embedded in the name "laptop" seems to be inadvisable.
 
-![laptop positions with bad ergonomics](/images/laptop_positions.gif)
+![laptop positions with bad ergonomics](./images/laptop-positions.gif)
 
 *Image from "The Adaptive Laptop". October, 2001. Timothy Griffin*
 
@@ -21,9 +21,9 @@ I'm writing this while on a flight to St. Louis, to attend [ICFP
 2018][]. Thankfully, I've figured out a pretty decent way to compute
 comfortably while flying! Here's what I'm looking at:
 
-![tented keyboardio with computer](/images/airplane-computing-tented-1.jpg)
+![tented keyboardio with computer](./images/tented-1.jpg)
 
-![tented keyboardio](/images/airplane-computing-tented-2.jpg)
+![tented keyboardio](./images/tented-2.jpg)
 
 This feels way better than the alternative! I can hardly believe I put
 up with the back-hunching, neck-craning, and wrist-compromising
@@ -60,7 +60,7 @@ The way I resolve this issue is by attaching the laptop to the folded
 tray table. The first step is to put some variety of strap around the
 tray table:
 
-![strap around tray table](/images/airplane-computing-strap.jpg)
+![strap around tray table](./images/strap.jpg)
 
 In this case, I'm using the strap that comes with the [Packed
 Pixels][]. Usually it's used to mount the portable screen to the side
@@ -88,7 +88,7 @@ in a variety of configurations.  More on this in future posts!
 I don't have a great picture of this on hand, but the zip-ties are
 fairly visible in this picture:
 
-![airplane laptop from side](/images/airplane-computing-side.jpg)
+![airplane laptop from side](./images/side.jpg)
 
 The resulting comfort and health totally makes up for looking a bit
 unconventional :)
@@ -120,8 +120,8 @@ though it is quite a lot lighter than it looks like it would be. I
 used it on a long flight in early 2018, and somehow ended up with a
 whole row to myself:
 
-![kinesis on airplane](/images/airplane-computing-kinesis.jpg)
-![kinesis on airplane 2](/images/airplane-computing-kinesis-2.jpg)
+![kinesis on airplane](./images/kinesis.jpg)
+![kinesis on airplane 2](./images/kinesis-2.jpg)
 
 All of these keyboards share the following great attributes:
 
@@ -172,12 +172,12 @@ a couple ["Aobelieve Flexible Twist Mounts"][flexible mount].  They
 turned out to work surprisingly well for keeping my keyboard in place,
 by wrapping around each leg:
 
-![flexible mount with keyboardio](/images/airplane-computing-mount.jpg)
+![flexible mount with keyboardio](./images/mount.jpg)
 
 This makes it feasible to use the keyboard tilted outwards, which can
 be quite comfortable:
 
-![airplane laptop from user pov](/images/airplane-computing-pov.jpg)
+![airplane laptop from user pov](./images/pov.jpg)
 
 It can go as far as being entirely vertical, but that does not seem to
 work well for me on airplanes due to usually not having much space.
@@ -196,7 +196,7 @@ horizontal.  The main downside is that I found myself often pressing
 with my palms to keep it in place - not great for correct typing
 ergonomics.
 
-![keyboardio no mount](/images/airplane-computing-no-mount.jpg)
+![keyboardio no mount](./images/no-mount.jpg)
 
 
 ## Other Possibilities

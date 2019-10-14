@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TupleSections #-}
 
 -- Copyright 2015 Ruud van Asseldonk
 -- Copyright 2018 Michael G Sloan
@@ -24,51 +25,39 @@ import qualified Post as P
 import qualified Template
 import qualified Mode
 
--- Applies the IO-performing function f to every file in a given directory if
--- the filename satisfies the predicate p.
-mapFilesIf :: (FilePath -> Bool) -> (FilePath -> IO a) -> FilePath -> IO [a]
-mapFilesIf p f dir = do
-  dirExists <- doesDirectoryExist dir
-  if dirExists
-    then enumerateFiles >>= filterM doesFileExist >>= mapM f
-    else return []
-  -- Prepend the directory names to the names returned by getDirectoryContents.
-  where enumerateFiles = fmap (filter p . fmap (dir </>)) $ getDirectoryContents dir
-
--- Applies the IO-performing function f to every file in a given directory.
-mapFiles :: (FilePath -> IO a) -> FilePath -> IO [a]
-mapFiles = mapFilesIf $ \_ -> True
-
 -- Copies all files in the source directory to the destination directory.
 copyFiles :: FilePath -> FilePath -> IO ()
-copyFiles srcDir dstDir = void $ mapFiles copy srcDir
-  where copy fname = copyFile fname $ dstDir </> (takeFileName fname)
-
--- Applies the IO-performing function f to every file in a given directory, and
--- returns a map from the file name to the result.
-mapFilesFileName :: (FilePath -> IO a) -> FilePath -> IO (M.Map FilePath a)
-mapFilesFileName f = (fmap M.fromList) . (mapFiles makePair)
-  where makePair fname = fmap (\x -> (takeFileName fname, x)) (f fname)
+copyFiles srcDir dstDir = do
+  fps <- map (srcDir </>) <$> listDirectory srcDir
+  forM_ fps $ \fp -> copyFile fp (dstDir </> takeFileName fp)
 
 -- Reads and parses all templates in the given directory.
 readTemplates :: FilePath -> IO (M.Map FilePath Template.Template)
-readTemplates = mapFilesFileName $ (fmap Template.parse) . readFile
-
--- Reads a post from a file.
-readPost :: FilePath -> IO P.Post
-readPost fname = fmap makePost $ readFile fname
-  where makePost body = P.parse (takeBaseName fname) body
+readTemplates dir = do
+  templates <- map (dir </>) <$> listDirectory dir
+  fmap M.fromList $ forM templates $ \fp -> do
+    contents <- readFile fp
+    return (takeFileName fp, Template.parse contents)
 
 -- Reads and renders all posts in the given directory.
 readPosts :: FilePath -> IO [P.Post]
-readPosts = mapFilesIf (\fp -> isMarkdown fp && isn'tLicense fp) readPost
-  where
-    isMarkdown = (== ".md") . takeExtension
-    isn'tLicense = (/= "license.md") . takeFileName
+readPosts dir = do
+  posts <- map (dir </>) <$> listDirectory dir
+  fmap concat $ forM posts $ \postDir -> do
+    let postName = takeBaseName postDir
+    if postName `elem` [".git", "license.md"]
+      then return []
+      else do
+        let postPath = postDir </> "post.md"
+        exists <- doesFileExist postPath
+        if exists
+          then (:[]) . P.parse postDir postName <$> readFile postPath
+          else do
+            putStrLn $ "Warning: expected file at " ++ postPath ++ ", but none found."
+            return []
 
 -- Holds the output directory and input image directory.
 data Config = Config { outDir   :: FilePath
-                     , imageDir :: FilePath
                      , outMode  :: Mode.Mode }
 
 -- Compresses the given file to a new file with .gz/br appended to the filename.
@@ -97,16 +86,18 @@ writePosts tmpl ctx posts config =
       Async.async $ writePost post related
     writePost post related = do
       let destFile = (outDir config) </> (drop 1 $ P.url post) </> "index.html"
+          destDir = takeDirectory destFile
           context  = M.unions [ P.context post
                               , P.relatedContext related
                               , ctx]
           html = Template.apply tmpl context
-      -- Ignores referenced images - ruuda's blog uses this for font
-      -- subsetting based on SVG contents, but I don't need that
-      -- feature.
-      (_imgPaths, withImages) <- Image.processImages (outMode config) (imageDir config) html
+          imagesDir = P.sourceDir post </> "images"
+          destImagesDir = destDir </> "images"
+      withImages <- Image.processImages (outMode config) imagesDir html
+      createDirectoryIfMissing True imagesDir
+      createDirectoryIfMissing True destImagesDir
+      copyFiles imagesDir destImagesDir
       let minified = minifyHtml withImages
-      createDirectoryIfMissing True $ takeDirectory destFile
       writeFile destFile minified
       compressFile destFile
   in do
@@ -208,9 +199,11 @@ regenerateCmd = do
   drafts    <- readPosts     "drafts/"
   unless (null drafts) $ do
     -- TODO Have separate draft images.  Separate images per post?
+    {-
     putStrLn "Copying draft images..."
     createDirectoryIfMissing True "out-drafts/images/"
     copyFiles "images/compressed/draft/" "out-drafts/images/"
+    -}
 
     putStrLn "Writing draft posts..."
     writePosts (templates M.! "post.html") globalContext drafts draftConfig
@@ -218,9 +211,11 @@ regenerateCmd = do
     putStrLn "Writing draft index..."
     writeArchive globalContext (templates M.! "archive.html") drafts draftConfig
 
+  {-
   putStrLn "Copying images..."
   createDirectoryIfMissing True  "out/images/"
   copyFiles "images/compressed/" "out/images/"
+  -}
 
   putStrLn "Writing posts..."
   writePosts (templates M.! "post.html") globalContext posts baseConfig
@@ -307,12 +302,10 @@ makeGlobalContext templates = do
 
 baseConfig :: Config
 baseConfig = Config { outDir   = "out/"
-                    , imageDir = "images/compressed/"
                     , outMode  = Mode.Published
                     }
 
 draftConfig :: Config
 draftConfig = baseConfig { outDir = "out-drafts/"
-                         , imageDir = "images/compressed/draft"
                          , outMode = Mode.Draft
                          }
