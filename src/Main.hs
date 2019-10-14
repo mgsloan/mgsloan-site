@@ -60,15 +60,6 @@ readPosts dir = do
 data Config = Config { outDir   :: FilePath
                      , outMode  :: Mode.Mode }
 
--- Compresses the given file to a new file with .gz/br appended to the filename.
-compressFile :: FilePath -> IO ()
-compressFile _fname = do
-  {-
-  System.Process.callProcess "zopfli" [fname]
-  System.Process.callProcess "brotli" ["--force", "--output",  fname ++ ".br", "--input", fname]
-  -}
-  return ()
-
 -- Given the post template and the global context, expands the template for all
 -- of the posts and writes them to the output directory. This also prints a list
 -- of processed posts to the standard output. Start numbering post artifacts at
@@ -99,7 +90,6 @@ writePosts tmpl ctx posts config =
       copyFiles imagesDir destImagesDir
       let minified = minifyHtml withImages
       writeFile destFile minified
-      compressFile destFile
   in do
     subsetCmdsAsync <- mapM writePostAsync withRelated
     mapM_ Async.wait subsetCmdsAsync
@@ -114,7 +104,6 @@ writePage url pageContext template config = do
       destFile = destDir </> "index.html"
   createDirectoryIfMissing True destDir
   writeFile destFile html
-  compressFile destFile
 
 {-
 writeIndex :: Template.Context -> Template.Template -> Config -> IO ()
@@ -154,7 +143,6 @@ writeFeed template posts config = do
       destFile = (outDir config) </> (tail url)
   createDirectoryIfMissing True (outDir config)
   writeFile destFile atom
-  compressFile destFile
 
 main :: IO ()
 main = do
