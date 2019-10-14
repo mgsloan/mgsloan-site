@@ -148,22 +148,7 @@ regenerateCmd = do
   posts     <- readPosts     "posts/"
   globalContext <- makeGlobalContext templates
 
-  {-
-  outExists <- doesDirectoryExist "out"
-  when outExists $ do
-    files <- listDirectory "out"
-    print files
-    forM_ files $ \file -> do
-      let fp = "out" </> file
-      if file == ".git"
-        then return ()
-        else do
-          isFile <- doesFileExist fp
-          print (fp, isFile)
-          if isFile
-            then removeFile fp
-            else removeDirectoryRecursive fp
-  -}
+  -- cleanOutputDir
 
   drafts    <- readPosts     "drafts/"
   unless (null drafts) $ do
@@ -192,6 +177,7 @@ regenerateCmd = do
 -- Push to both repos.
 pushCmd :: IO ()
 pushCmd = shelly $ do
+  liftIO cleanOutputDir
   -- Check if the repo is clean.
   -- https://stackoverflow.com/a/3879077
   let checkIsDirty = do
@@ -250,6 +236,23 @@ makeGlobalContext templates = do
         , Template.stringField "serif-font" "Alegreya"
         , fmap Template.TemplateValue templates
         ]
+
+cleanOutputDir :: IO ()
+cleanOutputDir = do
+  outExists <- doesDirectoryExist "out"
+  when outExists $ do
+    files <- listDirectory "out"
+    print files
+    forM_ files $ \file -> do
+      let fp = "out" </> file
+      if file == ".git"
+        then return ()
+        else do
+          isFile <- doesFileExist fp
+          print (fp, isFile)
+          if isFile
+            then removeFile fp
+            else removeDirectoryRecursive fp
 
 baseConfig :: Config
 baseConfig = Config { outDir   = "out/"
