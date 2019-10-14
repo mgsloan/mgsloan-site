@@ -44,7 +44,7 @@ readPosts :: FilePath -> IO [P.Post]
 readPosts dir = do
   posts <- map (dir </>) <$> listDirectory dir
   fmap concat $ forM posts $ \postDir -> do
-    let postName = takeBaseName postDir
+    let postName = takeFileName postDir
     if postName `elem` [".git", "license.md"]
       then return []
       else do
