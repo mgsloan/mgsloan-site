@@ -3,7 +3,7 @@
 # Resize an image to be 1280 pixels wide. Keep the same aspect ratio.
 # Usage:
 #
-#     $ ./resize.sh image.png image-1280.png
+#     $ ./resize-image.sh image.png image-1280.png
 
 # Resize in the linear LAB color space, but write the result in sRGB. Do not
 # write gamma information in the png metadata though. This feature of png
