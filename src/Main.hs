@@ -143,7 +143,7 @@ main = do
 renderDraftCmd :: String -> IO ()
 renderDraftCmd draftTitlePortion = do
   templates <- readTemplates "templates/"
-  drafts <- readPosts "drafts/"
+  drafts <- readPosts "draft/posts/"
   globalContext <- makeGlobalContext templates
   [draft] <- return $ filter ((draftTitlePortion `isInfixOf`) . P.title) drafts
   writePosts (templates M.! "post.html") globalContext [draft] draftConfig
@@ -156,7 +156,7 @@ regenerateCmd = do
 
   -- cleanOutputDir
 
-  drafts <- readPosts "drafts/"
+  drafts <- readPosts "draft/posts/"
   unless (null drafts) $ do
     putStrLn "Writing draft posts..."
     writePosts (templates M.! "post.html") globalContext drafts draftConfig
@@ -266,6 +266,6 @@ baseConfig = Config { outDir   = "out/"
                     }
 
 draftConfig :: Config
-draftConfig = baseConfig { outDir = "out-drafts/"
+draftConfig = baseConfig { outDir = "draft/out"
                          , outMode = Mode.Draft
                          }

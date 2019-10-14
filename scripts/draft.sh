@@ -2,6 +2,6 @@
 
 ghcid --run=":main render-draft \"$1\"" &
 
-cd out-drafts
+cd draft/out
 python3 -m http.server &
 livereload -w 0.3
