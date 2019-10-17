@@ -177,6 +177,8 @@ regenerateCmd = do
   copyFile "assets/favicon.png" "out/favicon.png"
   copyFile "assets/CNAME"       "out/CNAME"
   copyFile "assets/keybase.txt" "out/keybase.txt"
+  copyFile "assets/photoswipe.css" "out/photoswipe.css"
+  copyFile "assets/photoswipe.js" "out/photoswipe.js"
 
   putStrLn "Writing atom feed..."
   writeFeed (templates M.! "feed.xml") posts baseConfig
