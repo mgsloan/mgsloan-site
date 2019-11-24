@@ -140,6 +140,7 @@ main = do
   case args of
     ["push"] -> pushCmd
     ["render-draft", draftTitlePortion] -> renderDraftCmd draftTitlePortion
+    ["render-start"] -> renderStartPage
     [] -> regenerateCmd
     _ -> error $ "Unrecognized arguments: " ++ show args
 
@@ -284,15 +285,19 @@ renderStartPage = do
   password <- head . lines <$> readFile "draft/start-page-password"
   let concatenatedHtmlFile = "draft/start-page-concatenated.html"
   writeFile concatenatedHtmlFile $ unlines
-    [ secretsHtml
-    , "<div class=priorities>"
+    [ "<div id=contents>"
+    , secretsHtml
+    , "<div id=priorities>"
     , prioritiesHtml
+    , "</div>"
     , "</div>"
     ]
   -- staticrypt built from source of
   -- https://github.com/robinmoisson/staticrypt/tree/38a3f5b297b56c580a65cb2cadeb0007be88fe49
-  callProcess "staticrypt" [concatenatedHtmlFile, password, "-f", "templates/start-page.html", "-o", "out/start-page.html"]
-    `finally`
+  createDirectoryIfMissing False "out/start-page"
+  callProcess "staticrypt" [concatenatedHtmlFile, password, "-f", "templates/start-page.html", "-o", "out/start-page/index.html"]
+    `finally` do
+      removeFile prioritiesHtmlFile
       removeFile concatenatedHtmlFile
 
 findFileWithSuffixIn :: String -> FilePath -> IO FilePath

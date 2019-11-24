@@ -6,6 +6,7 @@
     <style>
       body {
         background-size: contain;
+        margin: 0;
       }
 
       #agenda-frames {
@@ -27,15 +28,45 @@
       }
 
       .reminder {
-        display: none;
         font-size: 200%;
         position: absolute;
-        bottom: 1em;
-        border-radius: 0.5em;
-        background-color: #333;
-        color: #eee;
-        padding: 0.25em;
+        bottom: 64px;
       }
+
+      .reminder a {
+        color: white;
+      }
+
+      #focus, #work-focus, #priorities, .reminder {
+        display: none;
+        background: rgba(0.5, 0.5, 0.5, 0.3);
+        opacity: 0.9;
+        color: white;
+        margin: 32px;
+        padding: 32px;
+        border-radius: 32px;
+      }
+
+      #priorities {
+        position: absolute;
+        top: 128px;
+        font-family: sans-serif;
+      }
+
+      #priorities h1 {
+        font-size: 150%;
+      }
+
+      #priorities ul {
+        font-size: 125%;
+      }
+
+      #focus {
+        position: absolute;
+        font-size: 200%;
+        font-family: serif;
+      }
+
     </style>
 
   </head>
@@ -92,7 +123,7 @@
 
       var urlParams = new URLSearchParams(window.location.search);
       if (!urlParams.has('pass')) {
-      abort('Expected "pass" query parameter');
+        abort('Expected "pass" query parameter');
       }
 
       var passphrase = urlParams.get('pass'),
@@ -111,9 +142,23 @@
       document.close()
 
       // After decrypting, display a random reminder
-      const reminders = document.getElementsByClassName('reminder');
+      const reminderClass = urlParams.has('work') ? 'work-reminder' : 'reminder';
+      const reminders = document.getElementsByClassName(reminderClass);
       const randomReminder = reminders[Math.floor(Math.random() * reminders.length)];
-      randomReminder.style.display = 'block';
+      randomReminder.style.display = 'inline-block';
+
+      const prioritiesDiv = document.getElementById('priorities');
+      const focusDiv = document.getElementById('focus');
+      const workFocusDiv = document.getElementById('work-focus');
+      if (urlParams.has('personal')) {
+        prioritiesDiv.style.display = 'inline-block';
+        focusDiv.style.display = 'inline-block';
+      } else if (urlParams.has('work')) {
+        workFocusDiv.style.display = 'inline-block';
+      } else {
+        // This case is for personal account at work.
+        workFocusDiv.style.display = 'inline-block';
+      }
     </script>
   </body>
 </html>
