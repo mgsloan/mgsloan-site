@@ -7,15 +7,17 @@
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License version 3. See
 -- the licence file in the root of the repository.
+import Control.Exception (finally)
 import Control.Monad
 import Data.Monoid ((<>))
-import Data.List (isInfixOf)
+import Data.List (isInfixOf, sort, isSuffixOf)
 import Data.Time.Calendar (toGregorian)
 import Data.Time.Clock (getCurrentTime, utctDay)
 import Minification (minifyHtml)
 import System.Environment
 import System.Directory
 import System.FilePath
+import System.Process (callProcess)
 import Shelly hiding ((</>), FilePath)
 import qualified Data.Text as T
 import qualified Control.Concurrent.Async as Async
@@ -203,6 +205,7 @@ pushCmd = shelly $ do
   checkMaster "out"
   -- Rebuild the site.
   liftIO regenerateCmd
+  liftIO renderStartPage
   -- Add all untracked and
   shouldPush <- chdir "out" $ do
     run_ "git" ["add", "-A"]
@@ -270,3 +273,30 @@ draftConfig :: Config
 draftConfig = baseConfig { outDir = "draft/out"
                          , outMode = Mode.Draft
                          }
+
+renderStartPage :: IO ()
+renderStartPage = do
+  prioritiesMd <- findFileWithSuffixIn "priorities.md" "/home/mgsloan/docs/weekly/"
+  let prioritiesHtmlFile = "draft/priorities.html"
+  callProcess "pandoc" [prioritiesMd, "-o", prioritiesHtmlFile]
+  secretsHtml <- readFile "draft/start-page-secret.html"
+  prioritiesHtml <- readFile prioritiesHtmlFile
+  password <- head . lines <$> readFile "draft/start-page-password"
+  let concatenatedHtmlFile = "draft/start-page-concatenated.html"
+  writeFile concatenatedHtmlFile $ unlines
+    [ secretsHtml
+    , "<div class=priorities>"
+    , prioritiesHtml
+    , "</div>"
+    ]
+  -- staticrypt built from source of
+  -- https://github.com/robinmoisson/staticrypt/tree/38a3f5b297b56c580a65cb2cadeb0007be88fe49
+  callProcess "staticrypt" [concatenatedHtmlFile, password, "-f", "templates/start-page.html", "-o", "out/start-page.html"]
+    `finally`
+      removeFile concatenatedHtmlFile
+
+findFileWithSuffixIn :: String -> FilePath -> IO FilePath
+findFileWithSuffixIn suffix weeklyDir = do
+  entries <- sort <$> listDirectory weeklyDir
+  let foundFileName = last $ filter ((suffix `isSuffixOf`) . takeFileName) entries
+  return $ weeklyDir </> foundFileName
