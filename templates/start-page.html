@@ -79,21 +79,6 @@
     {crypto_tag}
 
     <script>
-      var todoistFrame = document.getElementById('todoist-frame');
-      var urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('work')) {
-        todoistFrame.src = 'https://todoist.com/app?r=1574130853#agenda%2FToday%20%26%20%40Work';
-      } else {
-        todoistFrame.src = 'https://todoist.com/app?r=1574130853#agenda%2Foverdue%20%26%20!assigned%20to%3A%20other%2C%20today%20%26%20!assigned%20to%3A%20other'
-      }
-
-      async function fetchApod() {
-        const response = await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
-        const json = await response.json();
-        document.body.style.backgroundImage = 'url("' + json.hdurl + '")';
-      }
-      fetchApod();
-
       // Based on code from
       // https://github.com/robinmoisson/staticrypt/blob/38a3f5b297b56c580a65cb2cadeb0007be88fe49/cli/password_template.html
       var keySize = 256;
@@ -159,6 +144,44 @@
         // This case is for personal account at work.
         workFocusDiv.style.display = 'inline-block';
       }
+
+      var todoistFrame = document.getElementById('todoist-frame');
+      var urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('work')) {
+        todoistFrame.src = 'https://todoist.com/app?r=1574130853#agenda%2FToday%20%26%20%40Work';
+      } else {
+        todoistFrame.src = 'https://todoist.com/app?r=1574130853#agenda%2Foverdue%20%26%20!assigned%20to%3A%20other%2C%20today%20%26%20!assigned%20to%3A%20other'
+      }
+
+      async function getApodUrl() {
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        // May as well be friendly to nasa's servers and try to only query apod once a day :)
+        const apodDayRaw = localStorage.getItem('apodDayRaw');
+        if (apodDayRaw) {
+          const apodDay = new Date(apodDayRaw);
+          apodDay.setHours(0,0,0,0);
+          if (apodDay.getTime() == today.getTime()) {
+            console.log('Date match - attempting to use cached apod url');
+            const apodUrl = localStorage.getItem('apodUrl');
+            if (apodUrl) {
+              console.log('Successfully used cached apod url');
+              return apodUrl;
+            }
+          }
+        }
+        const response = await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
+        const json = await response.json();
+        const url = json.hdurl;
+        localStorage.setItem('apodDayRaw', today.toString());
+        localStorage.setItem('apodUrl', url);
+        return url;
+      }
+      async function updateBackground() {
+        const url = await getApodUrl();
+        document.body.style.backgroundImage = 'url("' + url + '")';
+      }
+      updateBackground();
     </script>
   </body>
 </html>
