@@ -71,10 +71,12 @@
 
   </head>
   <body>
+    <!-- TODO: re-enable on some sort of start page?
     <div id="agenda-frames">
       <iframe id="todoist-frame"></iframe>
       <iframe id="calendar-frame" src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%237986CB&amp;ctz=America%2FDenver&amp;src=bWdzbG9hbkBnbWFpbC5jb20&amp;src=c201YzdzZWw3bjcxcTBxZjYwN3JiNzhvYzRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&amp;src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&amp;color=%2330487E&amp;color=%235A9A08&amp;color=%23227F63&amp;showTitle=0&amp;mode=AGENDA&amp;showNav=0&amp;showPrint=0&amp;showDate=1&amp;showTabs=1&amp;showCalendars=0&amp;showTz=0" frameborder="0" scrolling="no"></iframe>
     </div>
+    -->
 
     {crypto_tag}
 
@@ -145,6 +147,7 @@
         workFocusDiv.style.display = 'inline-block';
       }
 
+      /*
       var todoistFrame = document.getElementById('todoist-frame');
       var urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('work')) {
@@ -152,6 +155,7 @@
       } else {
         todoistFrame.src = 'https://todoist.com/app?r=1574130853#agenda%2Foverdue%20%26%20!assigned%20to%3A%20other%2C%20today%20%26%20!assigned%20to%3A%20other'
       }
+      */
 
       async function getApodUrl() {
         const today = new Date();
