@@ -1,0 +1,3 @@
+[submodule "templates/dark-mode-toggle"]
+	path = assets/dark-mode-toggle
+	url = https://github.com/mgsloan/dark-mode-toggle

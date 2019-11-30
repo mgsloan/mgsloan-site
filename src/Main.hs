@@ -178,8 +178,11 @@ regenerateCmd = do
   writeArchive globalContext (templates M.! "archive.html") posts baseConfig
 
   copyFile "assets/favicon.png" "out/favicon.png"
+  copyFile "assets/favicon.png" "draft/out/favicon.png"
   copyFile "assets/CNAME"       "out/CNAME"
   copyFile "assets/keybase.txt" "out/keybase.txt"
+  copyFile "assets/dark-mode-toggle/src/dark-mode-toggle.mjs" "out/dark-mode-toggle.mjs"
+  copyFile "assets/dark-mode-toggle/src/dark-mode-toggle.mjs" "draft/out/dark-mode-toggle.mjs"
 
   putStrLn "Writing atom feed..."
   writeFeed (templates M.! "feed.xml") posts baseConfig

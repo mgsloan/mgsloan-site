@@ -742,3 +742,59 @@ nav a
 }
 
 /* TODO: Test this on larger screens. */
+
+
+/*
+ * DARK MODE
+ */
+
+.dark body, .dark ::-webkit-scrollbar, .dark ::-webkit-scrollbar-track, .dark pre::-webkit-scrollbar-thumb
+{
+	animation: color_change 1s infinite alternate;
+  background-color: #1a2633; /* 15% instead of 20% luminance version of footer color */
+  color: #eee;
+}
+
+.dark h1, .dark h2, .dark h3, .dark h2 > a:before
+{
+  color: #fff;
+}
+
+.dark .archive h2
+{
+    /* TODO */
+}
+
+.dark pre
+{
+  border: 1px solid #97a8ba;
+  color: #97a8ba;
+}
+
+.dark a {
+  color: #e05271; /* a bit lighter and more saturated than in light mode */
+}
+
+.dark hr.hairline
+{
+  border-bottom: 1px solid #e05271;
+}
+
+/* Syntax highlighting colors, adapted from the default prism.js theme. */
+.dark .kw, .dark .cf { color: #07a; } /* Keyword, control flow */
+.dark .dt, .dark .at { color: #d56; } /* Data type, function, attribute */
+.dark .fu            { color: #690; } /* Function */
+.dark .dv, .dark .bn, .dark .fl, .dark .er { color: #e6007e; } /* Decimal, base N, float, decimal part */
+.dark .ch, .dark .st { color: #d80; } /* Character, string */
+.dark .co            { color: #789; } /* Comment */
+
+dark-mode-toggle {
+  position: fixed;
+  top: 0;
+  right: 0;
+  transform: scale(1.5);
+}
+
+dark-mode-toggle input {
+  outline: none;
+}

@@ -25,3 +25,14 @@
     </p>
   </div>
 </footer>
+
+
+<dark-mode-toggle></dark-mode-toggle>
+<script type="module" src="/dark-mode-toggle.mjs"></script>
+<script>
+  const toggle = document.querySelector('dark-mode-toggle');
+  const html = document.documentElement;
+  toggle.addEventListener('colorschemechange', () => {
+    html.classList.toggle('dark', toggle.mode === 'dark');
+  });
+</script>
