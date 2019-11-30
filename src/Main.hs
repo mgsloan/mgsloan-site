@@ -209,7 +209,7 @@ pushCmd = shelly $ do
   checkMaster "out"
   -- Rebuild the site.
   liftIO regenerateCmd
-  liftIO renderStartPage
+  -- liftIO renderStartPage
   -- Add all untracked and
   shouldPush <- chdir "out" $ do
     run_ "git" ["add", "-A"]
