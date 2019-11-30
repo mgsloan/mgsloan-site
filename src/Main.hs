@@ -212,6 +212,14 @@ pushCmd = shelly $ do
   -- liftIO renderStartPage
   -- Add all untracked and
   shouldPush <- chdir "out" $ do
+    topLevel <- head . T.lines <$> run "git" ["rev-parse", "--show-toplevel"]
+    curDir <- pwd
+    when (fromText topLevel /= curDir) $ fail $ concat
+      [ "Expected out dir git repo to be at "
+      , show curDir
+      , ", but instead it was at "
+      , show topLevel
+      ]
     run_ "git" ["add", "-A"]
     run_ "git" ["status"]
     echo_n "Does this status for the output repo look good? "
