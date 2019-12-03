@@ -1,11 +1,11 @@
 [![Build Status][ci-img]][ci]
 
-This is the source code for [my personal site](mgsloan). It is based directly on
-[the code](ruudva-repo) for [Ruud van Asseldonk's site](ruudva). The site uses a
+This is the source code for [my personal site][mgsloan]. It is based directly on
+[the code][ruuda-repo] for [Ruud van Asseldonk's site][ruuda]. The site uses a
 custom static site generator written in Haskell.
 
 Here's a description of the generator written by Ruud van Asseldonk, from his
-[readme.md]:
+[readme.md][]:
 
 > The generator includes a tiny templating engine, an html and css minifier, and
 > an aggressive font subsetter. One of my objectives was to cut all the crap
@@ -18,8 +18,8 @@ using some popular fonts served by google. My reasoning is that for many users
 these will be cached.
 
 [mgsloan]:     https://mgsloan.com
-[ruudva]:      https://ruudvanasseldonk.com
-[ruudva-repo]: https://github.com/ruuda/blog
+[ruuda]:       https://ruudvanasseldonk.com
+[ruuda-repo]:  https://github.com/ruuda/blog
 [readme.md]:   https://github.com/ruuda/blog/blob/master/readme.md
 [ci-img]:      https://travis-ci.org/mgsloan/mgsloan-site.svg
 [ci]:          https://travis-ci.org/mgsloan/mgsloan-site
