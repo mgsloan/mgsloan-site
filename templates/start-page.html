@@ -147,24 +147,6 @@
       }
 
       var urlParams = new URLSearchParams(window.location.search);
-      if (!urlParams.has('pass')) {
-        abort('Expected "pass" query parameter');
-      }
-
-      var passphrase = urlParams.get('pass'),
-          encryptedMsg = '{encrypted}',
-          encryptedHMAC = encryptedMsg.substring(0, 64),
-          encryptedHTML = encryptedMsg.substring(64),
-          decryptedHMAC = CryptoJS.HmacSHA256(encryptedHTML, CryptoJS.SHA256(passphrase).toString()).toString();
-
-      if (decryptedHMAC !== encryptedHMAC) {
-          abort('Bad passphrase!');
-      }
-
-      var plainHTML = decrypt(encryptedHTML, passphrase);
-
-      document.write(plainHTML);
-      document.close()
 
       // Show site unblocking stuff
       if (urlParams.has('blocked')) {
@@ -184,34 +166,51 @@
         };
       }
 
-      // After decrypting, display a random reminder
-      const reminderClass = urlParams.has('work') ? 'work-reminder' : 'reminder';
-      const reminders = document.getElementsByClassName(reminderClass);
-      const randomReminder = reminders[Math.floor(Math.random() * reminders.length)];
-      randomReminder.style.display = 'inline-block';
+      if (urlParams.has('pass')) {
+        var passphrase = urlParams.get('pass'),
+            encryptedMsg = '{encrypted}',
+            encryptedHMAC = encryptedMsg.substring(0, 64),
+            encryptedHTML = encryptedMsg.substring(64),
+            decryptedHMAC = CryptoJS.HmacSHA256(encryptedHTML, CryptoJS.SHA256(passphrase).toString()).toString();
 
-      const prioritiesDiv = document.getElementById('priorities');
-      const focusDiv = document.getElementById('focus');
-      const workFocusDiv = document.getElementById('work-focus');
-      if (urlParams.has('personal')) {
-        prioritiesDiv.style.display = 'inline-block';
-        focusDiv.style.display = 'inline-block';
-      } else if (urlParams.has('work')) {
-        workFocusDiv.style.display = 'inline-block';
-      } else {
-        // This case is for personal account at work.
-        workFocusDiv.style.display = 'inline-block';
-      }
+        if (decryptedHMAC !== encryptedHMAC) {
+            abort('Bad passphrase!');
+        }
 
-      /*
-      var todoistFrame = document.getElementById('todoist-frame');
-      var urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('work')) {
-        todoistFrame.src = 'https://todoist.com/app?r=1574130853#agenda%2FToday%20%26%20%40Work';
-      } else {
-        todoistFrame.src = 'https://todoist.com/app?r=1574130853#agenda%2Foverdue%20%26%20!assigned%20to%3A%20other%2C%20today%20%26%20!assigned%20to%3A%20other'
+        var plainHTML = decrypt(encryptedHTML, passphrase);
+
+        document.write(plainHTML);
+        document.close()
+
+        // After decrypting, display a random reminder
+        const reminderClass = urlParams.has('work') ? 'work-reminder' : 'reminder';
+        const reminders = document.getElementsByClassName(reminderClass);
+        const randomReminder = reminders[Math.floor(Math.random() * reminders.length)];
+        randomReminder.style.display = 'inline-block';
+
+        const prioritiesDiv = document.getElementById('priorities');
+        const focusDiv = document.getElementById('focus');
+        const workFocusDiv = document.getElementById('work-focus');
+        if (urlParams.has('personal')) {
+            prioritiesDiv.style.display = 'inline-block';
+            focusDiv.style.display = 'inline-block';
+        } else if (urlParams.has('work')) {
+            workFocusDiv.style.display = 'inline-block';
+        } else {
+            // This case is for personal account at work.
+            workFocusDiv.style.display = 'inline-block';
+        }
+
+        /*
+        var todoistFrame = document.getElementById('todoist-frame');
+        var urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('work')) {
+            todoistFrame.src = 'https://todoist.com/app?r=1574130853#agenda%2FToday%20%26%20%40Work';
+        } else {
+            todoistFrame.src = 'https://todoist.com/app?r=1574130853#agenda%2Foverdue%20%26%20!assigned%20to%3A%20other%2C%20today%20%26%20!assigned%20to%3A%20other'
+        }
+        */
       }
-      */
 
       async function getApodUrl() {
         const today = new Date();
