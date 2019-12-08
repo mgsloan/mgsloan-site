@@ -148,6 +148,7 @@
 
       // Show site unblocking stuff
       if (urlParams.has('blocked')) {
+        document.title = 'Blocked site';
         const blockedUrl = urlParams.get('blocked');
         const blockedDiv = document.getElementById('blocked');
         blockedDiv.style.display = 'inline-block';
