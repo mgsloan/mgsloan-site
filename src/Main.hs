@@ -306,7 +306,7 @@ renderStartPage = do
   -- staticrypt built from source of
   -- https://github.com/robinmoisson/staticrypt/tree/38a3f5b297b56c580a65cb2cadeb0007be88fe49
   createDirectoryIfMissing False "out/start-page"
-  callProcess "staticrypt" [concatenatedHtmlFile, password, "-f", "templates/start-page.html", "-o", "out/start-page/index.html"]
+  callProcess "staticrypt" [concatenatedHtmlFile, password, "-f", "templates/start-page.html", "-o", "out/start-page.html"]
     `finally` do
       removeFile prioritiesHtmlFile
       removeFile concatenatedHtmlFile
