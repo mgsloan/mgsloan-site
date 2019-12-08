@@ -4,6 +4,7 @@ date: 2019-12-08
 break: Computing with
 synopsis: Experiments in outdoor computing, deck desking, and reclined computing
 run-in: In the last
+primary-image: https://mgsloan.com/posts/deck-desk/images/pretty-desk.jpg
 ---
 
 In the last couple years, I've been experimenting with some approaches

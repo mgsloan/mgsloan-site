@@ -59,6 +59,7 @@ data Post = Post { sourceDir :: FilePath
                  , date      :: Day
                  , slug      :: String
                  , synopsis  :: String
+                 , primaryImage :: Maybe String
                  , body      :: String } deriving (Show) -- TODO: This is for debugging only, remove.
 
 -- Returns the post date, formatted like "17 April, 2015".
@@ -126,7 +127,9 @@ context p = fmap Template.StringValue ctx
                                , ("math", mathField)
                                , ("img", imgField)
                                , ("mono-font", monoFontField)
-                               , ("serif-italic-font", serifItalicFontField) ]
+                               , ("serif-italic-font", serifItalicFontField)
+                               -- TODO: would be nice if this supported relative paths
+                               , ("primary-image", primaryImage p)]
         usesSerifItalic      = (Type.usesSerifItalicFont $ body p) || (isJust $ subheader p)
         boldFontField        = booleanField $ Type.usesBoldFont $ body p
         italicFontField      = booleanField $ usesItalicFont p
@@ -156,6 +159,7 @@ parse dir postSlug contents = let
           , date        = parseDate $ frontMatter M.! "date"
           , slug        = postSlug
           , synopsis    = frontMatter M.! "synopsis"
+          , primaryImage = M.lookup "primary-image" frontMatter
           , body        = refineType
                         $ Html.modifyLinks
                         $ Html.cleanTables
