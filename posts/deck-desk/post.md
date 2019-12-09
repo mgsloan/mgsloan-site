@@ -142,6 +142,13 @@ direct sunshine:
 ![view of laptop screen while reclining in the sun
 ](./images/lounging-pov.jpg)
 
+The screen may look hard to read here, but that's just due to the
+camera adjusting to the overall brightness of the scene.  Our eyes
+have much dynamic range than phone cameras, so the screen was quite
+visible to human eyes.  I wouldn't recommend photo editing like this,
+but it's perfectly suitable for text centric activities like
+programming, emailing, reading, etc.
+
 ## Working with Sun: Environmental Shade
 
 For longer computing sessions, it's advisable to be in the shade. A
