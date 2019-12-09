@@ -775,6 +775,10 @@ nav a
   color: #97a8ba;
 }
 
+.dark pre > code {
+  background-color: transparent;
+}
+
 .dark a {
   color: #e05271; /* a bit lighter and more saturated than in light mode */
 }
