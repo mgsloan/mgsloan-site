@@ -750,7 +750,6 @@ nav a
 
 .dark body, .dark ::-webkit-scrollbar, .dark ::-webkit-scrollbar-track, .dark pre::-webkit-scrollbar-thumb
 {
-	animation: color_change 1s infinite alternate;
   background-color: #1a2633; /* 15% instead of 20% luminance version of footer color */
   color: #eee;
 }
