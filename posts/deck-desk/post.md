@@ -8,18 +8,18 @@ primary-image: https://mgsloan.com/posts/deck-desk/images/pretty-desk.jpg
 ---
 
 In the last couple years, I've been experimenting with some approaches
-for outside computer use. For *way* too long, I'd felt compelled to
+for outdoor computer use. For *way* too long, I'd felt compelled to
 stay indoors to use the computer for any substantial chunk of
 time. Happily, I've found some ways to use my computer outside which
 work quite well for me, and I hope they might work well for you too!
 
 One way to work outside is to simply take your laptop
-outside. However, I find that for me using a laptop alone is not
+outside. However, I find that for me using only laptop is not
 sustainable for much more than an hour or two, and even then, it just
-doesn't feel great. The laptop's screen is adjacent to the keyboard,
-which means typically neither are positioned ergonomically. See the
-illustration at the beginning of my [post about comfortable airplane
-computing][]
+doesn't feel very comfortable. The laptop's screen is adjacent to the
+keyboard, which means typically neither are positioned
+ergonomically. See the illustration at the beginning of my [post about
+comfortable airplane computing][]
 
 [post about comfortable airplane computing]: /posts/comfortable-airplane-computing/
 
