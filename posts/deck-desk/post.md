@@ -14,10 +14,10 @@ time. Happily, I've found some ways to use my computer outside which
 work quite well for me, and I hope they might work well for you too!
 
 One way to work outside is to simply take your laptop
-outside. However, I find that for me using only laptop is not
-sustainable for much more than an hour or two, and even then, it just
-doesn't feel very comfortable. The laptop's screen is adjacent to the
-keyboard, which means typically neither are positioned
+outside. However, I find that for me working with a laptop on my lap
+is not sustainable for much more than an hour or two, and even then,
+it just doesn't feel very comfortable. The laptop's screen is adjacent
+to the keyboard, which means typically neither are positioned
 ergonomically. See the illustration at the beginning of my [post about
 comfortable airplane computing][]
 
