@@ -144,10 +144,11 @@ direct sunshine:
 
 The screen may look hard to read here, but that's just due to the
 camera adjusting to the overall brightness of the scene.  Our eyes
-have much dynamic range than phone cameras, so the screen was quite
-visible to human eyes.  I wouldn't recommend photo editing like this,
-but it's perfectly suitable for text centric activities like
-programming, emailing, reading, etc.
+have much more dynamic range than phone cameras, so the screen in this
+photo was actually quite readable.  I wouldn't recommend editing
+photos or video like this, but it's perfectly suitable for activities
+that don't require as much color accuracy, like programming, emailing,
+browsing, etc.
 
 ## Working with Sun: Environmental Shade
 
@@ -171,7 +172,8 @@ inclement weather could damage the equipment. My solution to this was
 straightforward and effective - a couple tarps and bungee cords to
 hold them down.
 
-I haven't yet computed during a proper downpour - maybe one day!
+I haven't yet computed outside during a proper downpour - maybe one
+day!
 
 ## Working with Cold
 
@@ -204,7 +206,7 @@ allow for dexterity, such as:
     typing. They are decent gloves, I can indeed type with
     them. However, the feel isn't ideal because the seams overlap the
     fingertips, reducing the tactile sensitivity right in the spot
-    where I want it[^fingertip-seams]. So for now I just use the
+    where I want it[^fingertip-seams]. So, for now I just use the
     fingerless gloves.
 
 [Fox River]: https://smile.amazon.com/gp/product/B015SSNV9K
@@ -212,7 +214,7 @@ allow for dexterity, such as:
 ["The Writer's Glove"]: https://smile.amazon.com/Writers-Glove-Gloves-Typing-Standard/dp/B0753TYHW4
 
 [^fingertip-seams]:
-    It seems like fingertip seams are common to most glove designs,
+    It seems like fingertip seams are common to most glove designs -
     some reviews of ["The Writer's Glove"][] mention the same
     problem. If you find some nice thin gloves which don't have this
     problem, please let me know!
@@ -221,12 +223,12 @@ allow for dexterity, such as:
 
 It can get a bit tough to be productive on a super hot day. This was a
 bit of a challenge for me in the summer. I found one good approach was
-to use simply use evaporative cooling[^cooling-vests] - douse a
-t-shirt in water and then wear it!
+to use evaporative cooling[^cooling-vests] - douse a t-shirt in water
+and then wear it!
 
-I also set up a [mist-based patio cooling system][] on the 2018 deck
-desk, and found that to be quite good for cooling the air, and
-generally refreshing.
+I also experimented with a [mist-based patio cooling system][] on the
+2018 deck desk, and found that to be quite good for cooling the air,
+and generally refreshing.
 
 [mist-based patio cooling system]: https://smile.amazon.com/gp/product/B01A9IU0C0
 
