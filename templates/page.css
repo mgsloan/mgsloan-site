@@ -764,6 +764,11 @@ nav a
     /* TODO */
 }
 
+.dark code
+{
+  background-color: #eee2;
+}
+
 .dark pre
 {
   border: 1px solid #97a8ba;
