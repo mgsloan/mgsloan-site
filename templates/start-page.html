@@ -211,6 +211,7 @@
         */
       }
 
+      const picsumUrl = 'https://picsum.photos/1920/1080?random';
       async function getApodUrl() {
         const today = new Date();
         today.setHours(0,0,0,0);
@@ -236,7 +237,10 @@
         return url;
       }
       async function updateBackground() {
-        const url = await getApodUrl();
+        let url = Math.random() > 0.5 ? await getApodUrl() : picsumUrl;
+        if (url === undefined || url === 'undefined') {
+          url = picsumUrl;
+        }
         document.body.style.backgroundImage = 'url("' + url + '")';
       }
       updateBackground();
