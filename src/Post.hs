@@ -25,12 +25,12 @@ module Post ( Post
 
 import qualified Data.Map as M
 import           Data.Maybe (fromMaybe, isJust)
-import qualified Data.Set as S
 import qualified Data.Text as Text
 import           Data.Time.Format
 import           Data.Time.Calendar (Day, showGregorian, toGregorian)
 import           GHC.Exts (groupWith, sortWith)
 import           Text.Pandoc
+import           Text.Pandoc.Highlighting (zenburn)
 
 import qualified Html
 import qualified Template
@@ -170,19 +170,18 @@ parse dir postSlug contents = let
 
 -- Renders markdown to html using Pandoc with my settings.
 renderMarkdown :: String -> String
-renderMarkdown md = case fmap (writeHtmlString wopt) (readMarkdown ropt md) of
-  Right result -> result
-  Left  _      -> "Failed to parse markdown."
+renderMarkdown md =
+  case runPure render of
+    Right result -> result
+    Left  err    -> "Failed to parse markdown: " ++ show err
   -- Enable backtick code blocks and accept tables.
   -- For output, enable syntax highlighting.
-  where ropt = def { readerExtensions = S.insert Ext_backtick_code_blocks $
-                                        S.insert Ext_raw_html $
-                                        S.insert Ext_simple_tables $
-                                        S.insert Ext_auto_identifiers $
-                                        S.insert Ext_ascii_identifiers $
-                                        S.insert Ext_footnotes $
-                                        def }
-        wopt = def { writerHighlight  = True }
+  where ropt = def { readerExtensions = extensionsFromList [Ext_footnotes] <>
+                                        githubMarkdownExtensions }
+        wopt = def { writerHighlightStyle = Just zenburn }
+        render = do
+          pandoc <- readMarkdown ropt (Text.pack md)
+          Text.unpack <$> writeHtml5String wopt pandoc
 
 -- Related content for a post, for the further reading section in the footer.
 data RelatedContent
