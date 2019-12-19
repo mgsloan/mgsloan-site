@@ -434,7 +434,7 @@ pre:hover::-webkit-scrollbar
 /* Syntax highlighting colors, adapted from the default prism.js theme. */
 .kw, .cf           { color: #07a; } /* Keyword, control flow */
 .dt, .at           { color: #d56; } /* Data type, function, attribute */
-.fu                { color: #690; } /* Function */
+.op                { color: #690; } /* Operators */
 .dv, .bn, .fl, .er { color: #905; } /* Decimal, base N, float, decimal part */
 .ch, .st           { color: #d80; } /* Character, string */
 .co                { color: #789; } /* Comment */
@@ -814,7 +814,7 @@ nav a
 /* Syntax highlighting colors, adapted from the default prism.js theme. */
 .dark .kw, .dark .cf { color: #07a; } /* Keyword, control flow */
 .dark .dt, .dark .at { color: #d56; } /* Data type, function, attribute */
-.dark .fu            { color: #690; } /* Function */
+.dark .op { color: #690; } /* Operators */
 .dark .dv, .dark .bn, .dark .fl, .dark .er { color: #e6007e; } /* Decimal, base N, float, decimal part */
 .dark .ch, .dark .st { color: #d80; } /* Character, string */
 .dark .co            { color: #789; } /* Comment */
