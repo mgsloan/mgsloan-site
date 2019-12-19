@@ -5,6 +5,7 @@
 -- it under the terms of the GNU General Public License version 3. See
 -- the licence file in the root of the repository.
 
+{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE LambdaCase #-}
 
 module Html ( Tag
@@ -63,7 +64,7 @@ module Html ( Tag
 -- This module contains utility functions for dealing with html.
 
 import           Control.Monad (join, msum)
-import           Data.List (delete, find, intersperse)
+import           Data.List (delete, find, intersperse, lookup)
 import           Data.Maybe (catMaybes)
 import           Network.URI (parseURIReference, uriToString, URI(..), URIAuth(..))
 import qualified Text.HTML.TagSoup as S
@@ -390,7 +391,7 @@ modifyLinks = go False
                 | otherwise ->
                   tag : go hasAffiliate tags
       -- Drop hr, add header, and add footnote for #amazon-links if needed.
-      (divTag@(S.TagOpen "div" [("class", "footnotes")]) : afterDiv) ->
+      (divTag@(S.TagOpen "section" (lookup "class" -> Just "footnotes")) : afterDiv) ->
         case afterDiv of
           ( S.TagText _ :
             S.TagOpen "hr" _ :
