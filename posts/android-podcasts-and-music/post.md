@@ -36,14 +36,14 @@ both:
 * Make it so that [Podcast Addict][] ignores audio focus requests. In
   particular:
 
-  1. Press the vertical ellipsis in the top right corner.
+    1. Press the vertical ellipsis in the top right corner.
 
-  2. Press "App settings", then "Player".
+    2. Press "App settings", then "Player".
 
-  3. Scroll all the way to the bottom of the Player settings.
+    3. Scroll all the way to the bottom of the Player settings.
 
-  4. Check the "Ignore Audio Focus requests" option, which is
-  currently marked "Experimental".
+    4. Check the "Ignore Audio Focus requests" option, which is
+    currently marked "Experimental".
 
 * In [Spotify][]'s settings, enable the "Normalize volume" option and
   set the "Volume level" to "Quiet". This makes the podcasts much more
