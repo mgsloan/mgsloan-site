@@ -209,15 +209,15 @@ allow for dexterity, such as:
     where I want it[^fingertip-seams]. So, for now I just use the
     fingerless gloves.
 
-[Fox River]: https://smile.amazon.com/gp/product/B015SSNV9K
-[Alaska Bear]: https://smile.amazon.com/gp/product/B00PIMIZWK
-["The Writer's Glove"]: https://smile.amazon.com/Writers-Glove-Gloves-Typing-Standard/dp/B0753TYHW4
+    [Fox River]: https://smile.amazon.com/gp/product/B015SSNV9K
+    [Alaska Bear]: https://smile.amazon.com/gp/product/B00PIMIZWK
+    ["The Writer's Glove"]: https://smile.amazon.com/Writers-Glove-Gloves-Typing-Standard/dp/B0753TYHW4
 
-[^fingertip-seams]:
-    It seems like fingertip seams are common to most glove designs -
-    some reviews of ["The Writer's Glove"][] mention the same
-    problem. If you find some nice thin gloves which don't have this
-    problem, please let me know!
+    [^fingertip-seams]:
+        It seems like fingertip seams are common to most glove designs -
+        some reviews of ["The Writer's Glove"][] mention the same
+        problem. If you find some nice thin gloves which don't have this
+        problem, please let me know!
 
 ## Working with Heat
 
