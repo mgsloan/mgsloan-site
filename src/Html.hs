@@ -398,6 +398,7 @@ modifyLinks = go False
             S.TagClose "hr" :
             S.TagText _ :
             rest ) ->
+              [S.TagOpen "hr" [("class", "hairline footnotes-divider")], S.TagClose "hr"] ++
               footnotesHeader ++ [divTag] ++ rest ++
               if hasAffiliate then affiliateNote else []
           _ -> error $ "Unexpected tags after footnotes div: " ++ show afterDiv

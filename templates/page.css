@@ -107,16 +107,28 @@ header > p
   margin-bottom: 0;
 }
 
-header > hr.hairline
+article > header > hr.hairline
 {
   margin-top: 0.5em;
+  transform: scale(1.4, 0.5);
+}
+
+article hr.hairline
+{
+  transform: scale(1.18, 0.5);
 }
 
 hr.hairline
 {
   border: none;
   border-bottom: 1px solid #c35;
-  transform: scale(1.4, 0.5);
+  transform: scale(1, 0.5);
+}
+
+.footnotes-divider
+{
+    margin-top: 4em;
+    margin-bottom: 2.4em;
 }
 
 /* The headings may contain manually inserted line breaks for a more balanced
