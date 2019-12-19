@@ -34,3 +34,4 @@ executable mgsloan-site
                , tagsoup
                , text
                , time
+               , skylighting

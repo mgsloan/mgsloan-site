@@ -30,7 +30,7 @@ import           Data.Time.Format
 import           Data.Time.Calendar (Day, showGregorian, toGregorian)
 import           GHC.Exts (groupWith, sortWith)
 import           Text.Pandoc
-import           Text.Pandoc.Highlighting (zenburn)
+import           Skylighting
 
 import qualified Html
 import qualified Template
@@ -178,10 +178,20 @@ renderMarkdown md =
   -- For output, enable syntax highlighting.
   where ropt = def { readerExtensions = extensionsFromList [Ext_footnotes] <>
                                         githubMarkdownExtensions }
-        wopt = def { writerHighlightStyle = Just zenburn }
+        wopt = def { writerHighlightStyle = Just noHighlight }
         render = do
           pandoc <- readMarkdown ropt (Text.pack md)
           Text.unpack <$> writeHtml5String wopt pandoc
+
+-- | Style with no colors or formatting
+noHighlight :: Style
+noHighlight = Style{
+    backgroundColor = Nothing
+  , defaultColor = Nothing
+  , lineNumberColor = Nothing
+  , lineNumberBackgroundColor = Nothing
+  , tokenStyles = M.empty
+  }
 
 -- Related content for a post, for the further reading section in the footer.
 data RelatedContent
