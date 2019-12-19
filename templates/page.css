@@ -171,6 +171,11 @@ abbr, .smcp
 {
   font-family: "Alegreya Sans SC";
   letter-spacing: 0.1em;
+  /* Not sure why this is needed, but otherwise an ABBR at the end of a
+   * P with display: inline-block effectively causes a newline. This
+   * can happen in the first P of an LI.
+   */
+  display: inline-block;
 }
 
 abbr
