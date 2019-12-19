@@ -246,7 +246,6 @@ ul, ol
 {
   counter-reset: ol;
   list-style: none;
-  margin-bottom: 1em;
   margin-top: 1em;
 }
 
@@ -290,6 +289,12 @@ li > p:first-child
 {
   display: inline-block;
   padding-top: 0;
+}
+
+/* Hack fixing layout of ul after paragraph in li */
+li > p:first-child + *
+{
+  margin-top: 0;
 }
 
 /* Nested list gets indented and uses square bullets. */
