@@ -170,12 +170,12 @@ ideas:
   phrase and came across a post by Justin Craig-Kuhn, titled ["DIY
   Supine
   Workstation"](https://medium.com/@jcraigk/healthy-hacking-diy-supine-workstation-cbaadcbbc2aa).
-  Cool stuff!!
+  He kindly gave me permission to reuse his photo here:
 
   ![Justin Craig-Kuhn's supine setup
   ](./images/supine-jcg.jpg)
 
-  A couple notes on this:
+  Cool stuff!! A couple notes on this:
 
     * He's using an ipad as a screen along with a gooseneck tablet
     mount. This has nice adjustability, and is more elegant than putting
