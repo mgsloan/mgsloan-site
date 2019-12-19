@@ -367,7 +367,7 @@ modifyLinks = go False
     go hasAffiliate = \case
       [] ->
         if hasAffiliate
-          then footnotesHeader ++ affiliateNote
+          then footnotesDivider ++ footnotesHeader ++ affiliateNote
           else []
       (tag@(S.TagOpen "a" attrs) : tags) ->
         case getAttr "href" attrs of
@@ -398,11 +398,14 @@ modifyLinks = go False
             S.TagClose "hr" :
             S.TagText _ :
             rest ) ->
-              [S.TagOpen "hr" [("class", "hairline footnotes-divider")], S.TagClose "hr"] ++
-              footnotesHeader ++ [divTag] ++ rest ++
+              footnotesDivider ++ footnotesHeader ++ [divTag] ++ rest ++
               if hasAffiliate then affiliateNote else []
           _ -> error $ "Unexpected tags after footnotes div: " ++ show afterDiv
       (tag : tags) -> tag : go hasAffiliate tags
+    footnotesDivider =
+      [ S.TagOpen "hr" [("class", "hairline footnotes-divider")]
+      , S.TagClose "hr"
+      ]
     footnotesHeader =
       [ S.TagOpen "h2" []
       , S.TagText "Footnotes"
