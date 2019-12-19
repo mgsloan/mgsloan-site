@@ -247,15 +247,12 @@ ul, ol
   counter-reset: ol;
   list-style: none;
   margin-bottom: 1em;
-  padding-top: 0.4em;
+  margin-top: 1em;
 }
 
 li
 {
-  margin-left: 1em;
-  margin-bottom: 1em;
-  /* Top padding is handled by p within the li */
-  /* padding-top: 0.4em */
+  position: relative;
 }
 
 li:before
@@ -263,6 +260,8 @@ li:before
   display: inline-block;
   margin-left: -1em;
   width: 1em;
+  position: absolute;
+  top: 0;
 }
 
 ul > li:before
@@ -270,7 +269,6 @@ ul > li:before
   content: '•';
   font-weight: bold;
   transform: scale(2);
-  position: relative;
   top: -0.15em;
 }
 
@@ -285,11 +283,13 @@ ol > li:before
   content: counter(ol, decimal);
   counter-increment: ol;
   font-weight: bold;
+  top: -0.05em;
 }
 
 li > p:first-child
 {
-  display: inline;
+  display: inline-block;
+  padding-top: 0;
 }
 
 /* Nested list gets indented and uses square bullets. */
@@ -302,6 +302,7 @@ li > ul > li:before
 {
   content: "■";
   transform: scale(0.5);
+  top: -0.05em;
 }
 
 table
