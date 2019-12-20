@@ -16,6 +16,7 @@
 # smaller output image.
 
 convert $1                       \
+  -auto-orient                   \
   -colorspace LAB                \
   -filter Lanczos2               \
   -distort Resize 1280           \
