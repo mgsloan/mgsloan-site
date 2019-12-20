@@ -527,6 +527,7 @@ footer
   clear: both;
   text-align: center;
   padding-top: 1.8em;
+  display: block;
 }
 
 #profile-links
@@ -534,6 +535,7 @@ footer
   clear: both;
   text-align: center;
   margin-left: 2.5em;
+  display: block;
 }
 
 footer span
