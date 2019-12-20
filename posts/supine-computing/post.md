@@ -4,7 +4,7 @@ date: 2019-12-18
 break:
 synopsis: Comfortable computer use while laying down, dealing with back pain. Hammocks!
 run-in: A few months ago,
-primary-image: https://mgsloan.com/posts/supine-computing/images/back-yard-hammock-strap.jpg
+primary-image: https://mgsloan.com/posts/supine-computing/images/back-yard-hammock.jpg
 ---
 
 A few months ago, I pulled a muscle in my lower back, by rock climbing
