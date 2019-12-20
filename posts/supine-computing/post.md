@@ -14,8 +14,11 @@ and an inability to sit at a desk. Argh!
 
 Happily, I was prepared with some very comfortable and
 ergonomic[^ergonomics] ways to use the computer while laying down
-([supine][]). This post describes some of the variations I've
-explored, and what has worked best for me so far.
+([supine][]). After about a week of doing this and phasing in some
+exercise, I could finally stand up straight again!
+
+This post describes variations on supine computing - what's worked
+best for me so far.
 
 [supine]: https://en.wikipedia.org/wiki/Supine_position
 
