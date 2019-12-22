@@ -70,6 +70,22 @@ I've found these things to work well for this:
   postures. Due to this, I can comfortably type on the keyboard in my
   lap, with straight wrists and my upper arms at my sides.
 
+    - **Update:** The long term viability of this posture probably
+      entirely relies on using a split keyboard or a keyboard with
+      wide hand separation like the Kinesis. Using standard form
+      factor keyboards with postures like this may easily involve
+      wrist angles that lead to pain[^hn-pain].
+
+    [^hn-pain]:
+      There was [a
+      comment](https://news.ycombinator.com/item?id=21850248) in the
+      hacker news discussion for this post describing wrist pain with
+      a similar reclining setup, but using a standard keyboard. It's
+      always good to pay attention to any feelings of strain,
+      particularly in wrists, and adjust to reduce it. The typical,
+      quite decent advice is to keep your wrists straight - hands at
+      the same angle as your forearms.
+
 * A "zero gravity" patio chair which can lock at particular angles.
   This allows you to set your level of recline, and overall get quite
   comfortable. I'm quite happy with my [Timber Ridge Zero Gravity
