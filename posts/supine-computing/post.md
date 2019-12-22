@@ -13,7 +13,7 @@ from feeling fairly nimble to hobbling around with limited mobility
 and an inability to sit at a desk. Argh!
 
 Happily, I was prepared with some very comfortable and
-ergonomic[^ergonomics] ways to use the computer while laying down
+ergonomic[^ergo-hobbyist] ways to use the computer while laying down
 ([supine][]). After about a week of doing this and phasing in some
 exercise, I could finally stand up straight again!
 
@@ -287,7 +287,7 @@ check back in a while, or perhaps subscribe to my [atom feed][].
 [airplane computing]: /posts/comfortable-airplane-computing/
 [atom feed]: /feed.xml
 
-[^ergonomics]:
+[^ergo-hobbyist]:
     I am a hobbyist in ergonomics, I have no credentials related to
     ergonomics, nor have I studied much of the academic literature on
     the topic. Mostly, I've just followed my own intuition, sought
