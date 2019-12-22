@@ -18,8 +18,8 @@ outside. However, I find that for me working with a laptop on my lap
 is not sustainable for much more than an hour or two, and even then,
 it just doesn't feel very comfortable. The laptop's screen is adjacent
 to the keyboard, which means typically neither are positioned
-ergonomically. See the illustration at the beginning of my [post about
-comfortable airplane computing][]
+ergonomically[^ergo-hobbyist]. See the illustration at the beginning
+of my [post about comfortable airplane computing][]
 
 [post about comfortable airplane computing]: /posts/comfortable-airplane-computing/
 
@@ -280,7 +280,7 @@ feed][].
 
 [atom feed]: /feed.xml
 
-[^ergonomics]:
+[^ergo-hobbyist]:
     I am a hobbyist in ergonomics, I have no credentials related to
     ergonomics, nor have I studied much of the academic literature on
     the topic. Mostly, I've just followed my own intuition, sought
