@@ -8,10 +8,11 @@ run-in: Flying
 
 Flying on commercial airlines can often be a bit stressful for both
 our minds and bodies.  Flights can also be a nice time to get some
-work done, but the ergonomics tends to be pretty awful.  You need to
-tilt your head forward, probably slouch your back, while
-simultaneously probably putting your wrists at funny angles. So, the
-proposed usage embedded in the name "laptop" seems to be inadvisable.
+work done, but the ergonomics[^ergo-hobbyist] tends to be pretty
+awful.  You need to tilt your head forward, probably slouch your back,
+while simultaneously probably putting your wrists at funny angles. So,
+the proposed usage embedded in the name "laptop" seems to be
+inadvisable.
 
 ![laptop positions with bad ergonomics](./images/laptop-positions.gif)
 
@@ -240,3 +241,11 @@ questions. I'm curious to see what y'all come up with!
 
 [jazzfan1980]: https://community.keyboard.io/t/flexible-camera-mounts-ergonomic-computer-use-on-airplanes/2078/4
 [tablethookz]: https://tablethookz.com/
+
+[^ergo-hobbyist]:
+    I am a hobbyist in ergonomics, I have no credentials related to
+    ergonomics, nor have I studied much of the academic literature on
+    the topic. Mostly, I've just followed my own intuition, sought
+    what feels good, and avoided what causes pain. So please take my
+    advice with a grain of salt, and perhaps experiment to see what
+    works for you!
