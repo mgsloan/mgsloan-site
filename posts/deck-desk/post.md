@@ -259,11 +259,11 @@ and generally refreshing.
 
 You might notice in the reclining pictures that I'm using an external
 keyboard but no mouse. This is because via software like [vimium][],
-[xmonad][], [keynav][], [gmail's keyboard shortcuts][], and my own
-[todoist-shortcuts][], I mostly just use the keyboard, reaching for
-the mouse infrequently. I think this can improve the flow of familiar
-interactions with the computer, because they can be performed via
-direct muscle memory rather than involving eye-hand coordination.
+[xmonad][], [keynav][], [emacs][], [gmail's keyboard shortcuts][], and
+my own [todoist-shortcuts][], I mostly just use the keyboard, reaching
+for the mouse infrequently[^dotfiles]. I think this can improve the flow of
+familiar interactions with the computer, because they can be performed
+via direct muscle memory rather than involving eye-hand coordination.
 
 I do have a recommendation if you want to try reclined computing
 with a mouse, though, which is to use a trackball mouse. I sometimes
@@ -277,6 +277,17 @@ times in a couple years.
 [todoist-shortcuts]: https://github.com/mgsloan/todoist-shortcuts
 [vimium]: https://vimium.github.io
 [xmonad]: https://xmonad.org
+[emacs]: https://www.gnu.org/software/emacs/
+
+[^dotfiles]:
+    If you're curious about primarily using a keyboard on Linux, my
+    configuration files for [xmonad][] and [keynav][] can be [found on
+    github](https://github.com/mgsloan/mgsloan-dotfiles). My emacs
+    configuration is [also on
+    github](https://github.com/mgsloan/mgsloan-emacs), though I don't
+    recommend using it directly.  Instead it's probably best to use
+    other folks' configurations as sources for inspiration and
+    building up your own config via incremental copy+modify.
 
 ## Thanks for reading!
 
