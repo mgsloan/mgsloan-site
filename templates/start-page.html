@@ -251,7 +251,8 @@
         return url;
       }
       async function updateBackground() {
-        let url = Math.random() > 0.5 ? await getApodUrl() : picsumUrl;
+        // let url = Math.random() > 0.5 ? await getApodUrl() : picsumUrl;
+        let url = await getApodUrl();
         if (url === undefined || url === 'undefined') {
           url = picsumUrl;
         }
