@@ -110,12 +110,12 @@ header > p
 article > header > hr.hairline
 {
   margin-top: 0.5em;
-  transform: scale(1.4, 0.5);
+  transform: scale(1.3, 0.5);
 }
 
 article hr.hairline
 {
-  transform: scale(1.18, 0.5);
+  transform: scale(1.09, 0.5);
 }
 
 hr.hairline
