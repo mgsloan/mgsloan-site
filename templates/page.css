@@ -272,7 +272,7 @@ ul > li:before
 {
   content: '•';
   font-weight: bold;
-  transform: scale(2);
+  transform: scale(1.6);
   top: -0.15em;
 }
 
