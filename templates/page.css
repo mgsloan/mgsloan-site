@@ -741,6 +741,14 @@ nav a
   }
 }
 
+@media(max-width: 399px)
+{
+  article li:before
+  {
+    margin-left: -0.5em;
+  }
+}
+
 @media(max-width: 490px)
 {
   /* On narrow screens, remove the dot in the footer and make it behave like
@@ -751,6 +759,16 @@ nav a
     height: 0;
     overflow: hidden;
     width: 0;
+  }
+
+  li:before
+  {
+    margin-left: -0.95em;
+  }
+
+  #profile-links
+  {
+    margin-left: 0;
   }
 }
 
