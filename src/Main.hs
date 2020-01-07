@@ -136,6 +136,7 @@ writeFeed template posts config = do
 
 main :: IO ()
 main = do
+  chdirRepo False =<< getCurrentDirectory
   args <- getArgs
   case args of
     ["push"] -> pushCmd
@@ -143,6 +144,17 @@ main = do
     ["render-start"] -> renderStartPage
     [] -> regenerateCmd
     _ -> error $ "Unrecognized arguments: " ++ show args
+
+chdirRepo :: Bool -> FilePath -> IO ()
+chdirRepo dirChanged dir = do
+  let dirName = takeFileName dir
+  isGitRoot <- elem ".git" <$> listDirectory dir
+  if isGitRoot && dirName `notElem` ["draft", "out"]
+    then when dirChanged $ do
+      putStrLn $ "Changing directory to " ++ show dir
+      setCurrentDirectory dir
+    else do
+      chdirRepo True (takeDirectory dir)
 
 renderDraftCmd :: String -> IO ()
 renderDraftCmd draftTitlePortion = do
