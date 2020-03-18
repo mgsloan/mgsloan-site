@@ -362,16 +362,16 @@ addAnchors = concatMap expandHeader
 -- Probably overkill.. Automatically add affiliate tags and footnote
 -- about it.
 modifyLinks :: [Tag] -> [Tag]
-modifyLinks = go False
+modifyLinks = go False False
   where
-    go hasAffiliate = \case
+    go hasAffiliate addedNote = \case
       [] ->
-        if hasAffiliate
+        if hasAffiliate && not addedNote
           then footnotesDivider ++ footnotesHeader ++ affiliateNote
           else []
       (tag@(S.TagOpen "a" attrs) : tags) ->
         case getAttr "href" attrs of
-          Nothing -> tag : go hasAffiliate tags
+          Nothing -> tag : go hasAffiliate addedNote tags
           Just href ->
             case parseURIReference href of
               Nothing -> error $ concat
@@ -387,21 +387,22 @@ modifyLinks = go False
                               }
                             , uriQuery = "?tag=mgsloan06-20"
                             }
-                     in S.TagOpen "a" (setAttr "href" href' attrs) : addSuperScript tags
+                     in S.TagOpen "a" (setAttr "href" href' attrs) : addSuperScript addedNote tags
                 | otherwise ->
-                  tag : go hasAffiliate tags
+                  tag : go hasAffiliate addedNote tags
       -- Drop hr, add header, and add footnote for #amazon-links if needed.
-      (divTag@(S.TagOpen "section" (lookup "class" -> Just "footnotes")) : afterDiv) ->
+      (divTag@(S.TagOpen "section" (lookup "class" -> Just "footnotes")) : afterDiv)
+        | not addedNote ->
         case afterDiv of
           ( S.TagText _ :
             S.TagOpen "hr" _ :
             S.TagClose "hr" :
             S.TagText _ :
             rest ) ->
-              footnotesDivider ++ footnotesHeader ++ [divTag] ++ rest ++
+              footnotesDivider ++ footnotesHeader ++ [divTag] ++ go False True rest ++
               if hasAffiliate then affiliateNote else []
           _ -> error $ "Unexpected tags after footnotes div: " ++ show afterDiv
-      (tag : tags) -> tag : go hasAffiliate tags
+      (tag : tags) -> tag : go hasAffiliate addedNote tags
     footnotesDivider =
       [ S.TagOpen "hr" [("class", "hairline footnotes-divider")]
       , S.TagClose "hr"
@@ -428,7 +429,7 @@ modifyLinks = go False
       , S.TagClose "li"
       , S.TagClose "ul"
       ]
-    addSuperScript = \case
+    addSuperScript addedNote = \case
       [] -> []
       ((S.TagOpen "a" _) : _) ->
         error "Didn't expect opening <a> tag inside amazon <a> tag"
@@ -439,9 +440,9 @@ modifyLinks = go False
         S.TagText "$" :
         S.TagClose "a" :
         S.TagClose "sup" :
-        go True tags
+        go True addedNote tags
       (tag : tags) ->
-        tag : addSuperScript tags
+        tag : addSuperScript addedNote tags
 
 getAttr :: String -> [S.Attribute String] -> Maybe String
 getAttr name = fmap snd . find ((name ==) . fst)
