@@ -9,7 +9,7 @@ module Image (processImages) where
 import           Codec.Picture (DynamicImage(..), imageWidth, imageHeight, readImage)
 import           Codec.Picture.Types (dynamicMap)
 import           Data.Foldable (foldrM)
-import           Data.List (find, isSuffixOf)
+import           Data.List (find, isSuffixOf, isPrefixOf)
 import           Data.Maybe (fromJust)
 import           System.FilePath ((</>), takeFileName)
 import qualified Text.HTML.TagSoup as S
@@ -31,36 +31,41 @@ makeDimensions img = [ ("width",  show $ dynamicMap imageWidth  img)
 
 -- Given the attributes of an <img> tag, which must include the src attribute,
 -- adds width and height attributes.
-addDimensions :: Mode -> FilePath -> Attributes -> IO Attributes
-addDimensions mode imgDir attrs = fmap (attrs ++) dimensions
+addDimensions :: Mode -> FilePath -> FilePath -> Attributes -> IO Attributes
+addDimensions mode imgDir outDir attrs = fmap (attrs ++) dimensions
   where
     src        = getSrc attrs
     imgPath    = imgDir </> (takeFileName src)
     dimensions = do
       let expectedName = "./images/" ++ takeFileName src
       if expectedName /= src
-        then do
-          let msg = "Expected image src " ++ expectedName ++ " but got " ++ src
-          case mode of
-            Draft -> do
-              putStrLn msg
-              pure []
-            Published -> error msg
-        else if ".svg" `isSuffixOf` src
-          -- Do not check the size for svg images, because Juicy Pixels cannot
-          -- handle those. I could extract the size from the svg in a different
-          -- way, but meh.
-          then pure []
-          else do
-            eres <- readImage imgPath
-            case eres of
-              Left e ->
-                case mode of
-                  Draft -> do
-                    putStrLn $ "Ignoring failure to compute image dimensions in draft: " ++ e
-                    pure []
-                  Published -> error e
-              Right img -> pure $ makeDimensions img
+        then
+          if "/" `isPrefixOf` src
+            then dimensionsOfPath (outDir ++ src)
+            else do
+              let msg = "Expected image src " ++ expectedName ++ " but got " ++ src
+              case mode of
+                Draft -> do
+                  putStrLn msg
+                  pure []
+                Published -> error msg
+        else dimensionsOfPath imgPath
+    dimensionsOfPath fp =
+      if ".svg" `isSuffixOf` fp
+        -- Do not check the size for svg images, because Juicy Pixels cannot
+        -- handle those. I could extract the size from the svg in a different
+        -- way, but meh.
+        then pure []
+        else do
+          eres <- readImage fp
+          case eres of
+            Left e ->
+              case mode of
+                Draft -> do
+                  putStrLn $ "Ignoring failure to compute image dimensions in draft: " ++ e
+                  pure []
+                Published -> error e
+            Right img -> pure $ makeDimensions img
 
 -- Maps an IO-performing function over the attributes of all <img> tags, and
 -- replaces <img> tags with an svg source with <object> tags instead, because
@@ -90,8 +95,8 @@ mapImgAttributes f = foldrM mapTag []
 
 -- Sets the width and height attributes of all <img> tags, turn <img> tags for
 -- svg images into <object> tags.
-addDimensionsAll :: Mode -> FilePath -> [Html.Tag] -> IO [Html.Tag]
-addDimensionsAll mode imgDir = mapImgAttributes $ addDimensions mode imgDir
+addDimensionsAll :: Mode -> FilePath -> FilePath -> [Html.Tag] -> IO [Html.Tag]
+addDimensionsAll mode imgDir outDir = mapImgAttributes $ addDimensions mode imgDir outDir
 
 isImgCloseTag :: Html.Tag -> Bool
 isImgCloseTag tag = case tag of
@@ -101,10 +106,10 @@ isImgCloseTag tag = case tag of
 -- Given a piece of html, adds the image dimensions to the attributes
 -- of every <img> tag and ensures that there are no closing </img>
 -- tags. Returns the new html.
-processImages :: Mode -> FilePath -> String -> IO (String)
-processImages mode imgDir html =
+processImages :: Mode -> FilePath -> FilePath -> String -> IO (String)
+processImages mode imgDir outDir html =
   let
     tags = filter (not . isImgCloseTag) $ Html.parseTags html
   in do
-    newHtml <- fmap Html.renderTags $ addDimensionsAll mode imgDir tags
+    newHtml <- fmap Html.renderTags $ addDimensionsAll mode imgDir outDir tags
     pure newHtml

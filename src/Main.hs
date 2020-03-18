@@ -65,6 +65,16 @@ data Config = Config
   , outMode  :: Mode.Mode
   }
 
+copyPostImages :: Config -> P.Post -> IO ()
+copyPostImages config post = do
+  let destFile = (outDir config) </> (drop 1 $ P.url post) </> "index.html"
+      destDir = takeDirectory destFile
+      imagesDir = P.sourceDir post </> "images"
+      destImagesDir = destDir </> "images"
+  createDirectoryIfMissing True imagesDir
+  createDirectoryIfMissing True destImagesDir
+  copyFiles imagesDir destImagesDir
+
 -- Given the post template and the global context, expands the template for all
 -- of the posts and writes them to the output directory. This also prints a list
 -- of processed posts to the standard output. Start numbering post artifacts at
@@ -82,18 +92,13 @@ writePosts tmpl ctx posts config =
       Async.async $ writePost post related
     writePost post related = do
       let destFile = (outDir config) </> (drop 1 $ P.url post) </> "index.html"
-          destDir = takeDirectory destFile
           context  = M.unions
             [ P.context post
             , P.relatedContext related
             , ctx]
           html = Template.apply tmpl context
           imagesDir = P.sourceDir post </> "images"
-          destImagesDir = destDir </> "images"
-      withImages <- Image.processImages (outMode config) imagesDir html
-      createDirectoryIfMissing True imagesDir
-      createDirectoryIfMissing True destImagesDir
-      copyFiles imagesDir destImagesDir
+      withImages <- Image.processImages (outMode config) imagesDir (outDir config) html
       let minified = minifyHtml withImages
       writeFile destFile minified
   in do
@@ -162,6 +167,7 @@ renderDraftCmd draftTitlePortion = do
   drafts <- readPosts "draft/posts/"
   globalContext <- makeGlobalContext templates
   [draft] <- return $ filter ((draftTitlePortion `isInfixOf`) . P.title) drafts
+  copyPostImages draftConfig draft
   writePosts (templates M.! "post.html") globalContext [draft] draftConfig
 
 regenerateCmd :: IO ()
@@ -175,11 +181,13 @@ regenerateCmd = do
   drafts <- (++) <$> readPosts "draft/posts/" <*> readPosts "draft/posts-old/"
   unless (null drafts) $ do
     putStrLn "Writing draft posts..."
+    forM_ drafts (copyPostImages draftConfig)
     writePosts (templates M.! "post.html") globalContext drafts draftConfig
     putStrLn "Writing draft index..."
     writeArchive globalContext (templates M.! "archive.html") drafts draftConfig
 
   putStrLn "Writing posts..."
+  forM_ posts (copyPostImages baseConfig)
   writePosts (templates M.! "post.html") globalContext posts baseConfig
 
   putStrLn "Copying old blog..."
