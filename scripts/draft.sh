@@ -4,4 +4,4 @@ ghcid --run=":main render-draft \"$1\"" &
 
 cd draft/out
 python3 -m http.server &
-livereload -w 0.3
+livereload -w 2
