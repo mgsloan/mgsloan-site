@@ -2,7 +2,7 @@
 title: Inspecting Haskell Instance Resolution
 date: 2019-09-28
 break: Haskell Instance
-synopsis: A sketch of how Haskell instance resolution errors could be improved
+synopsis: A sketch of how Haskell instance resolution errors could be improved.
 run-in:
 ---
 

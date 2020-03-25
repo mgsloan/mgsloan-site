@@ -2,7 +2,7 @@
 title: Outdoor Computing with a Deck Desk
 date: 2019-12-08
 break: Computing with
-synopsis: Experiments in outdoor computing, deck desking, and reclined computing
+synopsis: Experiments in outdoor computing, deck desking, and reclined computing.
 run-in: In the last
 primary-image: https://mgsloan.com/posts/deck-desk/images/pretty-desk.jpg
 ---
