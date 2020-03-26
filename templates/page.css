@@ -83,7 +83,7 @@ h1
    * aligns with the grid. */
   font-family: {{header-font}}, serif;
   color: #000;
-  font-size: 2.6em;
+  font-size: 1.8em;
   line-height: 3.8rem;
   margin-bottom: 0.7rem;
   padding-top: 2.8rem;
@@ -592,6 +592,35 @@ nav a
  * Note that the min-width given below is actually the viewport width for its
  * font size minus 0.5px, so the font size is right on average. */
 
+
+/* At the points where the font size changes, the viewport width in ems makes
+ * a jump:
+ *
+ *   469px -> 470px: 29.3em -> 27.6em (delta -1.7em)
+ *   624px -> 625px: 36.7em -> 34.7em (delta -2.0em)
+ *   801px -> 802px: 44.5em -> 42.2em (delta -2.3em)
+ *
+ * Instead of having a minimal margin until the viewport is wide enough, I like
+ * to gradually increase the margin. Changing the margins at the same time as
+ * the font size would make the difference in line width even more extreme, so
+ * instead change the margins in between. (The in-between points can be computed
+ * using the width formula above, but now at integer font sizes.)
+ *
+ * The settings below split the first jump in 1.2em and 0.5em, and the second
+ * jump in 1.6em and 0.4em. */
+
+/* Ideal width for 16px font size. */
+@media(min-width: 400px)
+{
+  #content, #teaser, #footer
+  {
+    padding-left: 2em;
+    padding-right: 2em;
+  }
+
+  h1 { font-size: 2.0em; }
+}
+
 @media(min-width: 470px)
 {
   html { font-size: 16px; }
@@ -602,6 +631,22 @@ nav a
   {
     margin-left: 2.8em;
     margin-right: 2.8em;
+  }
+}
+
+/* Ideal width for 18px font size. */
+@media(min-width: 544px)
+{
+  #content, #teaser, #footer
+  {
+    padding-left: 2.8em;
+    padding-right: 2.8em;
+  }
+
+  /* Hang list numbers and bullets in the margin when there is enough space. */
+  li
+  {
+    margin-left: 0;
   }
 }
 
@@ -635,6 +680,8 @@ nav a
 {
   html { font-size: 18px; }
 
+  h1 { font-size: 2.4em; }
+
   /* If we are on a large-ish screen anyway, give the header some room to
    * breathe. */
   header
@@ -646,6 +693,8 @@ nav a
 @media(min-width: 1003px)
 {
   html { font-size: 19px; }
+
+  h1 { font-size: 2.6em; }
 }
 
 @media(min-width: 1225px)
@@ -696,48 +745,6 @@ nav a
     float: right;
     width: 36em;
     margin-right: 3em;
-  }
-}
-
-/* At the points where the font size changes, the viewport width in ems makes
- * a jump:
- *
- *   469px -> 470px: 29.3em -> 27.6em (delta -1.7em)
- *   624px -> 625px: 36.7em -> 34.7em (delta -2.0em)
- *   801px -> 802px: 44.5em -> 42.2em (delta -2.3em)
- *
- * Instead of having a minimal margin until the viewport is wide enough, I like
- * to gradually increase the margin. Changing the margins at the same time as
- * the font size would make the difference in line width even more extreme, so
- * instead change the margins in between. (The in-between points can be computed
- * using the width formula above, but now at integer font sizes.)
- *
- * The settings below split the first jump in 1.2em and 0.5em, and the second
- * jump in 1.6em and 0.4em. */
-
-/* Ideal width for 16px font size. */
-@media(min-width: 400px)
-{
-  #content, #teaser, #footer
-  {
-    padding-left: 2em;
-    padding-right: 2em;
-  }
-}
-
-/* Ideal width for 18px font size. */
-@media(min-width: 544px)
-{
-  #content, #teaser, #footer
-  {
-    padding-left: 2.8em;
-    padding-right: 2.8em;
-  }
-
-  /* Hang list numbers and bullets in the margin when there is enough space. */
-  li
-  {
-    margin-left: 0;
   }
 }
 
