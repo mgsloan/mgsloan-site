@@ -1,7 +1,7 @@
 ---
 title: Tree Based Computing
 date: 2020-03-25
-synopsis: A portable and ergonomic way to use your computer in nature
+synopsis: A portable and ergonomic way to use your computer in nature.
 primary-image: https://mgsloan.com/posts/tree-based-computing/images/oct-tree-merged.jpg
 ---
 
@@ -218,8 +218,8 @@ Wearing a hat which provides shade is also worth considering.
 I wrote most of this post a few months ago, in the fall. Since then, I
 acquired some [adjustable paracord tie-downs][], and have started
 preferring using one or two of these to suspend my laptop. The
-viability of this approach is probably related to Colorado trees
-having low branches. Here are some photos of this approach:
+viability of this approach is probably related to nearly all Colorado
+trees having low branches. Here are some photos of this approach:
 
 ![two photos of adjustable paracord tie-down being used to support laptop
 ](./images/paracord.jpg)

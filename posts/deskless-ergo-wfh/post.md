@@ -1,7 +1,7 @@
 ---
 title: Deskless Ergonomic Work-From-Home Setups
 date: 2020-03-25
-synopsis: A few different ideas for comfortably working from home, without a desk
+synopsis: A few different ideas for comfortably working from home, without a desk.
 run-in: With the recent mass migration
 primary-image: https://mgsloan.com/posts/deskless-ergo-wfh/images/outdoor-treadmill.jpg
 ---
@@ -105,7 +105,7 @@ that post:
 I do this supine posture more frequently on a couch or bed, or the
 floor, but hammocks are my favorite! Since [that post][supine
 computing] already goes into some details of the supine posture, I
-won't cover it much more in this post.
+won't cover it much more in this one.
 
 [^adhesive-hangers]:
     For suspending something as light as laptops, I've also found that
@@ -371,17 +371,21 @@ preliminary notes about it in a footnote[^treadmill-comparison].
   "Costway" / "Gymax" branded treadmill compares to my recollection of
   using the [IMovr Thermotread GT][]:
   * 1/5 the cost!
-  * Not as big of a walking platform. I only really notice the lower
-    width, which means I've gotta be fairly precise about my
-    side-to-side position. Not finding it to be troublesome, though.
+  * Nice to be able to go faster than 2.5mph (the IMovR's upper
+    limit). I've found I can still type decently at about 3mph.
+  * Much easier to move around than the IMovr, since it's about half the weight
+  * Not as big of a walking platform. Initially I only noticed the
+    lower width, which means I've gotta be fairly precise about my
+    side-to-side position. After using it a while, I'm also finding
+    that it's just barely long enough, and so occasionally a longer
+    stride will end up hitting the guard plastic on the back. This is
+    not too troublesome, just mildly annoying. For others it may be no
+    issue, I'm larger than average.
   * Beeps loudly with every button press of the remote, which is
     annoying, definitely wouldn't be office friendly. I might open it
     up to disable whatever the beep is coming from.
   * Units are in kilometers instead of miles, which is fine, but not
     intuitive for me.
-  * Nice to be able to go faster than 2.5mph (the IMovR's upper
-    limit). I've found I can still type decently at about 3mph.
-  * Much easier to move around than the IMovr, since it's about half the weight
 
 One tip to wrap this section up - for me, listening to energetic music
 makes treadmill computing **so** much more sustainable for longer
@@ -430,10 +434,10 @@ sedentary.
 There are lots of studies about the harmful effects of extended,
 chronic sitting. There are many studies about the dangers of being
 sedentary, including supine - laying down all day is not very
-healthy. There are even some studies about prolonged standing
-still. None of these postures are perfect, but I assert their
-negatives can be greatly mitigated by switching between them, so that
-none are done for extended periods.
+healthy. There are even some studies suggesting that standing still
+for prolonged periods is deletorious. None of these postures are
+perfect, but I assert their negatives can be greatly mitigated by
+switching between them, so that none are done for extended periods.
 
 I am not aware of any studies showing adverse effects of lots of
 walking or dancing :)
