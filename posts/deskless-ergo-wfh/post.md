@@ -189,7 +189,9 @@ example, one of the very first iterations, in this photo from 2017:
 Back then, I'd just assumed the keyboard needed rotational stability,
 and had two of the massive 28" zip ties crossing each other to create
 offset attachment points. I then used normal size [releasable zip
-ties][] to secure these to my jeans' belt loops.
+ties][] to secure these to my jeans' belt loops. It turns out all that
+complex setup was unnecessary - just one giant zip tie does just as
+well.
 
 People's proportions, such as [ape factor][] differ quite a bit, so it
 may be that you need more adjustability than I do. Using the
@@ -207,7 +209,7 @@ position[^suspenders].
 [Kinesis Advantage 2]: https://smile.amazon.com/Kinesis-Advantage2-Ergonomic-Keyboard-KB600/dp/B07K1SMRGS
 [Keyboardio Model 01]: https://keyboard.io
 [Massdrop ErgoDox]: https://drop.com/buy/ergodox
-["Tree Based Computing"]: http://localhost:8000/posts/tree-based-computing/
+["Tree Based Computing"]: /posts/tree-based-computing/
 [giant releasable zip tie]: https://smile.amazon.com/gp/product/B001ARFF16/ref=ppx_yo_dt_b_search_asin_title
 [releasable zip ties]: https://smile.amazon.com/Releasable-cable-inch-50LBS-100pcs/dp/B00ANAWGM2
 [ape factor]: https://en.wikipedia.org/wiki/Ape_index
@@ -362,8 +364,8 @@ decent. Here are a couple pictures:
 
 I've been pleasantly surprised by this treadmill - today I walked 8.5
 miles while working! I can't really give a full review, since I've
-only had it for 2 days. It's quite as smooth or quiet as the IMovr,
-but it's 1/5 the cost and works decently. I've put some more
+only had it for 2 days. It's not quite as smooth or quiet as the
+IMovr, but it's 1/5 the cost and works decently. I've put some more
 preliminary notes about it in a footnote[^treadmill-comparison].
 
 [^treadmill-comparison]:
