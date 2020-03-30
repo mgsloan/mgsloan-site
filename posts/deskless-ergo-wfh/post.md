@@ -3,7 +3,7 @@ title: Deskless Ergonomic Work-From-Home Setups
 date: 2020-03-25
 synopsis: A few different ideas for comfortably working from home, without a desk.
 run-in: With the recent mass migration
-primary-image: https://mgsloan.com/posts/deskless-ergo-wfh/images/outdoor-treadmill.jpg
+primary-image: https://mgsloan.com/posts/deskless-ergo-wfh/images/recent-reclining.jpg
 ---
 
 With the recent mass migration to working from home to help [mitigate
