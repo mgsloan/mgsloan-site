@@ -2,7 +2,7 @@
 title: Tree Based Computing
 date: 2020-03-25
 synopsis: A portable and ergonomic way to use your computer in nature.
-primary-image: https://mgsloan.com/posts/tree-based-computing/images/oct-tree-merged.jpg
+primary-image: https://mgsloan.com/posts/tree-based-computing/images/tree-screen.jpg
 ---
 
 This post is about one of the most portable and
@@ -163,11 +163,11 @@ rock. Part of the fun of tree based computing is choosing your tree. I
 did a fair bit of the work on this post at this tree, near a very nice
 rock formation for leaning and sitting:
 
-![computer on tree next to rock seat 1
-](./images/rock-seat-1.jpg)
+![computer on tree next to rock seat
+](./images/rock-seat.jpg)
 
-![computer on tree next to rock seat 2
-](./images/rock-seat-2.jpg)
+![computer screen on tree next to rock seat
+](./images/tree-screen.jpg)
 
 Since picking your tree based on this criteria is not always practical
 or comfortable, it can be nice to bring along a leaning stool. I've

@@ -19,6 +19,6 @@ convert paracord-1.jpg -rotate 90 paracord-1.png
 convert paracord-2.jpg -rotate 90 paracord-2.png
 montage paracord-*.png -tile 2x1 -geometry +0+0 paracord.png
 
-../../../scripts/process-jpg.sh oct-tree-merged.png starting-tree-based-post.jpg x1-carbon-flat.jpg standing-tree-desk.png x1-zip-ties-around-rope.jpg p51-zip-ties-around-rope.jpg tree-shadow-sun-face.png attach-keyboard-1.png attach-keyboard-2.png attach-keyboard-3.png rock-seat-1.jpg rock-seat-2.jpg sitpack-zen.png paracord.png
+../../../scripts/process-jpg.sh oct-tree-merged.png starting-tree-based-post.jpg x1-carbon-flat.jpg standing-tree-desk.png x1-zip-ties-around-rope.jpg p51-zip-ties-around-rope.jpg tree-shadow-sun-face.png attach-keyboard-1.png attach-keyboard-2.png attach-keyboard-3.png rock-seat.jpg tree-screen.jpg sitpack-zen.png paracord.png
 
 rm oct-tree-1-rotated.png oct-tree-2-rotated.png oct-tree-merged.png tree-shadow-sun-face.png sitpack-zen-use.png sitpack-zen-and-tree.png paracord*.png
