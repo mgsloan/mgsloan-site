@@ -76,8 +76,8 @@
       #blocked, #unblock {
         font-size: 200%;
         position: absolute;
-        top: 100px;
-        right: 0;
+        top: 124px;
+        left: 0;
         opacity: 1 !important;
         background: black;
         z-index: 10;
@@ -155,9 +155,12 @@
       }
 
       var urlParams = new URLSearchParams(window.location.search);
+      var hasBlocked = urlParams.has('blocked');
+      var hasPass = urlParams.has('pass');
+      var hasPersonal = urlParams.has('personal');
 
       // Show site unblocking stuff
-      if (urlParams.has('blocked')) {
+      if (hasBlocked) {
         document.title = 'Blocked site';
         const blockedUrl = urlParams.get('blocked');
         const blockedDiv = document.getElementById('blocked');
@@ -179,7 +182,7 @@
         };
       }
 
-      if (urlParams.has('pass')) {
+      if (hasPass) {
         var passphrase = urlParams.get('pass'),
             encryptedMsg = '{encrypted}',
             encryptedHMAC = encryptedMsg.substring(0, 64),
@@ -204,8 +207,10 @@
         const prioritiesDiv = document.getElementById('priorities');
         const focusDiv = document.getElementById('focus');
         const workFocusDiv = document.getElementById('work-focus');
-        if (urlParams.has('personal')) {
-            prioritiesDiv.style.display = 'inline-block';
+        if (hasPersonal) {
+            if (!hasBlocked) {
+                prioritiesDiv.style.display = 'inline-block';
+            }
             focusDiv.style.display = 'inline-block';
         } else if (urlParams.has('work')) {
             workFocusDiv.style.display = 'inline-block';
