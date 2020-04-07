@@ -43,7 +43,7 @@
         color: white;
       }
 
-      #focus, #work-focus, #priorities, .reminder, #blocked, #unblock {
+      #focus, #work-focus, #priorities, .reminder, #blocked, #unblock, #unblock-reminder, #unblock-confirm {
         display: none;
         background: rgba(0, 0, 0, 0.5);
         opacity: 0.9;
@@ -73,7 +73,7 @@
         font-family: serif;
       }
 
-      #blocked, #unblock {
+      #blocked, #unblock, #unblock-reminder, #unblock-confirm {
         font-size: 200%;
         position: absolute;
         top: 124px;
@@ -81,6 +81,10 @@
         opacity: 1 !important;
         background: black;
         z-index: 10;
+      }
+
+      #unblock-confirm {
+        top: 280px !important;
       }
 
       #unblock input {
@@ -117,9 +121,16 @@
       </div>
     </div>
     <div id="unblock-reminder">
-      <b>Reminder:</b>
-      <span id="unblock-reminder-text"/>
-      <span id="unblock-reminder-counter"/>
+      <b>Reminder (</b>
+      <span id="unblock-reminder-counter"></span>
+      <b>): </b>
+      <span id="unblock-reminder-text"></span>
+    </div>
+    <div id="unblock-confirm">
+      <b>Intention: </b>
+      <span id="confirm-intention"></span>
+      <br/>
+      <span>Is this intention <b>legitimate</b>?</span>
     </div>
 
     <!-- TODO: re-enable on some sort of start page?
@@ -176,7 +187,7 @@
         blockedDiv.textContent = 'Blocked ';
         blockedDiv.appendChild(blockedLink);
         document.onkeyup = ev => {
-          if (ev.key === 'u') {
+          if (ev.key === 'u' && blockedDiv.style.display === 'inline-block') {
             document.onkeyup = null;
             blockedDiv.style.display = 'none';
             const unblockDiv = document.getElementById('unblock');
