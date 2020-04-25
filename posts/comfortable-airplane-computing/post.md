@@ -4,6 +4,7 @@ break: comfortably at
 date: 2018-10-01
 synopsis: How to use a laptop on an airline flight with decent ergonomics.
 run-in: Flying
+primary-image: https://mgsloan.com/posts/comfortable-airplane-computing/images/kinesis-2.jpg
 ---
 
 Flying on commercial airlines can often be a bit stressful for both
