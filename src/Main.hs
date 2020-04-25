@@ -178,6 +178,11 @@ regenerateCmd = do
 
   -- cleanOutputDir
 
+  createDirectoryIfMissing True "out/images"
+  createDirectoryIfMissing True "draft/out/images"
+  copyFile "assets/haskell/haskell-placeholder-banner.jpg" "out/images/haskell-placeholder-banner.jpg"
+  copyFile "assets/haskell/haskell-placeholder-banner.jpg" "draft/out/images/haskell-placeholder-banner.jpg"
+
   drafts <- (++) <$> readPosts "draft/posts/" <*> readPosts "draft/posts-old/"
   unless (null drafts) $ do
     putStrLn "Writing draft posts..."
@@ -204,9 +209,6 @@ regenerateCmd = do
   copyFile "assets/dark-mode-toggle/src/dark-mode-toggle.mjs" "out/dark-mode-toggle.mjs"
   copyFile "assets/dark-mode-toggle/src/dark-mode-toggle.mjs" "draft/out/dark-mode-toggle.mjs"
   copyFile "assets/redirect-index.html" "out/posts/index.html"
-
-  createDirectoryIfMissing True "out/images"
-  copyFile "assets/haskell/haskell-placeholder-banner.jpg" "out/images/haskell-placeholder-banner.jpg"
 
   putStrLn "Writing atom feed..."
   writeFeed (templates M.! "feed.xml") posts baseConfig
