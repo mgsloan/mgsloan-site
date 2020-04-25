@@ -4,6 +4,7 @@ date: 2019-09-28
 break: Haskell Instance
 synopsis: A sketch of how Haskell instance resolution errors could be improved.
 run-in:
+primary-image: https://mgsloan.com/images/haskell-placeholder-banner.jpg
 ---
 
 GHC's instance resolution errors can often be quite puzzling.  For

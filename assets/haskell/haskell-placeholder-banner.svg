@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="4032"
+   height="3024"
+   viewBox="0 0 1066.8 800.10002"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="haskell-placeholder-banner.svg"
+   inkscape:export-filename="/home/mgsloan/proj/site/assets/haskell/haskell-placeholder-banner;jpg.png"
+   inkscape:export-xdpi="47.981892"
+   inkscape:export-ydpi="47.981892">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="1100.1108"
+     inkscape:cy="1482.4078"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     width="4032mm"
+     inkscape:window-width="1764"
+     inkscape:window-height="1080"
+     inkscape:window-x="2076"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,503.10019)">
+    <image
+       sodipodi:absref="/home/mgsloan/proj/site/assets/haskell/gorge.jpg"
+       xlink:href="gorge.jpg"
+       y="-500.98355"
+       x="0.15116374"
+       id="image907"
+       preserveAspectRatio="none"
+       height="801.46075"
+       width="1068.6144" />
+    <g
+       id="g976"
+       transform="matrix(2.7380245,0,0,2.7380245,2.363593,-414.27988)"
+       style="opacity:0.53800001">
+      <path
+         id="path959"
+         d="M 0,180.664 60.222,90.332 0,0 h 45.166 l 60.222,90.332 -60.222,90.332 z"
+         inkscape:connector-curvature="0"
+         style="fill:#f97e2f" />
+      <path
+         id="path961"
+         d="M 60.222,180.664 120.444,90.332 60.222,0 h 45.166 L 225.83,180.664 h -45.166 l -37.637,-56.457 -37.639,56.457 z"
+         inkscape:connector-curvature="0"
+         style="fill:#95653a" />
+      <path
+         id="path963"
+         d="m 205.757,127.971 -20.072,-30.11 70.257,-0.002 v 30.112 z m -30.11,-45.166 -20.074,-30.11 100.369,-0.002 v 30.112 z"
+         inkscape:connector-curvature="0"
+         style="fill:#f97e2f" />
+    </g>
+  </g>
+</svg>

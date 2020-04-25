@@ -205,6 +205,9 @@ regenerateCmd = do
   copyFile "assets/dark-mode-toggle/src/dark-mode-toggle.mjs" "draft/out/dark-mode-toggle.mjs"
   copyFile "assets/redirect-index.html" "out/posts/index.html"
 
+  createDirectoryIfMissing True "out/images"
+  copyFile "assets/haskell/haskell-placeholder-banner.jpg" "out/images/haskell-placeholder-banner.jpg"
+
   putStrLn "Writing atom feed..."
   writeFeed (templates M.! "feed.xml") posts baseConfig
 
