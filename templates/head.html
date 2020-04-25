@@ -3,14 +3,17 @@
   <head>
     <meta charset="utf-8">
     <title>{{title}}</title>
+    <meta name="og:title" content="{{title}}">
     {{if primary-image}}<meta property="og:image" content="{{primary-image}}">{{end}}
     <meta property="og:site_name" content="mgsloan">
-    <meta name="twitter:creator" content="treetopian">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="treetopian">
     <link href="/favicon.png" rel="icon" type="image/png">
     <link href="/feed.xml" rel="alternate" type="application/atom+xml">
     <link href="https://mgsloan.com{{url}}" rel="canonical">
     {{if synopsis}}
     <meta name="description" content="{{synopsis}}">
+    <meta name="og:description" content="{{synopsis}}">
     {{end}}
     <meta name="author" content="Michael G Sloan">
     <meta name="viewport" content="width=device-width, initial-scale=1">
