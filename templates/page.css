@@ -246,6 +246,17 @@ h2:target > a:before
   margin-bottom: 0.6rem;
   padding-top: 0.8rem;
 }
+
+.archive h2.category
+{
+  display: block;
+  letter-spacing: 0;
+  height: unset;
+  width: unset;
+  text-align: center;
+  margin: 0;
+  padding-bottom: 1.6rem;
+}
 {{end}} /* if archive */
 
 ul, ol

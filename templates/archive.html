@@ -4,7 +4,7 @@
       <header>
         <h1>Michael Sloan</h1>
       </header>
-      <p><i>Here are some things I've written:</i></p>
+      <h2 class="category">Posts</h2>
       {{foreach archive-year}}
         <h2>{{year}}</h2>
         {{foreach post}}
@@ -12,8 +12,14 @@
           <p>{{synopsis-html}} <a href="{{url}}" class="smcp">Read</a></p>
         {{end}}
       {{end}}
-      <p><i>I hope you found something interesting or helpful!</i></p>
-      <p><i>If you like, you can subscribe to my <a href="/feed.xml">Atom feed</a>.</i></p>
+      <p><i>
+        I hope you found something interesting or helpful!<br>
+        If you like, you can subscribe to my <a href="/feed.xml">Atom feed</a>.
+      </i></p>
+      <br>
+      <!--
+      <h2 class="category">Non-Posts</h2>
+      -->
     </div>
     {{include footer.html}}
   </body>
