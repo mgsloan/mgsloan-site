@@ -10,7 +10,7 @@
 import Control.Exception (finally)
 import Control.Monad
 import Data.Monoid ((<>))
-import Data.List (isInfixOf, sort, isSuffixOf)
+import Data.List (isInfixOf, sort, isSuffixOf, isPrefixOf)
 import Data.Time.Calendar (toGregorian)
 import Data.Time.Clock (getCurrentTime, utctDay)
 import Minification (minifyHtml)
@@ -30,13 +30,13 @@ import qualified Mode
 -- Copies all files in the source directory to the destination directory.
 copyFiles :: FilePath -> FilePath -> IO ()
 copyFiles srcDir dstDir = do
-  fps <- map (srcDir </>) <$> listDirectory srcDir
+  fps <- map (srcDir </>) . omitEmacsFiles <$> listDirectory srcDir
   forM_ fps $ \fp -> copyFile fp (dstDir </> takeFileName fp)
 
 -- Reads and parses all templates in the given directory.
 readTemplates :: FilePath -> IO (M.Map FilePath Template.Template)
 readTemplates dir = do
-  templates <- map (dir </>) <$> listDirectory dir
+  templates <- map (dir </>) . omitEmacsFiles <$> listDirectory dir
   fmap M.fromList $ forM templates $ \fp -> do
     contents <- readFile fp
     return (takeFileName fp, Template.parse contents)
@@ -45,7 +45,7 @@ readTemplates dir = do
 readPosts :: FilePath -> IO [P.Post]
 readPosts dir = do
   createDirectoryIfMissing True dir
-  posts <- map (dir </>) <$> listDirectory dir
+  posts <- map (dir </>) . omitEmacsFiles <$> listDirectory dir
   fmap concat $ forM posts $ \postDir -> do
     let postName = takeFileName postDir
     if postName `elem` [".git", "license.md"]
@@ -345,3 +345,6 @@ findFileWithSuffixIn suffix weeklyDir = do
   entries <- sort <$> listDirectory weeklyDir
   let foundFileName = last $ filter ((suffix `isSuffixOf`) . takeFileName) entries
   return $ weeklyDir </> foundFileName
+
+omitEmacsFiles :: [FilePath] -> [FilePath]
+omitEmacsFiles = filter (not . (".#" `isPrefixOf`) . takeFileName)
