@@ -240,6 +240,7 @@ h2:target > a:before
   color: #ccc;
   font-size: 2.8em;
   letter-spacing: 1rem;
+  line-height: 0.5em;
 
   /* Unlike other h2, align this bigger one to the baseline. */
   margin-bottom: 0.6rem;
