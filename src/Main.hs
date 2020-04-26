@@ -147,6 +147,7 @@ main = do
     ["push"] -> pushCmd
     ["render-draft", draftTitlePortion] -> renderDraftCmd draftTitlePortion
     ["render-start"] -> renderStartPage
+    ["render-index"] -> renderIndexCmd
     [] -> regenerateCmd
     _ -> error $ "Unrecognized arguments: " ++ show args
 
@@ -169,6 +170,13 @@ renderDraftCmd draftTitlePortion = do
   [draft] <- return $ filter ((draftTitlePortion `isInfixOf`) . P.title) drafts
   copyPostImages draftConfig draft
   writePosts (templates M.! "post.html") globalContext [draft] draftConfig
+
+renderIndexCmd :: IO ()
+renderIndexCmd = do
+  templates <- readTemplates "templates/"
+  posts <- readPosts "posts/"
+  globalContext <- makeGlobalContext templates
+  writeArchive globalContext (templates M.! "archive.html") posts baseConfig
 
 regenerateCmd :: IO ()
 regenerateCmd = do
