@@ -17,9 +17,15 @@
         If you like, you can subscribe to my <a href="/feed.xml">Atom feed</a>.
       </i></p>
       <br>
-      <!--
+      {{if has-non-posts}}
       <h2 class="category">Non-Posts</h2>
-      -->
+      <p>
+        <i>
+          Some things don't fit blog post conventions.<br>
+          Most of the things below are likely to grow and change:
+        </i>
+      </p>
+      {{end}}
     </div>
     {{include footer.html}}
   </body>
