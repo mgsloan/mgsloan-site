@@ -247,6 +247,10 @@ pushCmd = shelly $ do
   -- Rebuild the site.
   liftIO regenerateCmd
   liftIO renderStartPage
+  liftIO $ createDirectoryIfMissing True "out/tree-sitter-demos/java"
+  liftIO $ createDirectoryIfMissing True "out/tree-sitter-demos/python"
+  liftIO $ copyFiles "assets/tree-sitter-demos/java/" "out/tree-sitter-demos/java"
+  liftIO $ copyFiles "assets/tree-sitter-demos/python/" "out/tree-sitter-demos/python"
   -- Add all untracked and
   shouldPush <- chdir "out" $ do
     topLevel <- head . T.lines <$> run "git" ["rev-parse", "--show-toplevel"]
