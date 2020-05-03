@@ -14,7 +14,7 @@ cabal-version: >= 1.10
 executable mgsloan-site
   main-is:          Main.hs
   hs-source-dirs:   src
-  other-modules:    Html, Image, Minification, Post, Template, Type, Mode
+  other-modules:    Html, Image, Minification, Post, Template, Type, Mode, Util, Page
   default-language: Haskell2010
   -- For the run time options, use 4 threads (-N4), and use a heap of 256 MiB
   -- (-H). These settings were found to be optimal by running ghc-gc-tune.

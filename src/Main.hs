@@ -19,10 +19,12 @@ import System.Directory
 import System.FilePath
 import System.Process (callProcess)
 import Shelly hiding ((</>), FilePath)
+import Util
 import qualified Data.Text as T
 import qualified Control.Concurrent.Async as Async
 import qualified Data.Map as M
 import qualified Image
+import qualified Page
 import qualified Post as P
 import qualified Template
 import qualified Mode
@@ -59,6 +61,24 @@ readPosts dir = do
             putStrLn $ "Warning: expected file at " ++ postPath ++ ", but none found."
             return []
 
+-- Reads and renders all non-posts in the given directory.
+readPages :: FilePath -> IO [Page.Page]
+readPages dir = do
+  createDirectoryIfMissing True dir
+  pages <- map (dir </>) . omitEmacsFiles <$> listDirectory dir
+  fmap concat $ forM pages $ \pageDir -> do
+    let pageName = takeFileName pageDir
+    if pageName `elem` [".git", "license.md"]
+      then return []
+      else do
+        let pagePath = pageDir </> "page.md"
+        pageExists <- doesFileExist pagePath
+        if pageExists
+          then (:[]) . Page.parse pageDir pageName <$> readFile pagePath
+          else do
+            putStrLn $ "Warning: expected file at " ++ pagePath ++ ", but none found."
+            return []
+
 -- Holds the output directory and input image directory.
 data Config = Config
   { outDir   :: FilePath
@@ -70,6 +90,16 @@ copyPostImages config post = do
   let destFile = (outDir config) </> (drop 1 $ P.url post) </> "index.html"
       destDir = takeDirectory destFile
       imagesDir = P.sourceDir post </> "images"
+      destImagesDir = destDir </> "images"
+  createDirectoryIfMissing True imagesDir
+  createDirectoryIfMissing True destImagesDir
+  copyFiles imagesDir destImagesDir
+
+copyPageImages :: Config -> Page.Page -> IO ()
+copyPageImages config page = do
+  let destFile = (outDir config) </> (drop 1 $ Page.url page) </> "index.html"
+      destDir = takeDirectory destFile
+      imagesDir = Page.sourceDir page </> "images"
       destImagesDir = destDir </> "images"
   createDirectoryIfMissing True imagesDir
   createDirectoryIfMissing True destImagesDir
@@ -103,10 +133,29 @@ writePosts tmpl ctx posts config =
     subsetCmdsAsync <- mapM writePostAsync withRelated
     mapM_ Async.wait subsetCmdsAsync
 
+writePages :: Template.Template -> Template.Context -> [Page.Page] -> Config -> IO ()
+writePages tmpl ctx pages config =
+  let
+    total = length pages
+    writePageAsync (i, page) = do
+      putStrLn $ "[" ++ (show i) ++ " of " ++ (show total) ++ "] " ++ (Page.slug page)
+      Async.async $ writePage page
+    writePage page = do
+      let destFile = (outDir config) </> (drop 1 $ Page.url page) </> "index.html"
+          context  = M.unions [Page.context page, ctx]
+          html = Template.apply tmpl context
+          imagesDir = Page.sourceDir page </> "images"
+      withImages <- Image.processImages (outMode config) imagesDir (outDir config) html
+      let minified = minifyHtml withImages
+      writeFile destFile minified
+  in do
+    subsetCmdsAsync <- mapM writePageAsync (zip ([1..] :: [Int]) pages)
+    mapM_ Async.wait subsetCmdsAsync
+
 -- Writes a general (non-post) page given a template and expansion context.
 -- Returns the subset commands that need to be executed for that page.
-writePage :: String -> Template.Context -> Template.Template -> Config -> IO ()
-writePage url pageContext template config = do
+writePlainPage :: String -> Template.Context -> Template.Template -> Config -> IO ()
+writePlainPage url pageContext template config = do
   let context  = Template.stringField "url" url <> pageContext
       html     = minifyHtml $ Template.apply template context
       destDir  = (outDir config) </> (tail url)
@@ -117,7 +166,7 @@ writePage url pageContext template config = do
 -- Given the archive template and the global context, writes the archive page
 -- to the destination directory.
 writeArchive :: Template.Context -> Template.Template -> [P.Post] -> Config -> IO ()
-writeArchive globalContext template posts = writePage "/" context template
+writeArchive globalContext template posts = writePlainPage "/" context template
   where
     context = M.unions
       [ P.archiveContext posts
@@ -167,19 +216,20 @@ renderDraftCmd draftTitlePortion = do
   globalContext <- makeGlobalContext templates
   [draft] <- return $ filter ((draftTitlePortion `isInfixOf`) . P.title) drafts
   copyPostImages draftConfig draft
-  writePosts (templates M.! "post.html") globalContext [draft] draftConfig
+  writePosts (templates ! "post.html") globalContext [draft] draftConfig
 
 renderIndexCmd :: IO ()
 renderIndexCmd = do
   templates <- readTemplates "templates/"
   posts <- readPosts "posts/"
   globalContext <- makeGlobalContext templates
-  writeArchive globalContext (templates M.! "archive.html") posts baseConfig
+  writeArchive globalContext (templates ! "archive.html") posts baseConfig
 
 regenerateCmd :: IO ()
 regenerateCmd = do
   templates <- readTemplates "templates/"
   posts <- readPosts "posts/"
+  pages <- readPages "non-posts/"
   globalContext <- makeGlobalContext templates
 
   -- cleanOutputDir
@@ -193,20 +243,25 @@ regenerateCmd = do
   unless (null drafts) $ do
     putStrLn "Writing draft posts..."
     forM_ drafts (copyPostImages draftConfig)
-    writePosts (templates M.! "post.html") globalContext drafts draftConfig
+    writePosts (templates ! "post.html") globalContext drafts draftConfig
     putStrLn "Writing draft index..."
-    writeArchive globalContext (templates M.! "archive.html") drafts draftConfig
+    writeArchive globalContext (templates ! "archive.html") drafts draftConfig
+
+  unless (null pages) $ do
+    putStrLn "Writing non-posts..."
+    forM_ pages (copyPageImages baseConfig)
+    writePages (templates ! "page.html") globalContext pages baseConfig
 
   putStrLn "Writing posts..."
   forM_ posts (copyPostImages baseConfig)
-  writePosts (templates M.! "post.html") globalContext posts baseConfig
+  writePosts (templates ! "post.html") globalContext posts baseConfig
 
   putStrLn "Copying old blog..."
   createDirectoryIfMissing True "out/wordpress"
   copyFiles "assets/old-blog/" "out/wordpress"
 
   putStrLn "Writing other pages..."
-  writeArchive globalContext (templates M.! "archive.html") posts baseConfig
+  writeArchive globalContext (templates ! "archive.html") posts baseConfig
 
   copyFile "assets/favicon.png" "out/favicon.png"
   copyFile "assets/favicon.png" "draft/out/favicon.png"
@@ -217,7 +272,7 @@ regenerateCmd = do
   copyFile "assets/redirect-index.html" "out/posts/index.html"
 
   putStrLn "Writing atom feed..."
-  writeFeed (templates M.! "feed.xml") posts baseConfig
+  writeFeed (templates ! "feed.xml") posts baseConfig
 
   putStrLn "Using rsync to copy published posts into drafts"
   shelly $ run_ "rsync" ["-a", "out/posts", "draft/out/posts"]

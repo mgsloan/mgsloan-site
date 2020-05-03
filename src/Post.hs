@@ -6,22 +6,7 @@
 -- it under the terms of the GNU General Public License version 3. See
 -- the licence file in the root of the repository.
 
-module Post ( Post
-            , sourceDir
-            , archiveContext
-            , body
-            , context
-            , date
-            , feedContext
-            , longDate
-            , parse
-            , relatedContext
-            , shortDate
-            , selectRelated
-            , slug
-            , title
-            , url
-            , year ) where
+module Post where
 
 import qualified Data.Map as M
 import           Data.Maybe (fromMaybe, isJust)
@@ -31,6 +16,7 @@ import           Data.Time.Calendar (Day, showGregorian, toGregorian)
 import           GHC.Exts (groupWith, sortWith)
 import           Text.Pandoc
 import           Skylighting
+import           Util
 
 import qualified Html
 import qualified Template
@@ -83,12 +69,12 @@ url post = "/" ++ datePath ++ "/" ++ (slug post)
 -}
 
 -- Returns whether post has code in it that requires a monospace font.
-usesMonoFont :: Post -> Bool
-usesMonoFont = not . null . Html.filterTags Html.isCode . Html.parseTags . body
+usesMonoFont :: String -> Bool
+usesMonoFont = not . null . Html.filterTags Html.isCode . Html.parseTags
 
 -- Returns whether the post has <em> tags that require an italic font.
-usesItalicFont :: Post -> Bool
-usesItalicFont = not . null . Html.filterTags Html.isEm . Html.parseTags . body
+usesItalicFont :: String -> Bool
+usesItalicFont = not . null . Html.filterTags Html.isEm . Html.parseTags
 
 -- Converts an integer to a Roman numeral (nothing fancy, works for 1-9).
 toRoman :: Int -> String
@@ -132,10 +118,10 @@ context p = fmap Template.StringValue ctx
                                , ("primary-image", primaryImage p)]
         usesSerifItalic      = (Type.usesSerifItalicFont $ body p) || (isJust $ subheader p)
         boldFontField        = booleanField $ Type.usesBoldFont $ body p
-        italicFontField      = booleanField $ usesItalicFont p
+        italicFontField      = booleanField $ usesItalicFont $ body p
         mathField            = booleanField $ Html.hasMath $ body p
         imgField             = booleanField $ Html.hasImg $ body p
-        monoFontField        = booleanField $ usesMonoFont p
+        monoFontField        = booleanField $ usesMonoFont $ body p
         serifItalicFontField = booleanField $ usesSerifItalic
 
 -- Given a slug and the contents of the post file (markdown with front matter),
@@ -143,30 +129,33 @@ context p = fmap Template.StringValue ctx
 parse :: FilePath -> String -> String -> Post
 parse dir postSlug contents = let
   (frontMatter, bodyContents) = extractFrontMatter contents
-  postTitle     = frontMatter M.! "title"
+  postTitle     = frontMatter ! "title"
   postHeading   = fromMaybe postTitle $ M.lookup "header" frontMatter
   breakAt       = M.lookup "break" frontMatter
   brokenHeading = foldr addBreak postHeading breakAt
   runIn         = M.lookup "run-in" frontMatter
   addRunIn html = foldl Html.makeRunIn html (fmap length runIn)
-  refineType    = addRunIn . Type.expandPunctuation . Html.renderTags . Type.makeAbbrsTags
   parseDate     = parseTimeOrError True defaultTimeLocale "%F"
   in Post { sourceDir   = dir
           , title       = postTitle
           , header      = brokenHeading
           , subheader   = M.lookup "subheader" frontMatter
           , part        = fmap read $ M.lookup "part" frontMatter
-          , date        = parseDate $ frontMatter M.! "date"
+          , date        = parseDate $ frontMatter ! "date"
           , slug        = postSlug
-          , synopsis    = frontMatter M.! "synopsis"
+          , synopsis    = frontMatter ! "synopsis"
           , primaryImage = M.lookup "primary-image" frontMatter
-          , body        = refineType
+          , body        = addRunIn
+                        $ refineType
                         $ Html.modifyLinks
                         $ Html.cleanTables
                         $ Html.addAnchors
                         $ Html.parseTags
                         $ renderMarkdown bodyContents
           }
+
+refineType :: [Html.Tag] -> String
+refineType = Type.expandPunctuation . Html.renderTags . Type.makeAbbrsTags
 
 -- Renders markdown to html using Pandoc with my settings.
 renderMarkdown :: String -> String
