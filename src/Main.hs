@@ -76,9 +76,7 @@ copyPostImages config post = do
   copyFiles imagesDir destImagesDir
 
 -- Given the post template and the global context, expands the template for all
--- of the posts and writes them to the output directory. This also prints a list
--- of processed posts to the standard output. Start numbering post artifacts at
--- 53, lower indices are reserved for other pages.
+-- of the posts and writes them to the output directory.
 writePosts :: Template.Template -> Template.Context -> [P.Post] -> Config -> IO ()
 writePosts tmpl ctx posts config =
   let
