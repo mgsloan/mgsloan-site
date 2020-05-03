@@ -220,7 +220,7 @@ regenerateCmd = do
   writeFeed (templates M.! "feed.xml") posts baseConfig
 
   putStrLn "Using rsync to copy published posts into drafts"
-  shelly $ run_ "rsync" ["-av", "out/posts", "draft/out/posts"]
+  shelly $ run_ "rsync" ["-a", "out/posts", "draft/out/posts"]
 
 -- Push to both repos.
 pushCmd :: IO ()
