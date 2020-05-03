@@ -31,28 +31,29 @@ fairly portable, I prefer to leave it setup with my recliner.
 
 ## Supine with suspended laptop
 
-If I'm feeling like going supine, I can just move one of the tie-downs
-to another hook which rotates things 90 degrees:
+If I feel like shifting to a [supine posture]["Supine Computing"
+post], I can just move one of the tie-downs to another hanger, which
+rotates things 90 degrees:
 
 ![photo of laptop suspended above face, laying on futon
 ](./images/supine-futon-computing.jpg)
 
 To allow a quick transition between these two postures, the adhesive
-hooks on the ceiling are in this configuration:
+hangers on the ceiling are in this configuration:
 
 ![photo of configuration of 3 adhesive hangers
 ](./images/three-adhesive-hangers.jpg)
 
-One thing to note is that the spacing here is less narrow than
-ideal. I later realized that spacing wider than the width of the
-laptop leads to more rotational stabilization.
+One thing to note is that the spacing here is narrower than ideal. I
+later realized that spacing wider than the width of the laptop leads
+to more rotational stabilization.
 
 ## Materials: adhesive hangers + adjustable paracord
 
 I'm currently renting, and would prefer to avoid maintenance on move
 out, so I began looking for suspension approaches which avoid putting
 holes in the ceiling. The ceiling is textured, so suction cups
-wouldn't work. So, I began looking for adhesive hooks available
+wouldn't work. So, I began looking for adhesive hangers available
 online, but most seemed to be intended for the wall, and had
 relatively low weight ratings. This makes sense, as adhesives
 typically have higher shear strength.
@@ -60,7 +61,7 @@ typically have higher shear strength.
 After comparing options for a while I ordered ["Multi Purpose No
 Drilling Required Ceiling Hooks Suspension and Wall Hooks
 Hangers"][adhesive hangers] from the cryptic brand "CRH600" - 12
-adhesive hooks for $15. They're intended for the ceiling, and the
+adhesive hangers for $15. They're intended for the ceiling, and the
 comments indicate a max load of around 6 or 7 pounds. Perfect! Even my
 heaviest laptop, a P51 ThinkPad workstation, weighs less than the
 limit, 5.8 pounds.
@@ -78,8 +79,8 @@ hangers).
 
 Here's what the [adhesive hangers][] and [tie-downs][] look like:
 
-![photo of adhesive hooks and paracord tie-downs
-](./images/adhesive-hooks-and-tie-downs.jpg)
+![photo of adhesive hangers and paracord tie-downs
+](./images/adhesive-hangers-and-tie-downs.jpg)
 
 [adhesive hangers]: https://smile.amazon.com/gp/product/B07P1P6VQ5
 [tie-downs]: https://smile.amazon.com/gp/product/B01COUOCG6
@@ -93,8 +94,9 @@ Here's what the [adhesive hangers][] and [tie-downs][] look like:
 
 ## Zip ties around hinges
 
-A rather nice way to add attachment loops to a laptop is threaded
-between the screen and body, around the hinges, like this:
+A rather nice way to add attachment loops to a laptop is to thread
+[releasable zip ties][] between the screen and body, around the
+hinges, like this:
 
 ![photo of zip ties and tie-downs close up
 ](./images/zip-tie-suspension.jpg)
@@ -107,25 +109,25 @@ of this is that they don't need to be taken on and off the way
 here are a few images that should give some idea of what I'm talking
 about:
 
-* Wire sloppily placed around the hinge. I used this for about a
-  month - it worked great.
+* In the photo below, wire is placed sloppily around the hinge. I used
+  this for about a month - it worked great.
 
   ![wire sloppily put around ThinkPad hinge
   ](./images/rough-wire-around-hinge.jpg)
 
-* Wire more neatly placed around the axle of the hinge. I'm waiting
-  for a soldering iron to arrive in the mail to finish it. I sold my
-  old soldering iron when I last pared down my possessions, foolishly
-  thinking I could always use a makerspace.
+* In the photo below, wire is neatly placed around the axle of the
+  hinge. I'm waiting for a soldering iron to arrive in the mail to
+  finish it. I sold my old soldering iron when I last pared down my
+  possessions, foolishly thinking I could always use a makerspace.
 
   ![more tidy wire around ThinkPad hinge
   ](./images/tidy-wire-around-hinge.jpg)
 
-* The wire and tools I'm using to bend it. I have no idea what I'm
-  doing - there's a whole art of wire bending - and I'm just winging
-  it. For fun I did get some premium wire, though, [18 gauge half hard
-  sterling silver][]. I figured since I need so little wire, may as
-  well get pretty and sturdy stuff.
+* Pictured below is the wire and tools I'm using to bend it. I have no
+  idea what I'm doing - there's a whole art of wire bending - and I'm
+  just winging it. For fun I did get some premium wire, though, [18
+  gauge half hard sterling silver][]. I figured since I need so little
+  wire, may as well get pretty and sturdy stuff.
 
   ![materials and tools used to put wire around hinges
   ](./images/wire-materials.jpg)
@@ -135,10 +137,9 @@ about:
 
 ## Other suspension points: window blinds / curtain track
 
-ThinkPads and other laptops that open all the way to flat can also be
-suspended in front of a window for indoor standing setups.  Often
-windows have blinds or curtains which can be conveniently reused for
-the suspension.
+Laptops can also be suspended in front of a window for indoor standing
+setups. Along with providing views, windows also often have blinds or
+curtains which can be conveniently reused for the suspension.
 
 * Below, [adjustable tie-downs][tie-downs] are wrapped directly around
   blinds, and hooked to themselves:
@@ -148,13 +149,11 @@ the suspension.
 
 * Below, two [reusable "Mille-Ties"][] are threaded between a curtain
   track and the ceiling, around the plate attaching it to the
-  ceiling. This allows the curtain to still close without removing the
-  ties!
+  ceiling. This allows the curtain to close without removing the ties!
 
   These ties are pretty cool, they are a bit stretchier than
   releasable zip ties, but these are thinner and more bendable, so
-  they have their uses. They can also be used instead of releasable
-  zip ties for adding attachment loops to laptops.
+  they have their uses.
 
   ![mille-ties used around curtain track
   ](./images/mille-tie-suspension.jpg)
