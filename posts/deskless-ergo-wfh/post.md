@@ -373,6 +373,11 @@ preliminary notes about it in a footnote[^treadmill-comparison].
   "Costway" / "Gymax" branded Treadmill][Goplus Treadmill] compares to
   my recollection of using the [IMovr Thermotread GT Treadmill][]:
   * 1/5 the cost!
+  * The GoPlus has a great hidden feature which I discovered only by
+    experimentation. If you aren't walking on it, it doesn't increment
+    the time and distance counters! This is really nice for taking a
+    quick break but not throwing off your numbers if you're keeping
+    track.
   * Nice to be able to go faster than 2.5mph (the IMovR's upper
     limit). I've found I can still type decently at about 3mph.
   * Much easier to move around than the IMovr, since it's about half the weight
