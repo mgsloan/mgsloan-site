@@ -247,14 +247,14 @@ regenerateCmd = do
     putStrLn "Writing draft index..."
     writeArchive globalContext (templates ! "archive.html") drafts draftConfig
 
+  putStrLn "Writing posts..."
+  forM_ posts (copyPostImages baseConfig)
+  writePosts (templates ! "post.html") globalContext posts baseConfig
+
   unless (null pages) $ do
     putStrLn "Writing non-posts..."
     forM_ pages (copyPageImages baseConfig)
     writePages (templates ! "page.html") globalContext pages baseConfig
-
-  putStrLn "Writing posts..."
-  forM_ posts (copyPostImages baseConfig)
-  writePosts (templates ! "post.html") globalContext posts baseConfig
 
   putStrLn "Copying old blog..."
   createDirectoryIfMissing True "out/wordpress"
