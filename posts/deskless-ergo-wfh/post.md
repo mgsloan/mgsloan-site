@@ -353,7 +353,7 @@ car.
 
 Since I am now working from home, getting a new treadmill was quite
 justified. This time, I purchased [a much less expensive
-treadmill][Goplus treadmill], which arrived a couple days ago. By
+treadmill][Goplus Treadmill], which arrived a couple days ago. By
 affixing a cardboard produce box with couple releasable zip-ties, I
 ended up with a platform for my keyboard with a very nice tilt. This
 is likely to be totally different soon, but it's already quite
@@ -369,9 +369,9 @@ IMovr, but it's 1/5 the cost and works decently. I've put some more
 preliminary notes about it in a footnote[^treadmill-comparison].
 
 [^treadmill-comparison]:
-  A few notes about how my initial impression of the "Goplus" /
-  "Costway" / "Gymax" branded treadmill compares to my recollection of
-  using the [IMovr Thermotread GT][]:
+  A few notes about how my initial impression of the ["Goplus" /
+  "Costway" / "Gymax" branded Treadmill][Goplus Treadmill] compares to
+  my recollection of using the [IMovr Thermotread GT Treadmill][]:
   * 1/5 the cost!
   * Nice to be able to go faster than 2.5mph (the IMovR's upper
     limit). I've found I can still type decently at about 3mph.
@@ -396,7 +396,7 @@ the music often inspires me to dance! Variation in position, dynamic
 movements, are far more sustainable for longer durations than
 attempting to stand or sit still.
 
-[GoPlus treadmill]: https://smile.amazon.com/gp/product/B081JMW6FJ
+[GoPlus Treadmill]: https://smile.amazon.com/gp/product/B081JMW6FJ
 [IMovR ThermoTread GT Treadmill]: https://smile.amazon.com/iMovR-ThermoTread-Treadmill-Measures-Standing/dp/B016COFDOA
 
 ## Variety is key
