@@ -13,26 +13,26 @@ I built some polarizer glasses!
 ![polarizer glasses selfie
 ](./images/selfie.jpg)
 
-This was directly inspired by a comment from [u/elonfutz][] in [a
-reddit thread][digital nomad deskless ergo] for one of my blog posts:
+The idea to build these was directly inspired by a comment from
+[u/elonfutz][] in [a reddit thread][digital nomad deskless ergo] about
+one of my blog posts:
 
-> On another note, I had a special pair of polarized sunglasses made
-> with the polarizer specifically tuned at the 45 degree angle to
-> match my laptop monitor. They're real nice when working
-> outside. They darken the world, but not your screen. Each
-> laptop/screen might have a different angle, so I can't use them with
-> just any screen. You might consider having some made for your
-> outdoor use.
+> I had a special pair of polarized sunglasses made with the polarizer
+> specifically tuned at the 45 degree angle to match my laptop
+> monitor. They're real nice when working outside. They darken the
+> world, but not your screen. Each laptop/screen might have a
+> different angle, so I can't use them with just any screen. You might
+> consider having some made for your outdoor use.
 
-Brilliant!  I love the idea of reducing glare while keeping the screen
-appearing the same.  Though I think there are [plenty of viable ways
-to use your computer on sunny days][working with sun], polarized
-glasses like these help too.
+I love this idea!  It allows reducing glare without reducing screen
+brightness.  While I think there are [plenty of viable ways to use
+your computer on sunny days][working with sun], polarized glasses like
+these help too.
 
 You might wonder why I would go through the trouble of building
-glasses.  After all, polarized sunglasses exist, you'd think something
-like that might be sufficient.  See the ["Other options considered"
-section][] for more info on that topic.
+polarizer glasses.  After all, polarized sunglasses exist, it'd be
+reasonable to think something like that might be sufficient.  See the
+["Other options considered" section][] for more on that topic.
 
 [working with sun]: https://mgsloan.com/posts/deck-desk/#working-with-sun-constructed-shade
 [digital nomad deskless ergo]: https://www.reddit.com/r/digitalnomad/comments/fph6d2/deskless_ergonomic_setups/flq4top
