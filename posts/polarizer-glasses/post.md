@@ -82,9 +82,10 @@ solder made no contact with the plastic.
 ![wire frame soldered, tensioned around lenses
 ](./images/build-3.jpg)
 
-Retrospectively, it made no sense for the wire overlap to be right at
-the nose section. The addition of Sugru later made up for this, but if
-I were to do this again, I wouldn't have made that choice.
+Retrospectively, it made no sense for the wire overlap soldering to be
+right at the nose section. The addition of Sugru later made up for
+this, but if I were to do this again, I wouldn't have made that
+choice.
 
 I decided to skip having hinges for the temples, since that would
 greatly complicate things. So, I just bent some wire at a 90 degree
