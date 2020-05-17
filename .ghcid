@@ -1,4 +1,5 @@
 --reload posts
+--reload non-posts
 --reload draft/posts
 --reload draft/posts-old
 --reload templates
