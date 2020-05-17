@@ -2,7 +2,7 @@
 title: Polarizer Glasses for Outdoor Computing
 date: 2020-05-16
 synopsis: I built some variable angle polarizer glasses based on camera optics
-primary-image: https://mgsloan.com/posts/polarizer-glasses/images/
+primary-image: https://mgsloan.com/posts/polarizer-glasses/images/finished-glasses.jpg
 ---
 
 I built some polarizer glasses!
