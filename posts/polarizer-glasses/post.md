@@ -44,7 +44,10 @@ Materials:
 
 * Two [Bower 58mm Polarizers][].
 
-* Two [AmazonBasics UV Protection Camera Filters][].
+* Two [AmazonBasics UV Protection Camera Filters][]. These filter
+  harmful rays and make it easier to build the frame without
+  interfering with the rotation of the polarizers. Without them, the
+  build would probably still be feasible, but a bit trickier.
 
 * I used [18 gauge half hard sterling silver][] wire that I originally
   got for making [more permanent laptop hinge attachments][wire around
