@@ -145,6 +145,15 @@ See the ["Deskless standing keyboard" section][] of the ["Deskless
 Ergonomic Work-From-Home Setups" post][] for a bit more info. There
 will hopefully be a more detailed post about this in the future.
 
+**Update 2020-05-25**: The giant releasable zip ties work pretty well
+for a while, but they started breaking on me due to repeated
+flexion. Currently I'm just putting a leather belt around the
+keyboard, and this is working well, thankfully the belt holes were
+already at the proper length for it to loop around twice. See my
+["suspending keyboard from ceiling" update][] for pictures of this.
+
+["suspending keyboard from ceiling" update]: /non-posts/computer-ergonomics#2020-05-25---suspending-keyboard-from-ceiling
+
 [Kinesis Advantage]: https://smile.amazon.com/Kinesis-Advantage2-Ergonomic-Keyboard-KB600/dp/B07K1SMRGS
 [28" long zip tie]: https://smile.amazon.com/gp/product/B001ARFF16/ref=ppx_yo_dt_b_search_asin_title
 

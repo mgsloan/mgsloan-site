@@ -146,6 +146,16 @@ Materials:
 * For the [Kinesis Advantage 2][], I use a [giant releasable zip
   tie][] - 28" (71cm) long with 175lb (80kg) of tensile strength!
 
+  - **Update 2020-05-25**: The giant releasable zip ties work pretty
+    well for a while, but they started breaking on me due to repeated
+    flexion. Currently I'm just putting a leather belt around the
+    keyboard, and this is working well, thankfully the belt holes were
+    already at the proper length for it to loop around twice. See my
+    ["suspending keyboard from ceiling" update][] for pictures of
+    this.
+
+    ["suspending keyboard from ceiling" update]: /non-posts/computer-ergonomics#2020-05-25---suspending-keyboard-from-ceiling
+
 * Pants with a drawstring[^fly-alternative]. The giant releasable zip
   tie gets looped through the drawstring, and then around the
   Kinesis[^drawstring-details]:
