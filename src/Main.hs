@@ -50,7 +50,7 @@ readPosts dir = do
   posts <- map (dir </>) . omitEmacsFiles <$> listDirectory dir
   fmap concat $ forM posts $ \postDir -> do
     let postName = takeFileName postDir
-    if postName `elem` [".git", "license.md"]
+    if postName `elem` [".git", "license.md", "license.md"]
       then return []
       else do
         let postPath = postDir </> "post.md"
@@ -78,6 +78,13 @@ readPages dir = do
           else do
             putStrLn $ "Warning: expected file at " ++ pagePath ++ ", but none found."
             return []
+
+readPageIndex :: IO String
+readPageIndex = Page.body . Page.parse pageDir pageName <$> readFile pagePath
+  where
+    pageDir = "non-posts/"
+    pageName = "non-posts"
+    pagePath = "non-posts/index.md"
 
 -- Holds the output directory and input image directory.
 data Config = Config
@@ -165,14 +172,17 @@ writePlainPage url pageContext template config = do
 
 -- Given the archive template and the global context, writes the archive page
 -- to the destination directory.
-writeArchive :: Template.Context -> Template.Template -> [P.Post] -> Config -> IO ()
-writeArchive globalContext template posts = writePlainPage "/" context template
+writeArchive :: Template.Context -> Template.Template -> [P.Post] -> [Page.Page] -> String -> Config -> IO ()
+writeArchive globalContext template posts pages pageIndex =
+  writePlainPage "/" context template
   where
     context = M.unions
       [ P.archiveContext posts
       , Template.stringField "title"     "mgsloan"
       , Template.stringField "bold-font" "true"
       , Template.stringField "archive"   "true"
+      , Template.stringField "has-pages" (if null pages then "false" else "true")
+      , Template.stringField "page-index-html" pageIndex
       , globalContext
       ]
 
@@ -222,14 +232,17 @@ renderIndexCmd :: IO ()
 renderIndexCmd = do
   templates <- readTemplates "templates/"
   posts <- readPosts "posts/"
+  pages <- readPages "non-posts/"
+  pageIndex <- readPageIndex
   globalContext <- makeGlobalContext templates
-  writeArchive globalContext (templates ! "archive.html") posts baseConfig
+  writeArchive globalContext (templates ! "archive.html") posts pages pageIndex baseConfig
 
 regenerateCmd :: IO ()
 regenerateCmd = do
   templates <- readTemplates "templates/"
   posts <- readPosts "posts/"
   pages <- readPages "non-posts/"
+  pageIndex <- readPageIndex
   globalContext <- makeGlobalContext templates
 
   -- cleanOutputDir
@@ -245,7 +258,7 @@ regenerateCmd = do
     forM_ drafts (copyPostImages draftConfig)
     writePosts (templates ! "post.html") globalContext drafts draftConfig
     putStrLn "Writing draft index..."
-    writeArchive globalContext (templates ! "archive.html") drafts draftConfig
+    writeArchive globalContext (templates ! "archive.html") drafts [] "" draftConfig
 
   putStrLn "Writing posts..."
   forM_ posts (copyPostImages baseConfig)
@@ -261,7 +274,7 @@ regenerateCmd = do
   copyFiles "assets/old-blog/" "out/wordpress"
 
   putStrLn "Writing other pages..."
-  writeArchive globalContext (templates ! "archive.html") posts baseConfig
+  writeArchive globalContext (templates ! "archive.html") posts pages pageIndex baseConfig
 
   copyFile "assets/favicon.png" "out/favicon.png"
   copyFile "assets/favicon.png" "draft/out/favicon.png"

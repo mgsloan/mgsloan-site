@@ -257,6 +257,13 @@ h2:target > a:before
   margin: 0;
   padding-bottom: 1.6rem;
 }
+
+.non-post-body
+{
+  margin-top: 2em;
+  min-height: 5em;
+}
+
 {{end}} /* if archive */
 
 ul, ol
