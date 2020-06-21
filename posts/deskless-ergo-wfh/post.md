@@ -73,9 +73,19 @@ This has worked shockingly well! The ropes have not slipped off the
 corners, even when carrying the monitor around suspended upright like
 this. There is a potential risk that might happen at some point, so
 I've ordered [a monitor mount][] which I believe will provide an
-attachment point directly above the monitor's center of mass. I'll
-update this post, possibly write a new post once I've attempted to use
-that monitor mount.
+attachment point directly above the monitor's center of mass.
+
+**Update**: The mount arrived! I prefer it to the rope approach. See
+footnote[^new-mount] for details.
+
+[^new-mount]:
+  The [new monitor mount][a monitor mount] is working well, pretty much
+  out-of-the-box! It is much heavier-duty than I anticipated, which is
+  great, but also heavy, which is a little inconvenient when attaching
+  to carrabiners, but not bad.  I now prefer this to the rope approach
+  even though the rope approach never gave me trouble.  I anticipate
+  that eventually the rope approach would have gone awry and busted the
+  screen.  No pics for now, perhaps later!
 
 There's a lot of versatility and adjustability here:
 
