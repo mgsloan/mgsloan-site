@@ -388,31 +388,55 @@ only had it for 2 days. It's not quite as smooth or quiet as the
 IMovr, but it's 1/5 the cost and works decently. I've put some more
 preliminary notes about it in a footnote[^treadmill-comparison].
 
+**Update:** The GoPlus / CostWay treadmill broke after only 130 miles
+of use in 6 weeks, which is pretty disappointing.  See
+footnote[^treadmill-broke] for details.
+
+[^treadmill-broke]:
+  **Update:** The GoPlus broke after only 130 miles in 6 weeks, which
+    is pretty disappointing.
+    * **Details**: It started losing torque / slipping the last time I
+      used it, and I noticed the treadmill belt was rubbing against
+      the side, increasing the load on the motor. This can usually be
+      resolved by adjusting the treadmill feet to level it.  I hadn't
+      noticed during the session since I was listening to music.  The
+      next time I used the treadmill it moved a bit, but stopped when
+      I walked on it and displayed an error code.  Soon it stoppped
+      entirely.  So, I suspect there is an element of user error here,
+      but still, a little extra torque shouldn't cause it to
+      completely break so quickly.  I did lubricate it regularly, so I
+      don't think that was the issue.
+    * **New Treadmill:** I trawled craigslist and ended up buying a
+      lightly used IMovr for $700, so now using that. I wanted to get
+      a LifeSpan treadmill to try out more options, but that didn't
+      pan out and I know the IMovr works well for me.
+
 [^treadmill-comparison]:
-  A few notes about how my initial impression of the ["Goplus" /
+  A few notes about how my my experience of the ["Goplus" /
   "Costway" / "Gymax" branded Treadmill][Goplus Treadmill] compares to
   my recollection of using the [IMovr Thermotread GT Treadmill][]:
-  * 1/5 the cost!
-  * The GoPlus has a great hidden feature which I discovered only by
-    experimentation. If you aren't walking on it, it doesn't increment
-    the time and distance counters! This is really nice for taking a
-    quick break but not throwing off your numbers if you're keeping
-    track.
-  * Nice to be able to go faster than 2.5mph (the IMovR's upper
-    limit). I've found I can still type decently at about 3mph.
-  * Much easier to move around than the IMovr, since it's about half the weight
-  * Not as big of a walking platform. Initially I only noticed the
-    lower width, which means I've gotta be fairly precise about my
-    side-to-side position. After using it a while, I'm also finding
-    that it's just barely long enough, and so occasionally a longer
-    stride will end up hitting the guard plastic on the back. This is
-    not too troublesome, just mildly annoying. For others it may be no
-    issue, I'm larger than average.
-  * Beeps loudly with every button press of the remote, which is
-    annoying, definitely wouldn't be office friendly. I might open it
-    up to disable whatever the beep is coming from.
-  * Units are in kilometers instead of miles, which is fine, but not
-    intuitive for me.
+
+    * A fraction of the cost!
+    * The GoPlus has a great hidden feature which I discovered only by
+      experimentation. If you aren't walking on it, it doesn't
+      increment the time and distance counters! This is really nice
+      for taking a quick break but not throwing off your numbers if
+      you're keeping track.
+    * Nice to be able to go faster than 2.5mph (the IMovR's upper
+      limit). I've found I can still type decently at about 3mph.
+    * Much easier to move around than the IMovr, since it's about half the weight
+    * Not as big of a walking platform. Initially I only noticed the
+      lower width, which means I've gotta be fairly precise about my
+      side-to-side position. After using it a while, I'm also finding
+      that it's just barely long enough, and so occasionally a longer
+      stride will end up hitting the guard plastic on the back. This
+      is not too troublesome, just mildly annoying. For others it may
+      be no issue, I'm larger than average.
+    * Beeps loudly with every button press of the remote, which is
+      annoying, definitely wouldn't be office friendly. I might open
+      it up to disable whatever the beep is coming from.
+    * Units are in kilometers instead of miles, which is fine, but not
+      intuitive for me.
 
 One tip to wrap this section up - for me, listening to energetic music
 makes treadmill computing **so** much more sustainable for longer
