@@ -39,12 +39,12 @@ area and much smoother than the cheap treadmill.
 
 ### New sit-stand desk and active sitting stool
 
-My employer kindly purchased equipment for WFH.  While I contemplated
-figuring out some weird ergonomic stuff to get, unfortunately most of
-the eccentric options I was interested in, like the [Varier Gravity
-Balans][] or the [Humanscale Float desk][] all fell outside the bounds
-of both budget and reasonableness.  So, instead, I ended up with the
-following setup:
+My employer kindly purchased equipment for working from home.  While I
+contemplated figuring out some weird ergonomic stuff to get,
+unfortunately most of the eccentric options I was interested in, like
+the [Varier Gravity Balans][] or the [Humanscale Float desk][] all
+fell outside the bounds of both budget and reasonableness.  So,
+instead, I ended up with the following setup:
 
 ![Treadmill desk](./images/desk-setup.jpg)
 
@@ -64,14 +64,14 @@ following setup:
 
     - One thing I particularly like about the Linak electronics is
       that it supports bluetooth.  While the phone control is fairly
-      lobotimized - it requires you to keep pressing on the phone to
+      lobotomized - it requires you to keep pressing on the phone to
       continue movement - it turns out there is a very handy
       [idasen-controller script][] which allows computer control!  So
       now I can get my desk to move to preset heights via keyboard
       shortcuts.  This makes me disproportionately happy :)
 
 - I got just the underframe, with the intention of putting a very nice
-  pice of wood on the top. However, I wanted to have a functioning
+  piece of wood on the top. However, I wanted to have a functioning
   desk quickly after picking up the underframe, and so I got a [$30
   piece of 4'x2' birch plywood from Home Depot][plywood]. My
   woodworking friends tell me the edges could really use some
@@ -85,7 +85,7 @@ following setup:
   active, which prevents slouching.  It *is* possible tilt your pelvis
   all the way back and round your back a bunch in terrible posture, so
   it does not entirely prevent bad posture.  However, that posture is
-  so extreme that it immediately feels rediculous and so it is
+  so extreme that it immediately feels ridiculous and so it is
   impossible for me to linger in it unaware.
 
 - [VIVO desk mount stand][] to raise the screen to a nice height. I
@@ -205,7 +205,7 @@ Here's the stuff involved:
 * [Braided cable sleeve][] to tidy up the monitor cables / power
   cables.
 
-* [Electriduct powerstrip][] provides three plugs and two USB power
+* [Electriduct power strip][] provides three plugs and two USB power
   ports.  It's fairly decent, I got it because it can be screwed into
   the bottom of the desk, with the outlets facing horizontally.
 
@@ -223,7 +223,7 @@ Here's the stuff involved:
 [19 inch 1U server rack finger ducts]: https://smile.amazon.com/gp/product/B07HNMVYD9/
 [Braided cable sleeve]: https://smile.amazon.com/gp/product/B07NVG25D1
 [Screw-in cable tie bases]: https://smile.amazon.com/gp/product/B01B5RJ0XY
-[Electriduct powerstrip]: https://smile.amazon.com/gp/product/B00UNWOM7W
+[Electriduct power strip]: https://smile.amazon.com/gp/product/B00UNWOM7W
 [CalDigit USB-C Pro Dock]: https://smile.amazon.com/CalDigit-USB-C-Pro-Dock-Thunderbolt/dp/B07VL675DT
 
 ## 2020-05-25 - suspending keyboard from ceiling!
