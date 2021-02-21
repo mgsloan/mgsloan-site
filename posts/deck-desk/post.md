@@ -110,7 +110,7 @@ for getting it out of the way when getting in and out of the chair:
 [Kinesis Advantage 2]: https://smile.amazon.com/Kinesis-Advantage2-Ergonomic-Keyboard-KB600LFQ/dp/B07K1SMRGS
 [keyboard.io Model 01]: https://keyboard.io/
 [Timber Ridge Zero Gravity Chair]: https://smile.amazon.com/gp/product/B017B9PPHA
-[Magichold stand]: https://smile.amazon.com/gp/product/B00JWD6XC0
+[Magichold stand]: https://smile.amazon.com/MagicHold-Rotating-Height-Adjusting-13-15-6/dp/B01MG1EWPQ
 
 [^touch-typing]:
     I suppose being able to type without looking at the keyboard is
