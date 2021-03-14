@@ -3,6 +3,7 @@ title: Listening to podcasts along with music, on Android
 break: music, on
 date: 2018-10-04
 synopsis: A couple tips for listening to podcasts and music simultaneously.
+category: software
 ---
 
 ## Context

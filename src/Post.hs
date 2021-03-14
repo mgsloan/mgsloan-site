@@ -41,12 +41,22 @@ data Post = Post { sourceDir :: FilePath
                  , title     :: String
                  , header    :: String
                  , subheader :: Maybe String
+                 , category  :: Maybe Category
                  , part      :: Maybe Int
                  , date      :: Day
                  , slug      :: String
                  , synopsis  :: String
                  , primaryImage :: Maybe String
-                 , body      :: String } deriving (Show) -- TODO: This is for debugging only, remove.
+                 , body      :: String
+                 } deriving (Show)
+
+data Category = Ergonomics | Software
+  deriving (Show)
+
+parseCategory :: String -> Category
+parseCategory "ergonomics" = Ergonomics
+parseCategory "software" = Software
+parseCategory x = error $ "Invalid category: " ++ x
 
 -- Returns the post date, formatted like "17 April, 2015".
 longDate :: Post -> String
@@ -140,6 +150,7 @@ parse dir postSlug contents = let
           , title       = postTitle
           , header      = brokenHeading
           , subheader   = M.lookup "subheader" frontMatter
+          , category    = parseCategory <$> M.lookup "category" frontMatter
           , part        = fmap read $ M.lookup "part" frontMatter
           , date        = parseDate $ frontMatter ! "date"
           , slug        = postSlug

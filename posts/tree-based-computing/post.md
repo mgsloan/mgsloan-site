@@ -3,6 +3,7 @@ title: Tree Based Computing
 date: 2020-03-25
 synopsis: A portable and ergonomic way to use your computer in nature.
 primary-image: https://mgsloan.com/posts/tree-based-computing/images/tree-screen.jpg
+category: ergonomics
 ---
 
 This post is about one of the most portable and

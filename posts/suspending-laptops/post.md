@@ -4,6 +4,7 @@ date: 2020-05-02
 synopsis: Using adhesive hangers and adjustable tie-downs to suspend laptops.
 run-in: I quite like
 primary-image: https://mgsloan.com/posts/suspending-laptops/images/zip-tie-suspension.jpg
+category: ergonomics
 ---
 
 I quite like being able to place my laptop screen where I want it in

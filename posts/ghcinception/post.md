@@ -4,6 +4,7 @@ date: 2018-07-28
 break: GHCinception: Running
 synopsis: My patches were merged, allowing GHC to be loaded into GHCi and run!
 primary-image: https://mgsloan.com/images/haskell-placeholder-banner.jpg
+category: software
 ---
 
 I'm happy to announce that you can now easily load GHC into GHCi! I've been
