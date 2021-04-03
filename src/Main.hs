@@ -9,6 +9,7 @@
 -- the licence file in the root of the repository.
 import Control.Exception (finally)
 import Control.Monad
+import Data.Char (toLower)
 import Data.Monoid ((<>))
 import Data.List (isInfixOf, sort, isSuffixOf, isPrefixOf)
 import Data.Time.Calendar (toGregorian)
@@ -224,9 +225,13 @@ renderDraftCmd draftTitlePortion = do
   templates <- readTemplates "templates/"
   drafts <- readPosts "draft/posts/"
   globalContext <- makeGlobalContext templates
-  [draft] <- return $ filter ((draftTitlePortion `isInfixOf`) . P.title) drafts
+  [draft] <- return $ filter (matchTitle draftTitlePortion) drafts
   copyPostImages draftConfig draft
   writePosts (templates ! "post.html") globalContext [draft] draftConfig
+
+matchTitle :: String -> P.Post -> Bool
+matchTitle portion post =
+  map toLower portion `isInfixOf` map toLower (P.title post)
 
 renderIndexCmd :: IO ()
 renderIndexCmd = do
