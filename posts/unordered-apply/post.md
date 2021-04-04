@@ -4,6 +4,7 @@ date: 2021-04-03
 break:
 synopsis: Fancy type system tricks to implement type-directed function application.
 run-in: Here is a little puzzle:
+primary-image: https://mgsloan.com/images/haskell-placeholder-banner.jpg
 category: software
 ---
 
