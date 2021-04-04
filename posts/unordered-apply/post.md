@@ -143,8 +143,8 @@ Conflicting family instance declarations:
 The problem is that open type families do not allow overlap in their
 instances.
 
-The code that results in this error is [didactic/v1.hs on
-github](https://github.com/mgsloan/apply-unordered/blob/master/didactic/v1.hs).
+The code that results in this error is [didactic/V1.hs on
+github](https://github.com/mgsloan/apply-unordered/blob/master/didactic/V1.hs).
 
 ## Attempted fix: use a closed type family
 
@@ -199,8 +199,8 @@ choose between the different cases of the closed type family. In order
 to reject the first equation, it would need to know that `a` does not
 unify with `b`.
 
-The code that results in this error is [didactic/v2.hs on
-github](https://github.com/mgsloan/apply-unordered/blob/master/didactic/v2.hs).
+The code that results in this error is [didactic/V2.hs on
+github](https://github.com/mgsloan/apply-unordered/blob/master/didactic/V2.hs).
 
 ## Fix: use a closed type family to choose the instance!
 
@@ -334,8 +334,8 @@ Giving that a try:
 
 Boom! Unordered, type-directed function application!
 
-This version of the code is [didactic/v3.hs on
-github](https://github.com/mgsloan/apply-unordered/blob/master/didactic/v3.hs). The
+This version of the code is [didactic/V3.hs on
+github](https://github.com/mgsloan/apply-unordered/blob/master/didactic/V3.hs). The
 next post in this series will improve the type errors that occur when
 the argument type mismatches with all of the parameters.
 
