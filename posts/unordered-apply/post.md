@@ -384,15 +384,12 @@ instead look like:
 <interactive>:11:1: error:
     • Couldn't match type ‘Text’ with ‘Bool -> b'’
         arising from a use of ‘?
-    • While resolving the following instances:
+    • Due to the constraint (Text ~ (Bool -> b))
+      arising from superclass constraints:
         (Text ~ (Bool -> b)) =>
-        Apply Text Bool b
-      due to
-        Apply Text Bool b' =>
-        Apply (Text -> Text) Bool (Text -> b')
-      due to
-        Apply (Text -> Text) Bool (Text b') =>
-        Apply (Char -> Text -> Text) Bool (Char -> Text -> b')
+        Apply Text Bool b =>
+        Apply (Text -> Text) Bool (Text -> b) =>
+        Apply (Char -> Text -> Text) Bool (Char -> Text -> b)
     ...
 ```
 
