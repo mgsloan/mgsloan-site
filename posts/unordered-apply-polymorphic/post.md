@@ -2,7 +2,7 @@
 title: Polymorphic Type-Directed Function Application
 date: 2021-04-06
 break:
-synopsis: GHC plugin to choose a "best-match" argument.
+synopsis: GHC plugin to choose a "best-match" parameter type.
 run-in:
 primary-image: https://mgsloan.com/images/haskell-placeholder-banner.jpg
 category: software
