@@ -341,6 +341,83 @@ the argument type mismatches with all of the parameters.
 
 <!-- TODO: make "next post" into a link -->
 
+## Alternative approach: functional dependencies
+
+In the [discussion on reddit][], [u/lightandlight][] described a [more
+elegant implementation][] using functional dependencies with
+overlapping instances:
+
+[discussion on reddit]: https://www.reddit.com/r/haskell/comments/mk11iu/unordered_function_application_in_haskell_type/
+[u/lightandlight]: https://www.reddit.com/user/lightandlight/
+[more elegant implementation]: https://www.reddit.com/r/haskell/comments/mk11iu/unordered_function_application_in_haskell_type/gtemzu9/
+
+```haskell
+class Apply f x y | f x -> y where
+  apply :: f -> x -> y
+
+instance {-# overlappable #-} (x ~ (a -> b)) => Apply x a b where
+  apply = ($)
+
+instance {-# overlapping #-} Apply b a b' => Apply (a' -> b) a (a' -> b') where
+  apply f a = \a' -> apply (f a')
+```
+
+Very cool! However, this approach leads to more obscure error
+messages. Lets say we supply the wrong argument type:
+
+```haskell
+> cons ? True
+
+<interactive>:1:1: error:
+    • Couldn't match type ‘Text’ with ‘Bool -> b'’
+        arising from a use of ‘?’
+    ...
+```
+
+A bit of a head-scratcher! If something like ["Inspecting Haskell
+Instance Resolution"][] was implemented in GHC, then this error might
+instead look like:
+
+```haskell
+> cons ? True
+
+<interactive>:11:1: error:
+    • Couldn't match type ‘Text’ with ‘Bool -> b'’
+        arising from a use of ‘?
+    • While resolving the following instances:
+        (Text ~ (Bool -> b)) =>
+        Apply Text Bool b
+      due to
+        Apply Text Bool b' =>
+        Apply (Text -> Text) Bool (Text -> b')
+      due to
+        Apply (Text -> Text) Bool (Text b') =>
+        Apply (Char -> Text -> Text) Bool (Char -> Text -> b')
+    ...
+```
+
+This makes it a bit clearer that it recursed on the function type and
+errored out on attempting to satisfy the `(x ~ (a -> b))` constraint.
+
+With the implementation here, the error is instead:
+
+```haskell
+λ cons ? True
+
+<interactive>:1:1: error:
+    • No instance for (ApplyByType 'NoArgToMatch Bool Text)
+        arising from a use of ‘?’
+    ...
+```
+
+Still not great, but I think a bit clearer. An upcoming post will
+describe using GHC custom type errors to further improve this
+circumstance.
+
+<!-- TODO: link to post -->
+
+["Inspecting Haskell Instance Resolution"]: /posts/inspecting-haskell-instance-resolution/
+
 ## Appendix: Why?
 
 You might be wondering why you would ever want to use this.  Honestly,
