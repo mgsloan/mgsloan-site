@@ -72,7 +72,7 @@ year post = y where (y, _m, _d) = toGregorian $ date post
 
 -- Returns the canonical absolute url for a particular post.
 url :: Post -> String
-url post = "/posts/" ++ slug post
+url post = "/posts/" ++ slug post ++ "/"
 {- Ruud included the date, whereas I'd prefer just the post
 url post = "/" ++ datePath ++ "/" ++ (slug post)
   where datePath = formatTime defaultTimeLocale "%Y/%m/%d" $ date post
