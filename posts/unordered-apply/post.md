@@ -44,16 +44,16 @@ that makes it feasible is a restriction that all arguments are
 monomorphic. Solving this puzzle is a decent didactic exercise, as it
 involves a variety of type-level techniques:
 
-1. Using [closed type families][] to direct instance selection.
+1. Using [closed type families][] to direct instance selection. This
+   is described in this post.
 
-2. Using [custom type errors][] to improve the error messaging.
+2. Using [custom type errors][] to improve the error messaging. This
+   is described in [the next post][].
 
-3. Using typeclasses to implement [polyvariadic functions][].
+3. Using typeclasses to implement [polyvariadic functions][]. This
+   will be described in a future post.
 
-**1** is described in this post. **2** and **3** will be described in
-subsequent posts in the series.
-
-<!-- TODO: Link to the posts -->
+<!-- TODO: Link to the reorderArgs post -->
 
 The functionality described in these posts is available on Hackage, in
 the [apply-unordered-mono package][]. It is also possible to
@@ -61,10 +61,9 @@ generalize this to polymorphic functions, via a GHC compiler
 plugin. This is demonstrated by the related [apply-unordered
 package][].
 
-<!-- TODO: Link to the posts -->
-
 [closed type families]: https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/exts/type_families.html#closed-type-families
 [custom type errors]: https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/exts/type_errors.html
+[the next post]: /posts/unordered-apply-type-errors/
 [polyvariadic functions]: http://okmij.org/ftp/Haskell/polyvariadic.html
 [apply-unordered-mono package]: http://hackage.haskell.org/package/apply-unordered-mono
 [apply-unordered package]: http://hackage.haskell.org/package/apply-unordered
@@ -335,11 +334,9 @@ Giving that a try:
 Boom! Unordered, type-directed function application!
 
 This version of the code is [didactic/V3.hs on
-github](https://github.com/mgsloan/apply-unordered/blob/master/didactic/V3.hs). The
-next post in this series will improve the type errors that occur when
-the argument type mismatches with all of the parameters.
-
-<!-- TODO: make "next post" into a link -->
+github](https://github.com/mgsloan/apply-unordered/blob/master/didactic/V3.hs). [The
+next post][] in this series will improve the type errors that occur
+when the argument type mismatches with all of the parameters.
 
 ## Alternative approach: functional dependencies
 
@@ -407,11 +404,9 @@ With the implementation here, the error is instead:
     ...
 ```
 
-Still not great, but I think a bit clearer. An upcoming post will
-describe using GHC custom type errors to further improve this
+Still not great, but I think a bit clearer. [The next post][]
+describes using GHC custom type errors to further improve this
 circumstance.
-
-<!-- TODO: link to post -->
 
 ["Inspecting Haskell Instance Resolution"]: /posts/inspecting-haskell-instance-resolution/
 
