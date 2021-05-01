@@ -825,12 +825,12 @@ nav a
 
 .dark h1, .dark h2, .dark h3, .dark h2 > a:before
 {
-  color: #fff;
+  color: #eee;
 }
 
 .dark .archive h2
 {
-    /* TODO */
+  color: #577ea8;
 }
 
 .dark code
