@@ -9,12 +9,12 @@
         <h2>{{year}}</h2>
         {{foreach post}}
           <h3><a href="{{url}}">{{title-html}}</a></h3>
-          <p>{{synopsis-html}} <a href="{{url}}" class="smcp">Read</a></p>
+          <p>{{synopsis-html}} <a href="{{url}}" class="smcp" tabindex=-1>Read </a></p>
         {{end}}
       {{end}}
       <p><i>
         I hope you found something interesting or helpful!<br>
-        If you like, you can subscribe to my <a href="/feed.xml">Atom feed</a>.
+        If you like, you can subscribe to my <a href="/feed.xml" tabindex=-1>Atom feed</a>.
       </i></p>
       <br>
       {{if has-pages}}
