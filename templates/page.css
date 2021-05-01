@@ -151,6 +151,13 @@ a
   text-decoration: none;
 }
 
+a:hover, a:focus
+{
+  text-decoration: underline;
+  text-decoration-thickness: 0.5px;
+  text-underline-offset: 3px;
+}
+
 {{if archive}}
 /* Used for post titles on the archive page. */
 h3
