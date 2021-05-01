@@ -171,19 +171,30 @@ writePlainPage url pageContext template config = do
   createDirectoryIfMissing True destDir
   writeFile destFile html
 
--- Given the archive template and the global context, writes the archive page
+writeListings :: Template.Context -> Template.Template -> [P.Post] -> [Page.Page] -> String -> Config -> IO ()
+writeListings globalContext template posts pages pageIndex config = do
+  let ergonomicsPosts = filter ((Just P.Ergonomics ==) . P.category) posts
+  let softwarePosts = filter ((Just P.Software ==) . P.category) posts
+  writeListing "/" Nothing globalContext template posts pages pageIndex config
+  writeListing "/category-ergonomics/" (Just P.Ergonomics) globalContext template ergonomicsPosts pages pageIndex config
+  writeListing "/category-software/" (Just P.Software) globalContext template softwarePosts pages pageIndex config
+
+-- Given the archive template and the global context, writes the listing page
 -- to the destination directory.
-writeArchive :: Template.Context -> Template.Template -> [P.Post] -> [Page.Page] -> String -> Config -> IO ()
-writeArchive globalContext template posts pages pageIndex =
-  writePlainPage "/" context template
+writeListing :: String -> Maybe P.Category -> Template.Context -> Template.Template -> [P.Post] -> [Page.Page] -> String -> Config -> IO ()
+writeListing url category globalContext template posts pages pageIndex =
+  writePlainPage url context template
   where
-    context = M.unions
+    context = M.unions $
       [ P.archiveContext posts
-      , Template.stringField "title"     "mgsloan"
-      , Template.stringField "bold-font" "true"
-      , Template.stringField "archive"   "true"
-      , Template.stringField "has-pages" (if null pages then "false" else "true")
+      , Template.stringField "title"           "mgsloan"
+      , Template.stringField "bold-font"       "true"
+      , Template.stringField "archive"         "true"
+      , Template.boolField "has-pages"         (not (null pages))
       , Template.stringField "page-index-html" pageIndex
+      , Template.boolField "is-index"          (category == Nothing)
+      , Template.boolField "is-ergonomics"     (category == Just P.Ergonomics)
+      , Template.boolField "is-software"       (category == Just P.Software)
       , globalContext
       ]
 
@@ -240,7 +251,7 @@ renderIndexCmd = do
   pages <- readPages "non-posts/"
   pageIndex <- readPageIndex
   globalContext <- makeGlobalContext templates
-  writeArchive globalContext (templates ! "archive.html") posts pages pageIndex baseConfig
+  writeListings globalContext (templates ! "archive.html") posts pages pageIndex baseConfig
 
 regenerateCmd :: IO ()
 regenerateCmd = do
@@ -263,7 +274,7 @@ regenerateCmd = do
     forM_ drafts (copyPostImages draftConfig)
     writePosts (templates ! "post.html") globalContext drafts draftConfig
     putStrLn "Writing draft index..."
-    writeArchive globalContext (templates ! "archive.html") drafts [] "" draftConfig
+    writeListings globalContext (templates ! "archive.html") drafts [] "" draftConfig
 
   putStrLn "Writing posts..."
   forM_ posts (copyPostImages baseConfig)
@@ -279,7 +290,7 @@ regenerateCmd = do
   copyFiles "assets/old-blog/" "out/wordpress"
 
   putStrLn "Writing other pages..."
-  writeArchive globalContext (templates ! "archive.html") posts pages pageIndex baseConfig
+  writeListings globalContext (templates ! "archive.html") posts pages pageIndex baseConfig
 
   copyFile "assets/favicon.png" "out/favicon.png"
   copyFile "assets/favicon.png" "draft/out/favicon.png"

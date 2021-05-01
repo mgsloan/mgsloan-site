@@ -262,7 +262,14 @@ h2:target > a:before
   width: unset;
   text-align: center;
   margin: 0;
-  padding-bottom: 1.6rem;
+  padding-bottom: 2.5rem;
+}
+
+.archive .other-category
+{
+  margin-top: 1em;
+  font-size: 50%;
+  font-style: italic;
 }
 
 .non-post-body

@@ -51,7 +51,7 @@ data Post = Post { sourceDir :: FilePath
                  } deriving (Show)
 
 data Category = Ergonomics | Software
-  deriving (Show)
+  deriving (Eq, Show)
 
 parseCategory :: String -> Category
 parseCategory "ergonomics" = Ergonomics

@@ -15,7 +15,8 @@ module Template
   listField,
   nestContext,
   parse,
-  stringField
+  stringField,
+  boolField
 )
 where
 
@@ -92,6 +93,10 @@ data ContextValue
 stringField :: String -> String -> Context
 stringField key value = Map.singleton key (StringValue value)
 
+boolField :: String -> Bool -> Context
+boolField key True = Map.singleton key (StringValue "")
+boolField _ False = Map.empty
+
 listField :: String -> [Context] -> Context
 listField key values = Map.singleton key (ListValue values)
 
@@ -125,7 +130,7 @@ applyBlock fragments context = next fragments ""
           End               -> (str, more)
           Raw contents      -> next more (str ++ contents)
           Variable variable -> next more (str ++ expand variable)
-          Conditional cond  -> next continue $ if (isTrue cond) then str ++ inner else str
+          Conditional cond  -> next continue $ if isTrue cond then str ++ inner else str
             where (inner, continue) = applyBlock more context
           Include template  -> next more (str ++ include template)
           Loop list         -> next continue $ str ++ inner

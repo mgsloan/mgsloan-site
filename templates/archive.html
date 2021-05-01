@@ -2,9 +2,29 @@
   <body>
     <div id="content" class="archive">
       <header>
-        <h1>Michael Sloan</h1>
+        <a href="/"><h1>Michael Sloan</h1></a>
       </header>
-      <h2 class="category">Posts</h2>
+      {{if is-index}}
+      <h2 class="category">
+        <div style="position: relative; display: inline-block; top: -1em;">posts about</div>
+        <div style="display: inline-block">
+          <a href="/category-ergonomics">ergonomics</a>
+          <br/>&<br/>
+          <a href="/category-software">software</a>
+        </div>
+      </h2>
+      {{end}}
+      {{if is-ergonomics}}
+      <h2 class="category">posts about ergonomics
+        <div class="other-category">(see also <a href="/category-software">posts about software</a>)</div>
+      </h2>
+      {{end}}
+      {{if is-software}}
+      <h2 class="category">
+        posts about software
+        <div class="other-category">(see also <a href="/category-ergonomics">posts about ergonomics</a>)</div>
+      </h2>
+      {{end}}
       {{foreach archive-year}}
         <h2>{{year}}</h2>
         {{foreach post}}
