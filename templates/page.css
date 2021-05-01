@@ -245,7 +245,7 @@ h2:target > a:before
 {
   /* On the archive page, h2 is used for the year headers. */
   color: #ccc;
-  font-size: 2.8em;
+  font-size: 1.75em;
   letter-spacing: 1rem;
   line-height: 0.5em;
 
@@ -272,12 +272,16 @@ h2:target > a:before
   font-style: italic;
 }
 
+.archive .category-leader
+{
+  margin-bottom: 0.75em;
+}
+
 .non-post-body
 {
   margin-top: 2em;
   min-height: 5em;
 }
-
 {{end}} /* if archive */
 
 ul, ol
@@ -721,6 +725,19 @@ nav a
   {
     margin-top: 1.4em;
   }
+
+  {{if archive}}
+  .archive h2 {
+    font-size: 2.8em;
+  }
+
+  .archive .category-leader
+  {
+    position: relative;
+    display: inline-block;
+    top: -1em;
+  }
+  {{end}}
 }
 
 @media(min-width: 1003px)
