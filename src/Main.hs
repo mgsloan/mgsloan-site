@@ -176,8 +176,8 @@ writeListings globalContext template posts pages pageIndex config = do
   let ergonomicsPosts = filter ((Just P.Ergonomics ==) . P.category) posts
   let softwarePosts = filter ((Just P.Software ==) . P.category) posts
   writeListing "/" Nothing globalContext template posts pages pageIndex config
-  writeListing "/category-ergonomics/" (Just P.Ergonomics) globalContext template ergonomicsPosts pages pageIndex config
-  writeListing "/category-software/" (Just P.Software) globalContext template softwarePosts pages pageIndex config
+  writeListing "/category-ergonomics/" (Just P.Ergonomics) globalContext template ergonomicsPosts [] pageIndex config
+  writeListing "/category-software/" (Just P.Software) globalContext template softwarePosts [] pageIndex config
 
 -- Given the archive template and the global context, writes the listing page
 -- to the destination directory.
@@ -289,8 +289,11 @@ regenerateCmd = do
   createDirectoryIfMissing True "out/wordpress"
   copyFiles "assets/old-blog/" "out/wordpress"
 
+  -- Moved entries from ergonomics log into normal posts
+  let filteredPages = filter (("Ergonomics Log" /=) . Page.title) pages
+
   putStrLn "Writing other pages..."
-  writeListings globalContext (templates ! "archive.html") posts pages pageIndex baseConfig
+  writeListings globalContext (templates ! "archive.html") posts filteredPages pageIndex baseConfig
 
   copyFile "assets/favicon.png" "out/favicon.png"
   copyFile "assets/favicon.png" "draft/out/favicon.png"
