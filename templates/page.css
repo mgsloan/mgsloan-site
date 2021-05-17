@@ -661,20 +661,12 @@ nav a
 @media(min-width: 470px)
 {
   html { font-size: 16px; }
-
-  /* Add some margin to the heading to make it line-wrap nicer. Smaller
-   * viewports get more room because the words might not fit otherwise. */
-  header
-  {
-    margin-left: 2.8em;
-    margin-right: 2.8em;
-  }
 }
 
 /* Ideal width for 18px font size. */
 @media(min-width: 544px)
 {
-  #content, #teaser, #footer
+  header, #content, #teaser, #footer
   {
     padding-left: 2.8em;
     padding-right: 2.8em;
