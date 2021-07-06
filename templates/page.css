@@ -263,6 +263,7 @@ h2:target > a:before
   text-align: center;
   margin: 0;
   padding-bottom: 2.5rem;
+  font-size: 150%;
 }
 
 .archive .other-category
