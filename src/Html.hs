@@ -424,7 +424,12 @@ modifyLinks = go False False
         [ "Some links are amazon affiliate links, which sometimes send me a bit of money when you make purchases after clicking them."
         , "The purpose of this blog is sharing information and ideas, not making money."
         , "But I figure I may as well add them, and I appreciate usage of them!"
+        , "If you do feel inclined to show your appreciation for these posts directly in monetary form, feel free to "
         ])
+      , S.TagOpen "a" [("href", "https://buymeacoffee.com/mgsloan")]
+      , S.TagText "buy me a coffee"
+      , S.TagClose "a"
+      , S.TagText "."
       , S.TagClose "p"
       , S.TagClose "li"
       , S.TagClose "ul"
