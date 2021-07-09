@@ -186,10 +186,9 @@ that with this approach, the `instance ApplyByType 'NoArgToMatch a r`
 is no longer necessary because we handle that case using the
 `HasAMatch` [closed type family][].
 
-That's it for now, thanks for reading!  The next post in this series
-will use `?` to implement a `reorderArgs` function which will permute
+That's it for now, thanks for reading! [The next post][] in this series
+uses `?` to implement a `reorderArgs` function which will permute
 function arguments to match a desired type signature.
 
-<!-- TODO: make "next post" into a link -->
-
 [closed type family]: https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/exts/type_families.html#closed-type-families
+[The next post]: /posts/reorder-args

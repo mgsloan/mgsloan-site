@@ -44,16 +44,14 @@ that makes it feasible is a restriction that all arguments are
 monomorphic. Solving this puzzle is a decent didactic exercise, as it
 involves a variety of type-level techniques:
 
-1. Using [closed type families][] to direct instance selection. This
-   is described in this post.
+1. Using [closed type families][] to direct instance selection, as
+   described in this post.
 
-2. Using [custom type errors][] to improve the error messaging. This
-   is described in [the next post][].
+2. Using [custom type errors][] to improve the error messaging,
+   described in [the next post][].
 
-3. Using typeclasses to implement [polyvariadic functions][]. This
-   will be described in a future post.
-
-<!-- TODO: Link to the reorderArgs post -->
+3. Using typeclasses to implement [polyvariadic functions][],
+   described in [a subsequent post](/posts/reorder-args).
 
 The functionality described in these posts is available on Hackage, in
 the [apply-unordered-mono package][]. It is also possible to
