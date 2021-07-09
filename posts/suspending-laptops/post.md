@@ -102,6 +102,14 @@ hinges, like this:
 ![photo of zip ties and tie-downs close up
 ](./images/zip-tie-suspension.jpg)
 
+**2021-07-08 update:** These days I prefer [Mille-Ties][] for this
+purpose instead of releasable zip ties. Though, I think the wire
+solution below is better / more aesthetic, it's fiddly to get it
+right. See my [my recent ergo update][] for more details.
+
+[Mille-Ties]: https://smile.amazon.com/gp/product/B00ARUQBRY
+[my recent ergo update]: /posts/ergo-update-coworking/#side-note-new-approach-for-around-the-tree-paracord
+
 ## Alternative to zip ties: wire around hinges
 
 I have also had success with wire around my laptop hinges. The benefit

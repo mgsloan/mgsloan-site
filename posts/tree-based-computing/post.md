@@ -101,6 +101,13 @@ the hinges, to attach tiny carabiners[^dutchware]. This way, I can
 clip right onto the zip ties, rather than fussing with supporting the
 weight of the laptop while threading the zip tie.
 
+**2021-07-08 update:** These days I prefer [Mille-Ties][] and
+[paracord tie-downs][], instead of rope + carabiners + zip ties. See
+my [my recent ergo update][] for more details.
+
+[Mille-Ties]: https://smile.amazon.com/gp/product/B00ARUQBRY
+[paracord tie-downs]: https://smile.amazon.com/gp/product/B01COUOCG6
+
 [^other-laptops]:
     Laptops that do not open to 180 degrees could potentially be
     adapted by use of a wedge between the laptop body and
