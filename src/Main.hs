@@ -414,7 +414,7 @@ draftConfig = baseConfig { outDir = "draft/out"
 
 renderStartPage :: IO ()
 renderStartPage = do
-  prioritiesMd <- findFileWithSuffixIn "priorities.md" "/home/mgsloan/docs/weekly/"
+  prioritiesMd <- findFileWithSuffixIn "reminders.md" "/home/mgsloan/docs/weekly/"
   let prioritiesHtmlFile = "draft/priorities.html"
   callProcess "pandoc" [prioritiesMd, "-o", prioritiesHtmlFile]
   secretsHtml <- readFile "draft/start-page-secret.html"
