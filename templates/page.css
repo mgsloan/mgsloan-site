@@ -127,8 +127,14 @@ hr.hairline
 
 .footnotes-divider
 {
-    margin-top: 3.4em;
-    margin-bottom: 2.4em;
+  margin-top: 3.4em;
+  margin-bottom: 2.4em;
+}
+
+.comments-divider
+{
+  margin-top: 2.4em;
+  margin-bottom: 2.4em;
 }
 
 /* The headings may contain manually inserted line breaks for a more balanced
@@ -630,6 +636,10 @@ nav a
  * Note that the min-width given below is actually the viewport width for its
  * font size minus 0.5px, so the font size is right on average. */
 
+#comments
+{
+  margin-left: -0.3em;
+}
 
 /* At the points where the font size changes, the viewport width in ems makes
  * a jump:
@@ -702,6 +712,11 @@ nav a
   }
   {{end}}
   {{end}}
+
+  #comments
+  {
+    margin-left: -3.2em;
+  }
 }
 
 /* At this width, the viewport is wide enough to fit the content at its
@@ -731,6 +746,11 @@ nav a
     top: -1em;
   }
   {{end}}
+
+  #comments
+  {
+    margin-left: -3em;
+  }
 }
 
 @media(min-width: 1003px)

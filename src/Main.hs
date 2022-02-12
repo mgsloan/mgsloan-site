@@ -302,6 +302,7 @@ regenerateCmd = do
   copyFile "assets/dark-mode-toggle/src/dark-mode-toggle.mjs" "out/dark-mode-toggle.mjs"
   copyFile "assets/dark-mode-toggle/src/dark-mode-toggle.mjs" "draft/out/dark-mode-toggle.mjs"
   copyFile "assets/redirect-index.html" "out/posts/index.html"
+  copyFile "assets/theme.js" "out/theme.js"
 
   putStrLn "Writing atom feed..."
   writeFeed (templates ! "feed.xml") posts baseConfig
