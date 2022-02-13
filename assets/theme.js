@@ -21,6 +21,7 @@
       s.src = 'https://utteranc.es/client.js';
       s.setAttribute('repo', 'mgsloan/mgsloan-site');
       s.setAttribute('issue-term', 'pathname');
+      s.setAttribute('label', 'comments');
       s.setAttribute('theme', initialTheme);
       s.setAttribute('crossorigin', 'anonymous');
       s.setAttribute('async', '');
