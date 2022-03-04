@@ -11,7 +11,7 @@ import Control.Exception (finally)
 import Control.Monad
 import Data.Char (toLower)
 import Data.Monoid ((<>))
-import Data.List (isInfixOf, sort, isSuffixOf, isPrefixOf)
+import Data.List (isInfixOf, isPrefixOf)
 import Data.Time.Calendar (toGregorian)
 import Data.Time.Clock (getCurrentTime, utctDay)
 import Minification (minifyHtml)
@@ -411,18 +411,18 @@ draftConfig = baseConfig { outDir = "draft/out"
 
 renderStartPage :: IO ()
 renderStartPage = do
-  prioritiesMd <- findFileWithSuffixIn "reminders.md" "/home/mgsloan/docs/weekly/"
-  let prioritiesHtmlFile = "draft/priorities.html"
-  callProcess "pandoc" [prioritiesMd, "-o", prioritiesHtmlFile]
+  let remindersMdFile = "/home/mgsloan/docs/reminders.md"
+      remindersHtmlFile = "draft/reminders.html"
+  callProcess "pandoc" [remindersMdFile, "-o", remindersHtmlFile]
   secretsHtml <- readFile "draft/start-page-secret.html"
-  prioritiesHtml <- readFile prioritiesHtmlFile
+  remindersHtml <- readFile remindersHtmlFile
   password <- head . lines <$> readFile "draft/start-page-password"
   let concatenatedHtmlFile = "draft/start-page-concatenated.html"
   writeFile concatenatedHtmlFile $ unlines
     [ "<div id=contents>"
     , secretsHtml
     , "<div id=priorities>"
-    , prioritiesHtml
+    , remindersHtml
     , "</div>"
     , "</div>"
     ]
@@ -431,14 +431,16 @@ renderStartPage = do
   createDirectoryIfMissing False "out/misc"
   callProcess "staticrypt" [concatenatedHtmlFile, password, "-f", "templates/ubwi", "-o", "out/misc/ubwi"]
     `finally` do
-      removeFile prioritiesHtmlFile
+      removeFile remindersHtmlFile
       removeFile concatenatedHtmlFile
 
+{-
 findFileWithSuffixIn :: String -> FilePath -> IO FilePath
 findFileWithSuffixIn suffix weeklyDir = do
-  entries <- sort <$> listDirectory weeklyDir
-  let foundFileName = last $ filter ((suffix `isSuffixOf`) . takeFileName) entries
+  entries <- listDirectory weeklyDir
+  let foundFileName = maximum $ filter ((suffix `isSuffixOf`) . takeFileName) entries
   return $ weeklyDir </> foundFileName
+-}
 
 omitEmacsFiles :: [FilePath] -> [FilePath]
 omitEmacsFiles = filter (not . (".#" `isPrefixOf`) . takeFileName)
