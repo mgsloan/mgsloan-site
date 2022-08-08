@@ -136,6 +136,33 @@ A potential downside of this is that this also makes it a bit easier
 to get sunburnt as it makes shade less necessary.  Don't ask how I
 found that out...!
 
+## 2022-08-07 update: Adjustable dial glasses
+
+Via a [serendipitous reddit post][], I found out about sunglasses with
+tint that is mechanically adjusted by a knob.  Each lens has two
+polarizers, and the knob rotates one of the pairs of polarizers.  I
+put in an order for the [closest product I could find to
+this](https://smile.amazon.com/gp/product/B001ASAPOC/).
+
+These glasses can be modified by taking off the outer non-rotating
+polarizers. To change the angle of the individual lens polarizers you
+can press on one lens to bend it a bit, and rotate the other lens
+without them being coupled via the center adjustment gear.
+
+I don't use these, though, because they are too narrow on my face and
+the lenses are too small to effectively block peripheral glare:
+
+* The lenses are 41mm diameter, whereas the camera optics used above
+  are 50mm.
+
+* The distance between the center of the lenses is about 70mm.  I have
+  a fairly extreme interpupillary distance, so these are almost
+  comically narrow on me. For those with more average IPDs they might
+  work decently!  May well be worth a shot, as at time of writing
+  these are just $10.
+
+[coincidental reddit post]: https://www.reddit.com/r/blackmagicfuckery/comments/gb3u94/these_sunglasses_with_adjustable_tint/fp535zx/
+
 ## Other options considered
 
 After discussing the polarized computer glasses idea with
@@ -158,20 +185,10 @@ down on glare very much.
 Along the way, I also realized that my computer monitor is
 horizontally polarized - the opposite of sunglasses.  I couldn't find
 readily available glasses with horizontal polarization, but I did come
-across the following:
-
-* [IRL Glasses - Glasses that Block Screens — Kickstarter][] which are
-  horizontally polarized in order to block screens.  This suggests to
-  me that vertical polarization is more popular than horizontal.
-
-* Via a [coincidental reddit post][], I found out about sunglasses
-  with tint that is mechanically adjusted by a knob.  Each lens has
-  two polarizers, and the knob rotates one of the pairs of
-  polarizers.  I put in an order for the [closest product I could find
-  to this](https://smile.amazon.com/gp/product/B001ASAPOC/), though it
-  might take a while to receive as they are out of stock. My hope is
-  that I can remove the non-rotating polarizers and modify these to be
-  horizontally polarized.
+across [IRL Glasses - Glasses that Block Screens — Kickstarter][]
+which are horizontally polarized in order to block screens.  This
+suggests to me that vertical screen polarization may be more popular
+than horizontal.
 
 Since nothing was readily available, I did a bit of brainstorming on
 how to make glasses with variable-angle polarization.  This resulted
@@ -181,4 +198,3 @@ pretty much had to give it a shot!
 
 [u/elonfutz]: https://www.reddit.com/user/elonfutz/
 [IRL Glasses - Glasses that Block Screens — Kickstarter]: https://www.kickstarter.com/projects/ivancash/irl-glasses-glasses-that-block-screens
-[coincidental reddit post]: https://www.reddit.com/r/blackmagicfuckery/comments/gb3u94/these_sunglasses_with_adjustable_tint/fp535zx/
