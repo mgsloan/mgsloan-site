@@ -68,8 +68,6 @@ body
 header
 {
   font-family: {{header-font}}, sans;
-  margin-left: 1em;
-  margin-right: 1em;
   overflow: visible;
   text-align: center;
   /* NOTE: this used to be only for min-width: 802px */
@@ -83,7 +81,7 @@ h1
    * aligns with the grid. */
   font-family: {{header-font}}, serif;
   color: #000;
-  font-size: 1.8em;
+  font-size: 1.6em;
   line-height: 3.8rem;
   margin-bottom: 0.7rem;
   padding-top: 2.8rem;
@@ -666,7 +664,7 @@ nav a
     padding-right: 2em;
   }
 
-  h1 { font-size: 2.0em; }
+  h1 { font-size: 1.8em; }
 }
 
 @media(min-width: 470px)
@@ -677,7 +675,7 @@ nav a
 /* Ideal width for 18px font size. */
 @media(min-width: 544px)
 {
-  header, #content, #teaser, #footer
+  #content, #teaser, #footer
   {
     padding-left: 2.8em;
     padding-right: 2.8em;
@@ -725,7 +723,7 @@ nav a
 {
   html { font-size: 18px; }
 
-  h1 { font-size: 2.4em; }
+  h1 { font-size: 2.0em; }
 
   /* If we are on a large-ish screen anyway, give the header some room to
    * breathe. */
