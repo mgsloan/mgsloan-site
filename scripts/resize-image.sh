@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -xe
 
 # Resize an image to be 1280 pixels wide. Keep the same aspect ratio.
 # Usage:

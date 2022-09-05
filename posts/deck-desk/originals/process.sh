@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -xe
 
 exiv2 rm *.jpg
 
