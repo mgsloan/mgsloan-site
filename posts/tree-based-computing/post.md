@@ -103,8 +103,9 @@ weight of the laptop while threading the zip tie.
 
 **2021-07-08 update:** These days I prefer [Mille-Ties][] and
 [paracord tie-downs][], instead of rope + carabiners + zip ties. See
-my [my recent ergo update][] for more details.
+[my recent ergo update][] for more details.
 
+[my recent ergo update]: /posts/ergo-update-coworking/#side-note-new-approach-for-around-the-tree-paracord
 [Mille-Ties]: https://smile.amazon.com/gp/product/B00ARUQBRY
 [paracord tie-downs]: https://smile.amazon.com/gp/product/B01COUOCG6
 
