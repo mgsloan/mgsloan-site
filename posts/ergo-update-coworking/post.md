@@ -2,7 +2,7 @@
 title: Ergo update: co-working experiment
 break: update: co-working
 date: 2021-07-08
-synopsis: A semi-accidental experiment in sitting more (oof, back pain!)
+synopsis: A semi-accidental experiment in sitting more
 primary-image: https://mgsloan.com/posts/ergo-update-coworking/images/treadmill.jpg
 category: ergonomics
 ---
