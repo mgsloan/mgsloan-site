@@ -356,7 +356,7 @@ addAnchors = concatMap expandHeader
   where
     emptyA href = [S.TagOpen "a" [("href", href)], S.TagClose "a"]
     expandHeader tag = case tag of
-      h2 @ (S.TagOpen "h2" [("id", anchor)]) -> h2 : emptyA ('#' : anchor)
+      h2@(S.TagOpen "h2" [("id", anchor)]) -> h2 : emptyA ('#' : anchor)
       otherTag -> [otherTag]
 
 -- Probably overkill.. Automatically add affiliate tags and footnote
