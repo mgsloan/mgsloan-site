@@ -2,7 +2,7 @@
 title: Type-Directed Permutation of Function Parameters
 date: 2021-07-07
 break:
-synopsis: Part three: Variadic functions + unordered application.
+synopsis: Variadic functions + unordered application.
 run-in:
 primary-image: https://mgsloan.com/images/haskell-placeholder-banner.jpg
 category: software
