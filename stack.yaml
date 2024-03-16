@@ -17,13 +17,13 @@ extra-deps:
 - doctemplates-0.11
 - commonmark-extensions-0.2.3.3
 - git: https://github.com/jgm/texmath
-  commit: dab2be16b751e8ce7e6d9937029f10e06c3c80c3
+  commit: bd466e1f98d0916f2d6ff3779ee1a11674c27c89
 - git: https://github.com/jgm/citeproc
-  commit: a73c7d1c00c993b8a20daf5a932afae16f889c83
+  commit: 7e0a9a39811098577f037e12bd8a897e109e8753
 - git: https://github.com/jgm/pandoc-types
   commit: 8c7bc6c66d22538711171b8cfd0e5f3d48de39fd
 - git: https://github.com/pandoc/pandoc-lua-marshal
   commit: 76a568e98c424b1e35a80f26f5998136adbeb165
 - git: https://github.com/jgm/commonmark-hs
-  commit: d0f3097e55471aa640d76d0188ba707cbece71b1
+  commit: 869bbce6b5e7e82bfce2ce36a38391176fb0fe4a
   subdirs: [commonmark-pandoc]
