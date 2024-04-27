@@ -412,7 +412,7 @@ draftConfig = baseConfig { outDir = "draft/out"
 
 renderStartPage :: IO ()
 renderStartPage = do
-  let remindersMdFile = "/home/mgsloan/docs/reminders.md"
+  let remindersMdFile = "/home/mgsloan/docs/obsidian/Reminders.md"
       remindersHtmlFile = "draft/reminders.html"
   callProcess "pandoc" [remindersMdFile, "-o", remindersHtmlFile]
   secretsHtml <- readFile "draft/start-page-secret.html"
