@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive Piano and Drum Pad</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #1e1e1e;
+            color: #ecf0f1;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        .drum-pads {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .drum-pad {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            background-color: #34495e;
+            border: 2px solid #2c3e50;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 5px #2c3e50;
+            user-select: none;
+            transition: background-color 0.1s, transform 0.1s;
+        }
+        .drum-pad.active {
+            box-shadow: 0 2px #2c3e50;
+            transform: translateY(3px);
+            background-color: #3c5a73;
+        }
+        .drum-pad span {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-size: 12px;
+            color: #95a5a6;
+        }
+        .piano {
+            display: flex;
+            position: relative;
+            user-select: none;
+            margin-bottom: 30px;
+        }
+        .key {
+            position: relative;
+            border: 1px solid #000;
+            box-sizing: border-box;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 10px;
+            font-size: 12px;
+            user-select: none;
+            transition: background-color 0.1s, transform 0.1s, box-shadow 0.1s;
+        }
+        .key.white {
+            width: 40px;
+            height: 200px;
+            background: white;
+            margin: 0 1px;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 4px #999;
+            z-index: 1;
+            position: relative;
+        }
+        .key.white.active {
+            box-shadow: 0 2px #666;
+            transform: translateY(2px);
+            background-color: #f1c40f;
+        }
+        .key.black {
+            width: 30px;
+            height: 120px;
+            background: black;
+            position: absolute;
+            top: 0;
+            z-index: 2;
+            margin: 0 -15px;
+            border-radius: 0 0 3px 3px;
+            box-shadow: 0 4px #555;
+            transition: background-color 0.1s, transform 0.1s, box-shadow 0.1s;
+        }
+        .key.black.active {
+            box-shadow: 0 2px #333;
+            transform: translateY(2px);
+            background-color: #f39c12;
+        }
+        /* Responsive Adjustments */
+        @media (max-width: 800px) {
+            .white {
+                width: 30px;
+                height: 150px;
+            }
+            .black {
+                width: 20px;
+                height: 90px;
+            }
+            .drum-pad {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Interactive Piano and Drum Pad</h1>
+    
+    <!-- Drum Pads Section -->
+    <div class="drum-pads">
+        <div class="drum-pad" data-sound="kick">
+            Kick
+            <span>[Q]</span>
+        </div>
+        <div class="drum-pad" data-sound="snare">
+            Snare
+            <span>[W]</span>
+        </div>
+        <div class="drum-pad" data-sound="hihat">
+            Hi-Hat
+            <span>[E]</span>
+        </div>
+        <div class="drum-pad" data-sound="clap">
+            Clap
+            <span>[R]</span>
+        </div>
+    </div>
+    
+    <!-- Piano Section -->
+    <div class="piano">
+        <!-- White Keys for 3 Octaves (C3 to B5) -->
+        <!-- Octave 3 -->
+        <div class="key white" data-note="C3">C<span>[Z]</span></div>
+        <div class="key white" data-note="D3">D<span>[X]</span></div>
+        <div class="key white" data-note="E3">E<span>[C]</span></div>
+        <div class="key white" data-note="F3">F<span>[V]</span></div>
+        <div class="key white" data-note="G3">G<span>[B]</span></div>
+        <div class="key white" data-note="A3">A<span>[N]</span></div>
+        <div class="key white" data-note="B3">B<span>[M]</span></div>
+        <!-- Octave 4 -->
+        <div class="key white" data-note="C4">C<span>[A]</span></div>
+        <div class="key white" data-note="D4">D<span>[S]</span></div>
+        <div class="key white" data-note="E4">E<span>[D]</span></div>
+        <div class="key white" data-note="F4">F<span>[F]</span></div>
+        <div class="key white" data-note="G4">G<span>[G]</span></div>
+        <div class="key white" data-note="A4">A<span>[H]</span></div>
+        <div class="key white" data-note="B4">B<span>[J]</span></div>
+        <!-- Octave 5 -->
+        <div class="key white" data-note="C5">C<span>[K]</span></div>
+        <div class="key white" data-note="D5">D<span>[L]</span></div>
+        <div class="key white" data-note="E5">E<span>[;]</span></div>
+        <div class="key white" data-note="F5">F<span>[:]</span></div>
+        <div class="key white" data-note="G5">G<span>[']</span></div>
+        <div class="key white" data-note="A5">A<span>[Enter]</span></div>
+        <div class="key white" data-note="B5">B<span>[Shift]</span></div>
+        
+        <!-- Black Keys -->
+        <!-- Octave 3 -->
+        <div class="key black" style="left: 30px;" data-note="C#3"></div>
+        <div class="key black" style="left: 70px;" data-note="D#3"></div>
+        <!-- Skip E#3 (F3) -->
+        <div class="key black" style="left: 150px;" data-note="F#3"></div>
+        <div class="key black" style="left: 190px;" data-note="G#3"></div>
+        <div class="key black" style="left: 230px;" data-note="A#3"></div>
+        <!-- Octave 4 -->
+        <div class="key black" style="left: 270px;" data-note="C#4"></div>
+        <div class="key black" style="left: 310px;" data-note="D#4"></div>
+        <!-- Skip E#4 (F4) -->
+        <div class="key black" style="left: 390px;" data-note="F#4"></div>
+        <div class="key black" style="left: 430px;" data-note="G#4"></div>
+        <div class="key black" style="left: 470px;" data-note="A#4"></div>
+        <!-- Octave 5 -->
+        <div class="key black" style="left: 510px;" data-note="C#5"></div>
+        <div class="key black" style="left: 550px;" data-note="D#5"></div>
+        <!-- Skip E#5 (F5) -->
+        <div class="key black" style="left: 630px;" data-note="F#5"></div>
+        <div class="key black" style="left: 670px;" data-note="G#5"></div>
+        <div class="key black" style="left: 710px;" data-note="A#5"></div>
+    </div>
+    
+    <script>
+        // Piano Notes Mapping: Note name to frequency
+        const notes = {
+            'C3': 130.81,
+            'C#3': 138.59,
+            'D3': 146.83,
+            'D#3': 155.56,
+            'E3': 164.81,
+            'F3': 174.61,
+            'F#3': 185.00,
+            'G3': 196.00,
+            'G#3': 207.65,
+            'A3': 220.00,
+            'A#3': 233.08,
+            'B3': 246.94,
+            'C4': 261.63,
+            'C#4': 277.18,
+            'D4': 293.66,
+            'D#4': 311.13,
+            'E4': 329.63,
+            'F4': 349.23,
+            'F#4': 369.99,
+            'G4': 392.00,
+            'G#4': 415.30,
+            'A4': 440.00,
+            'A#4': 466.16,
+            'B4': 493.88,
+            'C5': 523.25,
+            'C#5': 554.37,
+            'D5': 587.33,
+            'D#5': 622.25,
+            'E5': 659.25,
+            'F5': 698.46,
+            'F#5': 739.99,
+            'G5': 783.99,
+            'G#5': 830.61,
+            'A5': 880.00,
+            'A#5': 932.33,
+            'B5': 987.77
+        };
+
+        // Initialize Audio Context
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        // Function to play a piano note
+        function playNote(frequency) {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.type = 'sine'; // You can change to 'square', 'sawtooth', etc.
+            oscillator.frequency.value = frequency;
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.start();
+
+            // Fade out the note
+            gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1);
+
+            oscillator.stop(audioCtx.currentTime + 1);
+        }
+
+        // Add event listeners to all piano keys
+        const pianoKeys = document.querySelectorAll('.key');
+        pianoKeys.forEach(key => {
+            key.addEventListener('mousedown', () => {
+                const note = key.dataset.note;
+                if (notes[note]) {
+                    playNote(notes[note]);
+                    key.classList.add('active');
+                }
+            });
+
+            key.addEventListener('mouseup', () => {
+                key.classList.remove('active');
+            });
+
+            key.addEventListener('mouseleave', () => {
+                key.classList.remove('active');
+            });
+
+            // For touch devices
+            key.addEventListener('touchstart', (e) => {
+                e.preventDefault(); // Prevent mouse event from also firing
+                const note = key.dataset.note;
+                if (notes[note]) {
+                    playNote(notes[note]);
+                    key.classList.add('active');
+                }
+            });
+
+            key.addEventListener('touchend', () => {
+                key.classList.remove('active');
+            });
+        });
+
+        // Keyboard Mapping for Piano Keys
+        const keyMap = {
+            // Octave 3
+            'z': 'C3',
+            's': 'C#3',
+            'x': 'D3',
+            'd': 'D#3',
+            'c': 'E3',
+            'v': 'F3',
+            'g': 'F#3',
+            'b': 'G3',
+            'h': 'G#3',
+            'n': 'A3',
+            'j': 'A#3',
+            'm': 'B3',
+            // Octave 4
+            'q': 'C4',
+            '2': 'C#4',
+            'w': 'D4',
+            '3': 'D#4',
+            'e': 'E4',
+            'r': 'F4',
+            '5': 'F#4',
+            't': 'G4',
+            '6': 'G#4',
+            'y': 'A4',
+            '7': 'A#4',
+            'u': 'B4',
+            // Octave 5
+            'i': 'C5',
+            '9': 'C#5',
+            'o': 'D5',
+            '0': 'D#5',
+            'p': 'E5',
+            '[': 'F5',
+            '=': 'F#5',
+            ']': 'G5',
+            '\\': 'G#5',
+            ';': 'E5', // Mapping ';' to E5 for simplicity
+            "'": 'G5', // Mapping "'" to G5
+            'Enter': 'A5',
+            'Shift': 'B5'
+        };
+
+        document.addEventListener('keydown', (e) => {
+            if (e.repeat) return; // Prevent holding down the key
+            const key = e.key.toLowerCase();
+            const note = keyMap[key];
+            if (note && notes[note]) {
+                playNote(notes[note]);
+                // Visual feedback
+                const pianoKey = document.querySelector(`.key[data-note="${note}"]`);
+                if (pianoKey) {
+                    pianoKey.classList.add('active');
+                }
+            }
+
+            // Trigger drum pads via keyboard
+            const drumKeyMap = {
+                'q': 'kick',
+                'w': 'snare',
+                'e': 'hihat',
+                'r': 'clap'
+            };
+            const drumSound = drumKeyMap[key];
+            if (drumSound) {
+                playDrum(drumSound);
+                const drumPad = document.querySelector(`.drum-pad[data-sound="${drumSound}"]`);
+                if (drumPad) {
+                    drumPad.classList.add('active');
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            const key = e.key.toLowerCase();
+            const note = keyMap[key];
+            if (note) {
+                const pianoKey = document.querySelector(`.key[data-note="${note}"]`);
+                if (pianoKey) {
+                    pianoKey.classList.remove('active');
+                }
+            }
+
+            // Remove visual feedback from drum pads
+            const drumKeyMap = {
+                'q': 'kick',
+                'w': 'snare',
+                'e': 'hihat',
+                'r': 'clap'
+            };
+            const drumSound = drumKeyMap[key];
+            if (drumSound) {
+                const drumPad = document.querySelector(`.drum-pad[data-sound="${drumSound}"]`);
+                if (drumPad) {
+                    drumPad.classList.remove('active');
+                }
+            }
+        });
+
+        // Drum Sounds Mapping with Base64-encoded audio
+        const drumSounds = {
+            'kick': 'data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCA...',
+            'snare': 'data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCA...',
+            'hihat': 'data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCA...',
+            'clap': 'data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCA...'
+        };
+
+        // Replace the above Base64 strings with actual drum sound data
+        // For demonstration purposes, we'll use short beep sounds
+        // In a real scenario, replace these with proper drum samples
+
+        // Kick Drum (Simple Low Frequency Sound)
+        drumSounds['kick'] = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YRAAAAAA';
+
+        // Snare Drum (Simple White Noise)
+        drumSounds['snare'] = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YRQAAAAA';
+
+        // Hi-Hat (Simple High Frequency Sound)
+        drumSounds['hihat'] = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YRQAAAAA';
+
+        // Clap (Simple Click Sound)
+        drumSounds['clap'] = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YRQAAAAA';
+
+        // Function to play drum sound
+        function playDrum(sound) {
+            const audio = new Audio(drumSounds[sound]);
+            audio.currentTime = 0;
+            audio.play();
+        }
+
+        // Add event listeners to drum pads
+        const drumPads = document.querySelectorAll('.drum-pad');
+        drumPads.forEach(pad => {
+            pad.addEventListener('mousedown', () => {
+                const sound = pad.dataset.sound;
+                playDrum(sound);
+                pad.classList.add('active');
+            });
+
+            pad.addEventListener('mouseup', () => {
+                pad.classList.remove('active');
+            });
+
+            pad.addEventListener('mouseleave', () => {
+                pad.classList.remove('active');
+            });
+
+            // For touch devices
+            pad.addEventListener('touchstart', (e) => {
+                e.preventDefault(); // Prevent mouse event from also firing
+                const sound = pad.dataset.sound;
+                playDrum(sound);
+                pad.classList.add('active');
+            });
+
+            pad.addEventListener('touchend', () => {
+                pad.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>

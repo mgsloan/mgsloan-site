@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced Fish Simulator with Rainbow Tails and Bomb Effects</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #001f3f;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+        /* Optional: Custom cursor icons for bait and bomb */
+        /* Uncomment and provide appropriate URLs if desired */
+        /*
+        .bait-cursor {
+            cursor: url('path_to_bait_icon.png'), auto;
+        }
+        .bomb-cursor {
+            cursor: url('path_to_bomb_icon.png'), auto;
+        }
+        */
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<script>
+// Utility function to calculate distance between two points
+function distance(a, b) {
+    return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+}
+
+// Utility function to get a random rainbow color
+function getRandomRainbowColor() {
+    const colors = [
+        '#FF0000', // Red
+        '#FF7F00', // Orange
+        '#FFFF00', // Yellow
+        '#00FF00', // Green
+        '#0000FF', // Blue
+        '#4B0082', // Indigo
+        '#8B00FF'  // Violet
+    ];
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+
+// Particle class for tail animation
+class Particle {
+    constructor(x, y, velocity, color) {
+        this.position = { x: x, y: y };
+        this.velocity = { x: velocity.x, y: velocity.y };
+        this.lifespan = 100; // lifespan in frames
+        this.opacity = 1.0;
+        this.size = Math.random() * 2 + 1; // random size between 1 and 3
+        this.color = color;
+    }
+
+    update() {
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
+        this.lifespan--;
+        this.opacity = this.lifespan / 100;
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.position.x, this.position.y, this.size, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    isDead() {
+        return this.lifespan <= 0;
+    }
+}
+
+// Bait class
+class Bait {
+    constructor(x, y) {
+        this.position = { x: x, y: y };
+        this.radius = 10;
+        this.lifespan = 500; // lifespan in frames
+        this.opacity = 1.0;
+    }
+
+    update() {
+        this.lifespan--;
+        this.opacity = this.lifespan / 500;
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = 'rgba(255, 0, 0, 0.7)';
+        ctx.beginPath();
+        ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    isDead() {
+        return this.lifespan <= 0;
+    }
+}
+
+// Bomb class
+class Bomb {
+    constructor(x, y) {
+        this.position = { x: x, y: y };
+        this.radius = 0;
+        this.maxRadius = 100;
+        this.expanding = true;
+        this.opacity = 1.0;
+    }
+
+    update() {
+        if (this.expanding) {
+            this.radius += 4; // Expansion speed
+            if (this.radius >= this.maxRadius) {
+                this.expanding = false;
+                this.opacity = 0;
+            }
+        }
+    }
+
+    draw(ctx) {
+        if (this.expanding) {
+            ctx.save();
+            ctx.globalAlpha = 1 - this.radius / this.maxRadius;
+            ctx.strokeStyle = 'rgba(255, 165, 0, 0.8)'; // Orange color for explosion
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+
+    isDone() {
+        return !this.expanding;
+    }
+}
+
+// Boid (Fish) class with tail particles
+class Boid {
+    constructor(x, y) {
+        this.position = { x: x, y: y };
+        const angle = Math.random() * 2 * Math.PI;
+        this.velocity = { x: Math.cos(angle), y: Math.sin(angle) };
+        this.acceleration = { x: 0, y: 0 };
+        this.maxSpeed = 2;
+        this.maxForce = 0.05;
+
+        // Tail particle properties
+        this.tailParticles = [];
+        this.particlesPerFrame = 2; // Number of particles to emit each frame
+    }
+
+    edges(width, height) {
+        if (this.position.x > width) this.position.x = 0;
+        if (this.position.x < 0) this.position.x = width;
+        if (this.position.y > height) this.position.y = 0;
+        if (this.position.y < 0) this.position.y = height;
+    }
+
+    align(boids, perceptionRadius) {
+        let steering = { x: 0, y: 0 };
+        let total = 0;
+        for (let other of boids) {
+            const d = distance(this.position, other.position);
+            if (other !== this && d < perceptionRadius) {
+                steering.x += other.velocity.x;
+                steering.y += other.velocity.y;
+                total++;
+            }
+        }
+        if (total > 0) {
+            steering.x /= total;
+            steering.y /= total;
+            const mag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (mag !== 0) {
+                steering.x = (steering.x / mag) * this.maxSpeed;
+                steering.y = (steering.y / mag) * this.maxSpeed;
+            }
+            steering.x -= this.velocity.x;
+            steering.y -= this.velocity.y;
+            const steerMag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (steerMag > this.maxForce) {
+                steering.x = (steering.x / steerMag) * this.maxForce;
+                steering.y = (steering.y / steerMag) * this.maxForce;
+            }
+        }
+        return steering;
+    }
+
+    cohesion(boids, perceptionRadius) {
+        let steering = { x: 0, y: 0 };
+        let total = 0;
+        for (let other of boids) {
+            const d = distance(this.position, other.position);
+            if (other !== this && d < perceptionRadius) {
+                steering.x += other.position.x;
+                steering.y += other.position.y;
+                total++;
+            }
+        }
+        if (total > 0) {
+            steering.x /= total;
+            steering.y /= total;
+            steering.x -= this.position.x;
+            steering.y -= this.position.y;
+            const mag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (mag !== 0) {
+                steering.x = (steering.x / mag) * this.maxSpeed;
+                steering.y = (steering.y / mag) * this.maxSpeed;
+            }
+            steering.x -= this.velocity.x;
+            steering.y -= this.velocity.y;
+            const steerMag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (steerMag > this.maxForce) {
+                steering.x = (steering.x / steerMag) * this.maxForce;
+                steering.y = (steering.y / steerMag) * this.maxForce;
+            }
+        }
+        return steering;
+    }
+
+    separation(boids, perceptionRadius) {
+        let steering = { x: 0, y: 0 };
+        let total = 0;
+        for (let other of boids) {
+            const d = distance(this.position, other.position);
+            if (other !== this && d < perceptionRadius) {
+                let diff = { x: this.position.x - other.position.x, y: this.position.y - other.position.y };
+                if (d !== 0) {
+                    diff.x /= d;
+                    diff.y /= d;
+                }
+                steering.x += diff.x;
+                steering.y += diff.y;
+                total++;
+            }
+        }
+        if (total > 0) {
+            steering.x /= total;
+            steering.y /= total;
+            const mag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (mag > 0) {
+                steering.x = (steering.x / mag) * this.maxSpeed;
+                steering.y = (steering.y / mag) * this.maxSpeed;
+            }
+            steering.x -= this.velocity.x;
+            steering.y -= this.velocity.y;
+            const steerMag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (steerMag > this.maxForce) {
+                steering.x = (steering.x / steerMag) * this.maxForce;
+                steering.y = (steering.y / steerMag) * this.maxForce;
+            }
+        }
+        return steering;
+    }
+
+    // Attraction to bait
+    attractToBait(baits, attractionRadius) {
+        let steering = { x: 0, y: 0 };
+        let total = 0;
+        for (let bait of baits) {
+            const d = distance(this.position, bait.position);
+            if (d < attractionRadius) {
+                steering.x += bait.position.x - this.position.x;
+                steering.y += bait.position.y - this.position.y;
+                total++;
+            }
+        }
+        if (total > 0) {
+            steering.x /= total;
+            steering.y /= total;
+            const mag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (mag !== 0) {
+                steering.x = (steering.x / mag) * this.maxSpeed;
+                steering.y = (steering.y / mag) * this.maxSpeed;
+            }
+            steering.x -= this.velocity.x;
+            steering.y -= this.velocity.y;
+            const steerMag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (steerMag > this.maxForce * 2) { // Increased force for attraction
+                steering.x = (steering.x / steerMag) * this.maxForce * 2;
+                steering.y = (steering.y / steerMag) * this.maxForce * 2;
+            }
+        }
+        return steering;
+    }
+
+    // Repulsion from bombs
+    repelFromBombs(bombs, repulsionRadius) {
+        let steering = { x: 0, y: 0 };
+        for (let bomb of bombs) {
+            const d = distance(this.position, bomb.position);
+            if (d < repulsionRadius && d > 0) {
+                let diff = { x: this.position.x - bomb.position.x, y: this.position.y - bomb.position.y };
+                diff.x /= d;
+                diff.y /= d;
+                steering.x += diff.x;
+                steering.y += diff.y;
+            }
+        }
+        const mag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+        if (mag > 0) {
+            steering.x = (steering.x / mag) * this.maxSpeed;
+            steering.y = (steering.y / mag) * this.maxSpeed;
+            steering.x -= this.velocity.x;
+            steering.y -= this.velocity.y;
+            const steerMag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (steerMag > this.maxForce * 3) { // Increased force for repulsion
+                steering.x = (steering.x / steerMag) * this.maxForce * 3;
+                steering.y = (steering.y / steerMag) * this.maxForce * 3;
+            }
+        }
+        return steering;
+    }
+
+    flock(boids, baits, bombs) {
+        const alignment = this.align(boids, 50);
+        const cohesion = this.cohesion(boids, 50);
+        const separation = this.separation(boids, 25);
+        const attraction = this.attractToBait(baits, 100);
+        const repulsion = this.repelFromBombs(bombs, 100);
+
+        this.acceleration.x += alignment.x + cohesion.x + separation.x + attraction.x + repulsion.x;
+        this.acceleration.y += alignment.y + cohesion.y + separation.y + attraction.y + repulsion.y;
+    }
+
+    update() {
+        this.velocity.x += this.acceleration.x;
+        this.velocity.y += this.acceleration.y;
+
+        const speed = Math.sqrt(this.velocity.x ** 2 + this.velocity.y ** 2);
+        if (speed > this.maxSpeed) {
+            this.velocity.x = (this.velocity.x / speed) * this.maxSpeed;
+            this.velocity.y = (this.velocity.y / speed) * this.maxSpeed;
+        }
+
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
+        this.acceleration.x = 0;
+        this.acceleration.y = 0;
+    }
+
+    // Emit tail particles based on current velocity
+    emitParticles() {
+        // Calculate the tail position (slightly behind the fish)
+        const tailOffset = 15; // Distance behind the fish
+        const angle = Math.atan2(this.velocity.y, this.velocity.x);
+        const tailX = this.position.x - Math.cos(angle) * tailOffset;
+        const tailY = this.position.y - Math.sin(angle) * tailOffset;
+
+        for (let i = 0; i < this.particlesPerFrame; i++) {
+            // Add some randomness to the particle velocity
+            const particleVelocity = {
+                x: this.velocity.x * 0.5 + (Math.random() - 0.5) * 0.5,
+                y: this.velocity.y * 0.5 + (Math.random() - 0.5) * 0.5
+            };
+            const color = getRandomRainbowColor(); // Assign random rainbow color
+            const particle = new Particle(tailX, tailY, particleVelocity, color);
+            this.tailParticles.push(particle);
+        }
+    }
+
+    // Update and draw tail particles
+    updateParticles(ctx) {
+        for (let i = this.tailParticles.length - 1; i >= 0; i--) {
+            const p = this.tailParticles[i];
+            p.update();
+            if (p.isDead()) {
+                this.tailParticles.splice(i, 1);
+            } else {
+                p.draw(ctx);
+            }
+        }
+    }
+
+    draw(ctx) {
+        // Draw tail particles first so they appear behind the fish
+        this.updateParticles(ctx);
+
+        // Draw the fish
+        const angle = Math.atan2(this.velocity.y, this.velocity.x);
+        ctx.save();
+        ctx.translate(this.position.x, this.position.y);
+        ctx.rotate(angle);
+        ctx.beginPath();
+        ctx.moveTo(10, 0);
+        ctx.lineTo(-10, 5);
+        ctx.lineTo(-10, -5);
+        ctx.closePath();
+        ctx.fillStyle = '#FFDD57'; // Fish color
+        ctx.fill();
+        ctx.restore();
+    }
+}
+
+window.onload = () => {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    resizeCanvas();
+
+    window.addEventListener('resize', resizeCanvas);
+    // Prevent context menu on right-click
+    window.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    const boids = [];
+    const numBoids = 100;
+
+    const baits = [];
+    const bombs = [];
+
+    for (let i = 0; i < numBoids; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        boids.push(new Boid(x, y));
+    }
+
+    // Handle mouse clicks
+    canvas.addEventListener('mousedown', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        if (e.button === 0) { // Left click: Add bait
+            baits.push(new Bait(x, y));
+        } else if (e.button === 2) { // Right click: Detonate bomb
+            const bomb = new Bomb(x, y);
+            bombs.push(bomb);
+            detonateBomb(bomb);
+        }
+    });
+
+    // Function to detonate bomb and affect boids
+    function detonateBomb(bomb) {
+        for (let i = boids.length - 1; i >= 0; i--) {
+            const boid = boids[i];
+            const d = distance(boid.position, bomb.position);
+            if (d < bomb.maxRadius) {
+                // Remove boid and create bait at its position
+                baits.push(new Bait(boid.position.x, boid.position.y));
+                boids.splice(i, 1);
+            }
+        }
+    }
+
+    function animate() {
+        // Clear the canvas with a semi-transparent fill for trailing effect
+        ctx.fillStyle = 'rgba(0, 31, 63, 0.25)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Update and draw bombs
+        for (let i = bombs.length - 1; i >= 0; i--) {
+            const bomb = bombs[i];
+            bomb.update();
+            bomb.draw(ctx);
+            if (bomb.isDone()) {
+                bombs.splice(i, 1);
+            }
+        }
+
+        // Update and draw baits
+        for (let i = baits.length - 1; i >= 0; i--) {
+            const bait = baits[i];
+            bait.update();
+            bait.draw(ctx);
+            if (bait.isDead()) {
+                baits.splice(i, 1);
+            }
+        }
+
+        // Update and draw boids
+        for (let boid of boids) {
+            boid.flock(boids, baits, bombs);
+            boid.update();
+            boid.edges(canvas.width, canvas.height);
+            boid.emitParticles(); // Emit tail particles
+            boid.draw(ctx);
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+};
+</script>
+</body>
+</html>

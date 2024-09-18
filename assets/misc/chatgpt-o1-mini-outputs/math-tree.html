@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enhanced Math Trees Interactive Game with Editable Nodes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+        #tree-container {
+            flex: 3;
+            border-right: 1px solid #ccc;
+            position: relative;
+            background-color: #fff;
+        }
+        #sidebar {
+            flex: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            background-color: #fafafa;
+        }
+        .node circle {
+            fill: #fff;
+            stroke: steelblue;
+            stroke-width: 3px;
+            cursor: pointer;
+        }
+        .node text {
+            font: 14px sans-serif;
+            pointer-events: none;
+        }
+        .node.editable circle {
+            stroke: #4CAF50;
+            stroke-width: 4px;
+        }
+        .link {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 2px;
+        }
+        .link.inverted {
+            stroke: red;
+            stroke-dasharray: 5,5;
+        }
+        .instructions {
+            margin-bottom: 20px;
+        }
+        .current-expression {
+            margin-top: 20px;
+            font-weight: bold;
+            word-wrap: break-word;
+        }
+        .add-node-form {
+            margin-top: 20px;
+        }
+        .add-node-form input, .add-node-form select, .add-node-form button {
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .add-node-form label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        /* Styling for editable input fields */
+        .node-input {
+            position: absolute;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 2px 4px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="tree-container"></div>
+    <div id="sidebar">
+        <div class="instructions">
+            <h2>Math Trees Game</h2>
+            <p>Manipulate the tree nodes to solve the equation.</p>
+            <ul>
+                <li>Use <strong>+</strong>, <strong>*</strong>, and <strong>=</strong> operations.</li>
+                <li>Drag nodes across the equals sign to move terms from one side to the other.</li>
+                <li>Inverted operations (subtraction and division) are indicated with a red dashed line.</li>
+                <li>Operations can have multiple children. Click "Add Node" to add new operands.</li>
+                <li>Click on any operand (number or variable) to edit its value.</li>
+            </ul>
+            <p>Current Expression:</p>
+            <div class="current-expression" id="current-expression"></div>
+        </div>
+        <div class="add-node-form">
+            <h3>Add New Node</h3>
+            <label for="node-name">Operand (e.g., 5 or x):</label>
+            <input type="text" id="node-name" placeholder="Enter number or variable">
+            <label for="operation-select">Attach to Operation:</label>
+            <select id="operation-select">
+                <!-- Options will be populated dynamically -->
+            </select>
+            <button id="add-node-button">Add Node</button>
+        </div>
+    </div>
+
+    <!-- Load D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        // Initialize unique ID counter
+        let i = 0;
+
+        // Initial Tree Data
+        const treeData = {
+            id: i++,
+            name: "=",
+            children: [
+                {
+                    id: i++,
+                    name: "+",
+                    side: "left",
+                    children: [
+                        { id: i++, name: "3", side: "left" },
+                        { id: i++, name: "x", side: "left" }
+                    ]
+                },
+                {
+                    id: i++,
+                    name: "*",
+                    side: "right",
+                    children: [
+                        { id: i++, name: "2", side: "right" },
+                        { id: i++, name: "y", side: "right" }
+                    ]
+                }
+            ]
+        };
+
+        // Set dimensions
+        const width = document.getElementById('tree-container').clientWidth;
+        const height = document.getElementById('tree-container').clientHeight;
+
+        // Create SVG
+        const svg = d3.select("#tree-container").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .call(d3.zoom().on("zoom", function (event) {
+                g.attr("transform", event.transform)
+            }));
+
+        const g = svg.append("g")
+            .attr("transform", "translate(50,50)");
+
+        const treeLayout = d3.tree().size([height - 100, width - 200]);
+
+        let root = d3.hierarchy(treeData, d => d.children);
+
+        treeLayout(root);
+
+        // Function to update the tree
+        function update(source) {
+            // Recompute the layout
+            treeLayout(root);
+
+            // ****************** Links Section ******************
+            const links = g.selectAll(".link")
+                .data(root.links(), d => d.target.data.id);
+
+            // Enter new links
+            const linksEnter = links.enter().append("path")
+                .attr("class", d => "link" + (d.target.data.inverted ? " inverted" : ""))
+                .attr("d", d3.linkHorizontal()
+                    .x(d => d.y)
+                    .y(d => d.x));
+
+            // Update existing links
+            links.merge(linksEnter)
+                .transition()
+                .duration(500)
+                .attr("d", d3.linkHorizontal()
+                    .x(d => d.y)
+                    .y(d => d.x))
+                .attr("class", d => "link" + (d.target.data.inverted ? " inverted" : ""));
+
+            // Remove old links
+            links.exit().remove();
+
+            // ****************** Nodes Section ******************
+            const nodes = g.selectAll(".node")
+                .data(root.descendants(), d => d.data.id);
+
+            // Enter new nodes
+            const nodesEnter = nodes.enter().append("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate(${source.y0 || source.y},${source.x0 || source.x})`)
+                .on("dblclick", (event, d) => {
+                    if (d.depth === 0 || d.data.name === "+" || d.data.name === "*" || d.data.name === "=") {
+                        // Prevent editing operation nodes and root
+                        return;
+                    }
+                    initiateEdit(d);
+                })
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+
+            nodesEnter.append("circle")
+                .attr("r", 20);
+
+            nodesEnter.append("text")
+                .attr("dy", 5)
+                .attr("text-anchor", "middle")
+                .text(d => d.data.name);
+
+            // Update existing nodes
+            nodes.merge(nodesEnter)
+                .transition()
+                .duration(500)
+                .attr("transform", d => `translate(${d.y},${d.x})`)
+                .attr("class", d => {
+                    return d.editing ? "node editable" : "node";
+                });
+
+            nodes.select("text")
+                .text(d => d.data.name);
+
+            // Remove old nodes
+            nodes.exit().remove();
+
+            // Save the old positions for transition
+            root.descendants().forEach(d => {
+                d.x0 = d.x;
+                d.y0 = d.y;
+            });
+
+            // Update the expression display
+            updateExpression();
+
+            // Update the operation select options
+            populateOperationSelect();
+        }
+
+        // Initial update
+        update(root);
+
+        // ****************** Drag Functions ******************
+        function dragstarted(event, d) {
+            if (d.depth === 0) return; // Prevent dragging the root '='
+            d3.select(this).raise().classed("active", true);
+        }
+
+        function dragged(event, d) {
+            if (d.depth === 0) return; // Prevent dragging the root '='
+            d3.select(this).attr("transform", `translate(${event.x},${event.y})`);
+        }
+
+        function dragended(event, d) {
+            if (d.depth === 0) return; // Prevent dragging the root '='
+
+            const dropThreshold = width / 2;
+            const newSide = event.x < dropThreshold ? "left" : "right";
+
+            if (d.data.side !== newSide) {
+                // Move the node to the other side with operation inversion
+                moveNodeAcrossEquals(d, newSide);
+            }
+
+            update(d);
+            d3.select(this).classed("active", false);
+        }
+
+        // Function to move node across the equals sign with operation inversion
+        function moveNodeAcrossEquals(d, newSide) {
+            // Remove node from current parent
+            const currentParent = d.parent.data;
+            currentParent.children = currentParent.children.filter(child => child !== d.data);
+            if (currentParent.children.length === 0) {
+                delete currentParent.children;
+            }
+
+            // Find or create the operation node on the new side
+            let targetOp = findOperationNode(newSide, d.data.operationType);
+            if (!targetOp) {
+                // Default to addition if no operation exists on the target side
+                targetOp = { id: i++, name: "+", side: newSide, children: [] };
+                root.data.children.push(targetOp);
+            }
+
+            // Attach the node to the target operation with inversion
+            d.data.side = newSide;
+            d.data.inverted = !d.data.inverted; // Toggle inversion
+            targetOp.children.push(d.data);
+        }
+
+        // Helper function to find an operation node on a given side
+        function findOperationNode(side, operationName) {
+            if (!operationName) return null;
+            return root.data.children.find(child => child.side === side && child.name === operationName);
+        }
+
+        // ****************** Expression Building ******************
+        function updateExpression() {
+            const expr = buildExpression(root);
+            document.getElementById('current-expression').innerText = expr;
+        }
+
+        // Recursive function to build expression string
+        function buildExpression(node) {
+            if (!node.children || node.children.length === 0) {
+                return node.data.name;
+            }
+            if (node.data.name === "=") {
+                const left = node.children.map(child => buildExpression(child)).join(" ");
+                const right = node.children.map(child => buildExpression(child)).join(" ");
+                return `${left} = ${right}`;
+            }
+            const operator = node.data.name;
+            const operands = node.children.map(child => {
+                let operand = buildExpression(child);
+                return child.data.inverted ? invertOperator(child.data.parentOperation, operand) : operand;
+            });
+            return operands.join(` ${operator} `);
+        }
+
+        // Helper function to invert an operand based on the parent operation
+        function invertOperator(parentOperation, operand) {
+            // Determine the inversion based on the parent operation
+            if (parentOperation === "+") {
+                return `- ${operand}`;
+            } else if (parentOperation === "*") {
+                return `/ ${operand}`;
+            }
+            return operand;
+        }
+
+        // ****************** Adding New Nodes ******************
+        // Populate the operation select dropdown
+        function populateOperationSelect() {
+            const select = document.getElementById('operation-select');
+            // Clear existing options
+            select.innerHTML = '';
+
+            // Traverse the tree to find all operation nodes
+            const operationNodes = [];
+            root.descendants().forEach(d => {
+                if (d.data.name === "+" || d.data.name === "*") {
+                    operationNodes.push(d);
+                }
+            });
+
+            operationNodes.forEach(opNode => {
+                const option = document.createElement('option');
+                option.value = opNode.data.id;
+                const path = getPath(opNode);
+                option.text = `${opNode.data.name} (${opNode.data.side}) - ${path}`;
+                select.appendChild(option);
+            });
+        }
+
+        // Helper function to get the path of a node
+        function getPath(node) {
+            let path = node.data.name;
+            let current = node.parent;
+            while (current && current.data.name !== "=") {
+                path = `${current.data.name} > ${path}`;
+                current = current.parent;
+            }
+            return path;
+        }
+
+        // Handle Add Node button click
+        document.getElementById('add-node-button').addEventListener('click', () => {
+            const nodeName = document.getElementById('node-name').value.trim();
+            const operationId = parseInt(document.getElementById('operation-select').value);
+
+            if (!nodeName) {
+                alert("Please enter a valid operand.");
+                return;
+            }
+
+            // Validate the node name
+            if (!isValidOperand(nodeName)) {
+                alert("Invalid operand. Please enter a number or a single variable (e.g., x).");
+                return;
+            }
+
+            // Find the operation node by ID
+            const operationNode = findNodeById(root, operationId);
+            if (!operationNode) {
+                alert("Selected operation node not found.");
+                return;
+            }
+
+            // Add the new node
+            const newNode = {
+                id: i++,
+                name: nodeName,
+                side: operationNode.data.side,
+                inverted: false
+            };
+            if (!operationNode.data.children) {
+                operationNode.data.children = [];
+            }
+            operationNode.data.children.push(newNode);
+
+            // Update the tree
+            root = d3.hierarchy(treeData, d => d.children);
+            update(root);
+        });
+
+        // Helper function to find a node by its unique ID
+        function findNodeById(node, id) {
+            if (node.data.id === id) return node;
+            if (node.children) {
+                for (let child of node.children) {
+                    const found = findNodeById(child, id);
+                    if (found) return found;
+                }
+            }
+            return null;
+        }
+
+        // Helper function to validate operand
+        function isValidOperand(name) {
+            return isNumeric(name) || isVariable(name);
+        }
+
+        // Helper functions to identify operand types
+        function isNumeric(n) {
+            return !isNaN(parseFloat(n)) && isFinite(n);
+        }
+
+        function isVariable(v) {
+            return /^[a-zA-Z]+$/.test(v);
+        }
+
+        // ****************** Editable Nodes ******************
+        function initiateEdit(d) {
+            // Prevent multiple edits
+            if (d.editing) return;
+
+            d.editing = true;
+            update(d);
+
+            // Get node's current position
+            const [x, y] = [d.y, d.x];
+
+            // Create an input element
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = d.data.name;
+            input.className = 'node-input';
+            input.style.left = `${y + 50}px`; // Adjust as needed
+            input.style.top = `${x + 50}px`;  // Adjust as needed
+
+            // Append to the tree-container
+            const treeContainer = document.getElementById('tree-container');
+            treeContainer.appendChild(input);
+
+            // Focus and select the input
+            input.focus();
+            input.select();
+
+            // Handle input events
+            input.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    this.blur();
+                }
+            });
+
+            input.addEventListener('blur', function() {
+                const newValue = this.value.trim();
+                if (!newValue) {
+                    alert("Operand cannot be empty.");
+                    this.focus();
+                    return;
+                }
+                if (!isValidOperand(newValue)) {
+                    alert("Invalid operand. Please enter a number or a single variable (e.g., x).");
+                    this.focus();
+                    return;
+                }
+
+                // Update the node's name
+                d.data.name = newValue;
+
+                // Remove the input element
+                treeContainer.removeChild(this);
+                d.editing = false;
+                update(d);
+            });
+        }
+
+    </script>
+</body>
+</html>

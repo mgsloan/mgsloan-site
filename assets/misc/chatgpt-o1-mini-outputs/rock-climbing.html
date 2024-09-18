@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Infinite Rock Climbing Game</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #222;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+        canvas {
+            display: block;
+            background-color: #333;
+        }
+        #score, #lives {
+            position: absolute;
+            top: 10px;
+            color: #fff;
+            font-size: 20px;
+            z-index: 1;
+        }
+        #score {
+            left: 10px;
+        }
+        #lives {
+            left: 300px;
+        }
+        #gameOver {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0,0,0,0.8);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+        #gameOver h1 {
+            margin-bottom: 20px;
+            font-size: 36px;
+        }
+        #gameOver p {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        #restartBtn {
+            padding: 10px 20px;
+            font-size: 20px;
+            background-color: #FFD700;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #restartBtn:hover {
+            background-color: #FFC700;
+        }
+    </style>
+</head>
+<body>
+    <div id="score">Holds Reached: 0</div>
+    <div id="lives">Lives: 3</div>
+    <div id="gameOver">
+        <h1>Game Over</h1>
+        <p id="finalScore">Your Score: 0</p>
+        <button id="restartBtn">Restart Game</button>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas to full window size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Game Over Elements
+        const gameOverDiv = document.getElementById('gameOver');
+        const finalScoreP = document.getElementById('finalScore');
+        const restartBtn = document.getElementById('restartBtn');
+
+        // Climber properties
+        const climber = {
+            x: canvas.width / 2,
+            y: canvas.height - 100,
+            radius: 20,
+            color: '#FFD700',
+            dx: 0,
+            dy: 0,
+            speed: 7,
+            jumpStrength: 20, // Tripled jump strength
+            gravity: 0.3,
+            onGround: false,
+            jumpsLeft: 2, // Starts with max jumps
+            maxJumps: 100,
+            stickingTimer: 0 // Timer for scoring cooldown (in ms)
+        };
+
+        // Holds properties
+        let holds = [];
+        const holdRadius = 15;
+        const holdColor = '#8B0000';
+
+        // Generate random holds with closer spacing
+        function generateHolds(num, startY) {
+            const verticalSpacing = 80; // Reduced spacing for closer holds
+            for (let i = 0; i < num; i++) {
+                const hold = {
+                    x: Math.random() * (canvas.width - 100) + 50,
+                    y: startY - (i * verticalSpacing + 100),
+                    radius: holdRadius,
+                    color: holdColor,
+                    reached: false // To track if hold has been reached
+                };
+                holds.push(hold);
+            }
+        }
+
+        // Initial hold generation
+        generateHolds(60, canvas.height);
+
+        // Score and Lives
+        let score = 0;
+        const scoreDiv = document.getElementById('score');
+        let lives = 3;
+        const livesDiv = document.getElementById('lives');
+
+        // Handle key presses
+        const keys = {
+            left: false,
+            right: false,
+            up: false
+        };
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'ArrowLeft') keys.left = true;
+            if (e.code === 'ArrowRight') keys.right = true;
+            if (e.code === 'Space') {
+                if (climber.jumpsLeft > 0 && (climber.onGround || isNearHold())) {
+                    climber.dy = -climber.jumpStrength;
+                    climber.jumpsLeft--;
+                    climber.onGround = false;
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'ArrowLeft') keys.left = false;
+            if (e.code === 'ArrowRight') keys.right = false;
+        });
+
+        // Collision detection between two circles
+        function isColliding(c1, c2) {
+            const dx = c1.x - c2.x;
+            const dy = c1.y - c2.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            return distance < c1.radius + c2.radius;
+        }
+
+        // Check if the climber is near any hold
+        function isNearHold() {
+            const nearDistance = 50; // Define what "near" means
+            for (let hold of holds) {
+                const dx = climber.x - hold.x;
+                const dy = climber.y - hold.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance <= nearDistance) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Scrolling Parameters
+        let scrollOffset = 0; // Total scroll distance
+        const scrollThreshold = canvas.height / 2; // When to start scrolling
+
+        // Update climber position and game state
+        function update(deltaTime) {
+            // Handle sticking timer (score cooldown)
+            if (climber.stickingTimer > 0) {
+                climber.stickingTimer -= deltaTime;
+                if (climber.stickingTimer <= 0) {
+                    climber.stickingTimer = 0;
+                }
+            }
+
+            // Reset jumps when on ground or near a hold
+            if (climber.onGround || isNearHold()) {
+                climber.jumpsLeft = climber.maxJumps;
+            }
+
+            // Horizontal movement
+            if (keys.left) {
+                climber.dx = -climber.speed;
+            } else if (keys.right) {
+                climber.dx = climber.speed;
+            } else {
+                climber.dx = 0;
+            }
+
+            // Apply gravity
+            climber.dy += climber.gravity;
+
+            // Update position
+            climber.x += climber.dx;
+            climber.y += climber.dy;
+
+            // Boundary conditions
+            if (climber.x - climber.radius < 0) {
+                climber.x = climber.radius;
+            }
+            if (climber.x + climber.radius > canvas.width) {
+                climber.x = canvas.width - climber.radius;
+            }
+
+            // Check if climber reaches upper half to start scrolling
+            if (climber.y < scrollThreshold) {
+                const scrollAmount = scrollThreshold - climber.y;
+                climber.y = scrollThreshold;
+                scrollOffset += scrollAmount;
+
+                // Move all holds down
+                holds.forEach((hold) => {
+                    hold.y += scrollAmount;
+                });
+
+                // Generate new holds above
+                generateHolds(10, holds[holds.length - 1].y - 100);
+            }
+
+            // Boundary condition: falling to the ground
+            if (climber.y + climber.radius > canvas.height) {
+                climber.y = canvas.height - climber.radius;
+                climber.dy = 0;
+                if (!climber.onGround) { // Only lose life if falling from above
+                    loseLife();
+                }
+                climber.onGround = true;
+            } else {
+                climber.onGround = false;
+            }
+
+            // Check collision with holds
+            holds.forEach((hold) => {
+                const holdObj = {
+                    x: hold.x,
+                    y: hold.y,
+                    radius: hold.radius
+                };
+                const climberObj = {
+                    x: climber.x,
+                    y: climber.y,
+                    radius: climber.radius
+                };
+                if (isColliding(climberObj, holdObj)) {
+                    if (climber.stickingTimer <= 0 && !hold.reached) {
+                        score++;
+                        scoreDiv.textContent = `Holds Reached: ${score}`;
+                        hold.reached = true; // Mark hold as reached
+                        hold.color = '#00FF00'; // Turn hold green
+                        // Make climber stand on hold
+                        climber.y = hold.y - hold.radius - climber.radius;
+                        climber.dy = 0;
+                        climber.onGround = true;
+                        // Start sticking timer
+                        climber.stickingTimer = 500; // 500 milliseconds
+                        // Reset jumps when reaching a hold
+                        climber.jumpsLeft = climber.maxJumps;
+                    }
+                }
+            });
+
+            // Remove holds that have moved below the screen
+            holds = holds.filter(hold => hold.y - hold.radius < canvas.height + 50);
+        }
+
+        // Handle losing a life
+        function loseLife() {
+            lives--;
+            livesDiv.textContent = `Lives: ${lives}`;
+            if (lives <= 0) {
+                endGame();
+            }
+        }
+
+        // End the game
+        function endGame() {
+            cancelAnimationFrame(gameLoop);
+            finalScoreP.textContent = `Your Score: ${score}`;
+            gameOverDiv.style.display = 'block';
+        }
+
+        // Restart the game
+        restartBtn.addEventListener('click', () => {
+            // Reset game state
+            score = 0;
+            scoreDiv.textContent = `Holds Reached: ${score}`;
+            lives = 3;
+            livesDiv.textContent = `Lives: ${lives}`;
+            holds = [];
+            generateHolds(60, canvas.height);
+            climber.x = canvas.width / 2;
+            climber.y = canvas.height - 100;
+            climber.dy = 0;
+            climber.dx = 0;
+            climber.onGround = false;
+            climber.jumpsLeft = climber.maxJumps;
+            climber.stickingTimer = 0;
+            scrollOffset = 0;
+            gameOverDiv.style.display = 'none';
+            gameLoop = requestAnimationFrame(loop);
+        });
+
+        // Draw everything on the canvas
+        function draw() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw holds
+            holds.forEach((hold) => {
+                ctx.beginPath();
+                ctx.arc(hold.x, hold.y, hold.radius, 0, Math.PI * 2);
+                ctx.fillStyle = hold.color;
+                ctx.fill();
+                ctx.closePath();
+            });
+
+            // Draw climber
+            ctx.beginPath();
+            ctx.arc(climber.x, climber.y, climber.radius, 0, Math.PI * 2);
+            ctx.fillStyle = climber.color;
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        // Game loop
+        let lastTime = 0;
+        let gameLoop = null;
+
+        function loop(timestamp) {
+            if (!lastTime) lastTime = timestamp;
+            const deltaTime = timestamp - lastTime;
+            lastTime = timestamp;
+
+            update(deltaTime);
+            draw();
+
+            gameLoop = requestAnimationFrame(loop);
+        }
+
+        // Start the game loop
+        gameLoop = requestAnimationFrame(loop);
+    </script>
+</body>
+</html>

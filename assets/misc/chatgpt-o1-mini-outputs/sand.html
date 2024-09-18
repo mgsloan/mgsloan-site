@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sandbox Simulator</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        #toolbar {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(255,255,255,0.8);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+        #toolbar button {
+            margin: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="toolbar">
+        <button onclick="currentTool = 'sand'">Sand</button>
+        <button onclick="currentTool = 'water'">Water</button>
+        <button onclick="currentTool = 'oil'">Oil</button>
+        <button onclick="currentTool = 'fire'">Fire</button>
+        <button onclick="currentTool = 'erase'">Erase</button>
+    </div>
+    <canvas id="sandbox"></canvas>
+    <script>
+        const canvas = document.getElementById('sandbox');
+        const ctx = canvas.getContext('2d');
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        const cellSize = 4;
+        const cols = Math.floor(width / cellSize);
+        const rows = Math.floor(height / cellSize);
+
+        // Define elements
+        const EMPTY = 0;
+        const SAND = 1;
+        const WATER = 2;
+        const OIL = 3;
+        const FIRE = 4;
+
+        // Colors for elements
+        const colors = {
+            [EMPTY]: [0, 0, 0],
+            [SAND]: [194, 178, 128],
+            [WATER]: [0, 0, 255],
+            [OIL]: [0, 0, 0],
+            [FIRE]: [255, 69, 0]
+        };
+
+        // Initialize grid
+        let grid = [];
+        for (let y = 0; y < rows; y++) {
+            let row = [];
+            for (let x = 0; x < cols; x++) {
+                row.push(EMPTY);
+            }
+            grid.push(row);
+        }
+
+        let currentTool = SAND;
+        let drawing = false;
+
+        // Handle mouse events
+        canvas.addEventListener('mousedown', (e) => {
+            drawing = true;
+            paint(e);
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (drawing) paint(e);
+        });
+
+        window.addEventListener('mouseup', () => {
+            drawing = false;
+        });
+
+        function getMousePos(evt) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: Math.floor((evt.clientX - rect.left) / cellSize),
+                y: Math.floor((evt.clientY - rect.top) / cellSize)
+            };
+        }
+
+        function paint(evt) {
+            const pos = getMousePos(evt);
+            if (pos.x >= 0 && pos.x < cols && pos.y >= 0 && pos.y < rows) {
+                grid[pos.y][pos.x] = currentTool === 'erase' ? EMPTY :
+                    currentTool === 'sand' ? SAND :
+                    currentTool === 'water' ? WATER :
+                    currentTool === 'oil' ? OIL :
+                    FIRE;
+            }
+        }
+
+        // Simulation loop
+        function update() {
+            for (let y = rows - 1; y >= 0; y--) {
+                for (let x = 0; x < cols; x++) {
+                    let cell = grid[y][x];
+                    if (cell === EMPTY || cell === FIRE) continue;
+
+                    switch(cell) {
+                        case SAND:
+                            moveDown(x, y, SAND);
+                            break;
+                        case WATER:
+                            moveFluid(x, y, WATER);
+                            break;
+                        case OIL:
+                            moveFluid(x, y, OIL, WATER);
+                            break;
+                    }
+
+                    // Handle fire spread
+                    if (cell === FIRE) {
+                        grid[y][x] = EMPTY;
+                        spreadFire(x, y);
+                    }
+                }
+            }
+        }
+
+        function moveDown(x, y, type) {
+            if (y + 1 < rows && grid[y + 1][x] === EMPTY) {
+                grid[y + 1][x] = type;
+                grid[y][x] = EMPTY;
+            }
+        }
+
+        function moveFluid(x, y, type, floatAbove = null) {
+            // Move down
+            if (y + 1 < rows && grid[y + 1][x] === EMPTY) {
+                grid[y + 1][x] = type;
+                grid[y][x] = EMPTY;
+                return;
+            }
+
+            // Move sideways
+            let dirs = shuffle([ -1, 1 ]);
+            for (let dir of dirs) {
+                let nx = x + dir;
+                if (nx >= 0 && nx < cols && grid[y][nx] === EMPTY) {
+                    grid[y][nx] = type;
+                    grid[y][x] = EMPTY;
+                    break;
+                }
+            }
+        }
+
+        function spreadFire(x, y) {
+            let neighbors = [
+                {x: x-1, y: y},
+                {x: x+1, y: y},
+                {x: x, y: y-1},
+                {x: x, y: y+1}
+            ];
+
+            neighbors.forEach(n => {
+                if (n.x >=0 && n.x < cols && n.y >=0 && n.y < rows) {
+                    let cell = grid[n.y][n.x];
+                    if (cell === SAND || cell === OIL) {
+                        if (Math.random() < 0.3) { // 30% chance to catch fire
+                            grid[n.y][n.x] = FIRE;
+                        }
+                    }
+                }
+            });
+        }
+
+        function shuffle(array) {
+            for (let i = array.length -1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i +1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Render the grid
+        function render() {
+            const imageData = ctx.createImageData(width, height);
+            const data = imageData.data;
+
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    let cell = grid[y][x];
+                    let color = colors[cell];
+                    let index = (y * cols + x) * cellSize * cellSize * 4;
+
+                    for (let cy = 0; cy < cellSize; cy++) {
+                        for (let cx = 0; cx < cellSize; cx++) {
+                            let px = (y * cellSize + cy) * width + (x * cellSize + cx);
+                            let idx = px * 4;
+                            data[idx] = color[0];
+                            data[idx + 1] = color[1];
+                            data[idx + 2] = color[2];
+                            data[idx + 3] = cell === EMPTY ? 0 : 255;
+                        }
+                    }
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        // Main loop
+        function loop() {
+            update();
+            render();
+            requestAnimationFrame(loop);
+        }
+
+        loop();
+    </script>
+</body>
+</html>

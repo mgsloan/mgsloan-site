@@ -33,6 +33,7 @@ import qualified Mode
 -- Copies all files in the source directory to the destination directory.
 copyFiles :: FilePath -> FilePath -> IO ()
 copyFiles srcDir dstDir = do
+  createDirectoryIfMissing True dstDir
   fps <- map (srcDir </>) . omitEmacsFiles <$> listDirectory srcDir
   forM_ fps $ \fp -> copyFile fp (dstDir </> takeFileName fp)
 
@@ -100,7 +101,6 @@ copyPostImages config post = do
       imagesDir = P.sourceDir post </> "images"
       destImagesDir = destDir </> "images"
   createDirectoryIfMissing True imagesDir
-  createDirectoryIfMissing True destImagesDir
   copyFiles imagesDir destImagesDir
 
 copyPageImages :: Config -> Page.Page -> IO ()
@@ -110,7 +110,6 @@ copyPageImages config page = do
       imagesDir = Page.sourceDir page </> "images"
       destImagesDir = destDir </> "images"
   createDirectoryIfMissing True imagesDir
-  createDirectoryIfMissing True destImagesDir
   copyFiles imagesDir destImagesDir
 
 -- Given the post template and the global context, expands the template for all
@@ -286,8 +285,8 @@ regenerateCmd = do
     writePages (templates ! "page.html") globalContext pages baseConfig
 
   putStrLn "Copying old blog..."
-  createDirectoryIfMissing True "out/wordpress"
   copyFiles "assets/old-blog/" "out/wordpress"
+  copyFiles "assets/misc/chatgpt-o1-mini-outputs" "out/chatgpt-o1-mini-output"
 
   -- Moved entries from ergonomics log into normal posts
   let filteredPages = filter (("Ergonomics Log" /=) . Page.title) pages

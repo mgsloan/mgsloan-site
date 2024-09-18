@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fish Simulator with Animated Tails</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #001f3f;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<script>
+// Utility function to calculate distance between two points
+function distance(a, b) {
+    return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+}
+
+// Particle class for tail animation
+class Particle {
+    constructor(x, y, velocity, color) {
+        this.position = { x: x, y: y };
+        this.velocity = { x: velocity.x, y: velocity.y };
+        this.lifespan = 100; // lifespan in frames
+        this.opacity = 1.0;
+        this.size = Math.random() * 2 + 1; // random size between 1 and 3
+        this.color = color;
+    }
+
+    update() {
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
+        this.lifespan--;
+        this.opacity = this.lifespan / 100;
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.position.x, this.position.y, this.size, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    isDead() {
+        return this.lifespan <= 0;
+    }
+}
+
+// Boid (Fish) class with tail particles
+class Boid {
+    constructor(x, y) {
+        this.position = { x: x, y: y };
+        const angle = Math.random() * 2 * Math.PI;
+        this.velocity = { x: Math.cos(angle), y: Math.sin(angle) };
+        this.acceleration = { x: 0, y: 0 };
+        this.maxSpeed = 2;
+        this.maxForce = 0.05;
+
+        // Tail particle properties
+        this.tailParticles = [];
+        this.tailColor = '#FFDD57'; // Color of the tail particles
+        this.particlesPerFrame = 2; // Number of particles to emit each frame
+    }
+
+    edges(width, height) {
+        if (this.position.x > width) this.position.x = 0;
+        if (this.position.x < 0) this.position.x = width;
+        if (this.position.y > height) this.position.y = 0;
+        if (this.position.y < 0) this.position.y = height;
+    }
+
+    align(boids, perceptionRadius) {
+        let steering = { x: 0, y: 0 };
+        let total = 0;
+        for (let other of boids) {
+            const d = distance(this.position, other.position);
+            if (other !== this && d < perceptionRadius) {
+                steering.x += other.velocity.x;
+                steering.y += other.velocity.y;
+                total++;
+            }
+        }
+        if (total > 0) {
+            steering.x /= total;
+            steering.y /= total;
+            const mag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (mag !== 0) {
+                steering.x = (steering.x / mag) * this.maxSpeed;
+                steering.y = (steering.y / mag) * this.maxSpeed;
+            }
+            steering.x -= this.velocity.x;
+            steering.y -= this.velocity.y;
+            const steerMag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (steerMag > this.maxForce) {
+                steering.x = (steering.x / steerMag) * this.maxForce;
+                steering.y = (steering.y / steerMag) * this.maxForce;
+            }
+        }
+        return steering;
+    }
+
+    cohesion(boids, perceptionRadius) {
+        let steering = { x: 0, y: 0 };
+        let total = 0;
+        for (let other of boids) {
+            const d = distance(this.position, other.position);
+            if (other !== this && d < perceptionRadius) {
+                steering.x += other.position.x;
+                steering.y += other.position.y;
+                total++;
+            }
+        }
+        if (total > 0) {
+            steering.x /= total;
+            steering.y /= total;
+            steering.x -= this.position.x;
+            steering.y -= this.position.y;
+            const mag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (mag !== 0) {
+                steering.x = (steering.x / mag) * this.maxSpeed;
+                steering.y = (steering.y / mag) * this.maxSpeed;
+            }
+            steering.x -= this.velocity.x;
+            steering.y -= this.velocity.y;
+            const steerMag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (steerMag > this.maxForce) {
+                steering.x = (steering.x / steerMag) * this.maxForce;
+                steering.y = (steering.y / steerMag) * this.maxForce;
+            }
+        }
+        return steering;
+    }
+
+    separation(boids, perceptionRadius) {
+        let steering = { x: 0, y: 0 };
+        let total = 0;
+        for (let other of boids) {
+            const d = distance(this.position, other.position);
+            if (other !== this && d < perceptionRadius) {
+                let diff = { x: this.position.x - other.position.x, y: this.position.y - other.position.y };
+                if (d !== 0) {
+                    diff.x /= d;
+                    diff.y /= d;
+                }
+                steering.x += diff.x;
+                steering.y += diff.y;
+                total++;
+            }
+        }
+        if (total > 0) {
+            steering.x /= total;
+            steering.y /= total;
+            const mag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+            if (mag > 0) {
+                steering.x = (steering.x / mag) * this.maxSpeed;
+                steering.y = (steering.y / mag) * this.maxSpeed;
+                steering.x -= this.velocity.x;
+                steering.y -= this.velocity.y;
+                const steerMag = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+                if (steerMag > this.maxForce) {
+                    steering.x = (steering.x / steerMag) * this.maxForce;
+                    steering.y = (steering.y / steerMag) * this.maxForce;
+                }
+            }
+        }
+        return steering;
+    }
+
+    flock(boids) {
+        const alignment = this.align(boids, 50);
+        const cohesion = this.cohesion(boids, 50);
+        const separation = this.separation(boids, 25);
+
+        this.acceleration.x += alignment.x + cohesion.x + separation.x;
+        this.acceleration.y += alignment.y + cohesion.y + separation.y;
+    }
+
+    update() {
+        this.velocity.x += this.acceleration.x;
+        this.velocity.y += this.acceleration.y;
+
+        const speed = Math.sqrt(this.velocity.x ** 2 + this.velocity.y ** 2);
+        if (speed > this.maxSpeed) {
+            this.velocity.x = (this.velocity.x / speed) * this.maxSpeed;
+            this.velocity.y = (this.velocity.y / speed) * this.maxSpeed;
+        }
+
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
+        this.acceleration.x = 0;
+        this.acceleration.y = 0;
+    }
+
+    // Emit tail particles based on current velocity
+    emitParticles() {
+        // Calculate the tail position (slightly behind the fish)
+        const tailOffset = 15; // Distance behind the fish
+        const angle = Math.atan2(this.velocity.y, this.velocity.x);
+        const tailX = this.position.x - Math.cos(angle) * tailOffset;
+        const tailY = this.position.y - Math.sin(angle) * tailOffset;
+
+        for (let i = 0; i < this.particlesPerFrame; i++) {
+            // Add some randomness to the particle velocity
+            const particleVelocity = {
+                x: this.velocity.x * 0.5 + (Math.random() - 0.5) * 0.5,
+                y: this.velocity.y * 0.5 + (Math.random() - 0.5) * 0.5
+            };
+            const particle = new Particle(tailX, tailY, particleVelocity, this.tailColor);
+            this.tailParticles.push(particle);
+        }
+    }
+
+    // Update and draw tail particles
+    updateParticles(ctx) {
+        for (let i = this.tailParticles.length - 1; i >= 0; i--) {
+            const p = this.tailParticles[i];
+            p.update();
+            if (p.isDead()) {
+                this.tailParticles.splice(i, 1);
+            } else {
+                p.draw(ctx);
+            }
+        }
+    }
+
+    draw(ctx) {
+        // Draw tail particles first so they appear behind the fish
+        this.updateParticles(ctx);
+
+        // Draw the fish
+        const angle = Math.atan2(this.velocity.y, this.velocity.x);
+        ctx.save();
+        ctx.translate(this.position.x, this.position.y);
+        ctx.rotate(angle);
+        ctx.beginPath();
+        ctx.moveTo(10, 0);
+        ctx.lineTo(-10, 5);
+        ctx.lineTo(-10, -5);
+        ctx.closePath();
+        ctx.fillStyle = '#FFDD57';
+        ctx.fill();
+        ctx.restore();
+    }
+}
+
+window.onload = () => {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    resizeCanvas();
+
+    window.addEventListener('resize', resizeCanvas);
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    const boids = [];
+    const numBoids = 100;
+
+    for (let i = 0; i < numBoids; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        boids.push(new Boid(x, y));
+    }
+
+    function animate() {
+        // Clear the canvas with a semi-transparent fill for trailing effect
+        ctx.fillStyle = 'rgba(0, 31, 63, 0.25)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let boid of boids) {
+            boid.flock(boids);
+            boid.update();
+            boid.edges(canvas.width, canvas.height);
+            boid.emitParticles(); // Emit tail particles
+            boid.draw(ctx);
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+};
+</script>
+</body>
+</html>

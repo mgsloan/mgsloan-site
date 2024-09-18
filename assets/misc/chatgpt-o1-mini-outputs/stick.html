@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Enhanced Stick Figure Physics Simulation</title>
+  <!-- Include the p5.js library from a CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.js"></script>
+  <style>
+    /* Center the canvas on the page */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #1a1a1a; /* Dark background for better visibility */
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // =========================
+    // Particle Class
+    // =========================
+    class Particle {
+      constructor(x, y) {
+        this.position = createVector(x, y);
+        this.velocity = createVector(0, 0);
+        this.acceleration = createVector(0, 0);
+        this.mass = 1;
+      }
+
+      applyForce(force) {
+        // F = ma => a = F / m
+        let f = p5.Vector.div(force, this.mass);
+        this.acceleration.add(f);
+      }
+
+      update() {
+        this.velocity.add(this.acceleration);
+        this.position.add(this.velocity);
+        this.acceleration.mult(0); // Reset acceleration
+      }
+
+      display() {
+        // Optional: Uncomment to visualize particles
+        // fill(255);
+        // noStroke();
+        // ellipse(this.position.x, this.position.y, 5, 5);
+      }
+    }
+
+    // =========================
+    // Spring Class
+    // =========================
+    class Spring {
+      constructor(particleA, particleB, restLength, k) {
+        this.particleA = particleA;
+        this.particleB = particleB;
+        this.restLength = restLength;
+        this.k = k; // Spring constant
+      }
+
+      applyForce() {
+        let force = p5.Vector.sub(this.particleB.position, this.particleA.position);
+        let currentLength = force.mag();
+        let extension = currentLength - this.restLength;
+        force.normalize();
+        force.mult(this.k * extension);
+        this.particleA.applyForce(force);
+        force.mult(-1);
+        this.particleB.applyForce(force);
+      }
+
+      display() {
+        stroke(200);
+        strokeWeight(2);
+        line(this.particleA.position.x, this.particleA.position.y, this.particleB.position.x, this.particleB.position.y);
+      }
+    }
+
+    // =========================
+    // StickFigure Class
+    // =========================
+    class StickFigure {
+      constructor(x, y) {
+        // Initialize particles
+        this.body = new Particle(x, y);
+        this.head = new Particle(x, y - 60);
+        this.leftHand = new Particle(x - 20, y - 10);
+        this.rightHand = new Particle(x + 20, y - 10);
+        this.leftFoot = new Particle(x - 10, y + 30);
+        this.rightFoot = new Particle(x + 10, y + 30);
+
+        // Initialize springs (connections)
+        this.springs = [];
+
+        // Torso
+        this.springs.push(new Spring(this.body, this.head, 60, 0.1));
+
+        // Arms
+        this.springs.push(new Spring(this.body, this.leftHand, 30, 0.1));
+        this.springs.push(new Spring(this.body, this.rightHand, 30, 0.1));
+
+        // Legs
+        this.springs.push(new Spring(this.body, this.leftFoot, 40, 0.1));
+        this.springs.push(new Spring(this.body, this.rightFoot, 40, 0.1));
+      }
+
+      applyForces(forces) {
+        // Apply attraction forces to hands
+        this.leftHand.applyForce(forces.left);
+        this.rightHand.applyForce(forces.right);
+      }
+
+      update() {
+        // Update springs
+        for (let spring of this.springs) {
+          spring.applyForce();
+        }
+
+        // Update particles
+        this.body.update();
+        this.head.update();
+        this.leftHand.update();
+        this.rightHand.update();
+        this.leftFoot.update();
+        this.rightFoot.update();
+      }
+
+      display() {
+        // Display springs
+        for (let spring of this.springs) {
+          spring.display();
+        }
+
+        // Draw head
+        fill(255);
+        stroke(255);
+        ellipse(this.head.position.x, this.head.position.y, 20, 20);
+      }
+
+      getFeetPositions() {
+        return {
+          leftFoot: this.leftFoot.position.copy(),
+          rightFoot: this.rightFoot.position.copy()
+        };
+      }
+    }
+
+    // =========================
+    // Global Variables
+    // =========================
+    let stickFigures = [];
+    const NUM_STICKFIGURES = 5;
+    const ATTRACTION_STRENGTH = 0.2; // Increased from 0.05 to 0.2 for faster movement
+
+    // =========================
+    // Setup Function
+    // =========================
+    function setup() {
+      createCanvas(800, 600);
+      background(26);
+
+      // Create stick figures at random positions
+      for (let i = 0; i < NUM_STICKFIGURES; i++) {
+        let x = random(150, width - 150);
+        let y = random(150, height - 150);
+        stickFigures.push(new StickFigure(x, y));
+      }
+    }
+
+    // =========================
+    // Draw Function
+    // =========================
+    function draw() {
+      background(26); // Dark background
+
+      // Initialize forces array
+      let forces = [];
+      for (let i = 0; i < stickFigures.length; i++) {
+        forces[i] = {
+          left: createVector(0, 0),
+          right: createVector(0, 0)
+        };
+      }
+
+      // Calculate attraction forces
+      for (let i = 0; i < stickFigures.length; i++) {
+        for (let j = 0; j < stickFigures.length; j++) {
+          if (i !== j) {
+            let targetFeet = stickFigures[j].getFeetPositions();
+
+            // Attract left hand to j's feet
+            let forceLeft = p5.Vector.sub(targetFeet.leftFoot, stickFigures[i].leftHand.position);
+            let distanceLeft = forceLeft.mag();
+            distanceLeft = constrain(distanceLeft, 5, 200); // Increased max distance
+            forceLeft.setMag(ATTRACTION_STRENGTH / distanceLeft); // Increased attraction strength
+            forces[i].left.add(forceLeft);
+
+            // Attract right hand to j's feet
+            let forceRight = p5.Vector.sub(targetFeet.rightFoot, stickFigures[i].rightHand.position);
+            let distanceRight = forceRight.mag();
+            distanceRight = constrain(distanceRight, 5, 200);
+            forceRight.setMag(ATTRACTION_STRENGTH / distanceRight);
+            forces[i].right.add(forceRight);
+          }
+        }
+      }
+
+      // Apply forces and update stick figures
+      for (let i = 0; i < stickFigures.length; i++) {
+        stickFigures[i].applyForces(forces[i]);
+        stickFigures[i].update();
+      }
+
+      // Display all stick figures
+      for (let figure of stickFigures) {
+        figure.display();
+      }
+    }
+
+    // =========================
+    // Optional: Mouse Interaction
+    // =========================
+    function mousePressed() {
+      // Add a new stick figure at mouse position
+      stickFigures.push(new StickFigure(mouseX, mouseY));
+    }
+  </script>
+</body>
+</html>
