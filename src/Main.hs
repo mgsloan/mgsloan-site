@@ -286,7 +286,7 @@ regenerateCmd = do
 
   putStrLn "Copying old blog..."
   copyFiles "assets/old-blog/" "out/wordpress"
-  copyFiles "assets/misc/chatgpt-o1-mini-outputs" "out/chatgpt-o1-mini-output"
+  copyFiles "assets/misc/chatgpt-o1-mini-outputs" "out/misc/chatgpt-o1-mini-output"
 
   -- Moved entries from ergonomics log into normal posts
   let filteredPages = filter (("Ergonomics Log" /=) . Page.title) pages
